@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import "./../../globals.css";
+import './../../globals.css'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -7,16 +7,14 @@ const inter = Inter({
   display: "swap",
 });
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en" className={inter.className}>
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

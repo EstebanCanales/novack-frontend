@@ -30,8 +30,8 @@ export function Circles() {
           y2="475.424"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="white" stop-opacity="0" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="white" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_206_3188"
@@ -41,8 +41,8 @@ export function Circles() {
           y2="353.704"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="white" stop-opacity="0" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="white" stopOpacity="0" />
         </linearGradient>
       </defs>
     </svg>
