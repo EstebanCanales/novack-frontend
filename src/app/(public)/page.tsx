@@ -1,14 +1,11 @@
-import { Navbar } from "@/shared/components/navbar/navbar";
+import HeroSection from "./features/ui/secctions/hero-section/heroSection";
 
 export default function Home() {
   return (
     <>
-      <Navbar />
-      <div className="h-96"></div>
-      <div className="h-96"></div>
-      <div className="h-96"></div>
-      <div className="h-96"></div>
-      <div className="h-96"></div>
+      <main className="m-4 mt-24.5">
+        <HeroSection />
+      </main>
     </>
   );
 }

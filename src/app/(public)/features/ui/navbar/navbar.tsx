@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { NavbarLink } from "./navbarLink";
 import { NavbarMobileLink } from "./navbarMobilLink";
 
@@ -25,17 +26,17 @@ export const Navbar = () => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center m-4 
+        className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center m-4
         ${
           isScrolled
             ? "bg-white/60 backdrop-blur-xl shadow-lg border-opacity-30"
             : "bg-white"
         } 
-        border-2 border-gray-200 rounded-xl p-3 px-4 transition-all duration-300`}
+        border-2 border-gray-200 rounded-normal p-3 px-4 transition-all duration-300`}
       >
         <div className="flex justify-center items-center gap-3">
           <div className="h-10 w-10 bg-primary rounded-md"></div>
-          <div className="text-xl font-bold text-primary pb-0.5">Novack</div>
+          <div className="text-xl font-bold text-primary pb-0.3">Novack</div>
         </div>
 
         <div className="hidden md:flex gap-8 font-medium">
@@ -44,7 +45,7 @@ export const Navbar = () => {
           <NavbarLink href="/" title="Link 3" />
         </div>
 
-        <button className="hidden md:block text-sm border-1 border-primary hover:bg-primary px-6 py-2 rounded-3xl hover:text-white bg-transparent text-primary hover:shadow-lg transition-all duration-300">
+        <button className="hidden md:block text-sm border-3 border-primary hover:bg-primary px-6 py-2 rounded-normal hover:text-white bg-transparent text-primary hover:shadow-lg transition-all duration-300">
           Find a plan
         </button>
 
