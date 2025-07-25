@@ -1,8 +1,10 @@
 import { Inter } from "next/font/google";
-import "./../../globals.css";
+import { cookies } from "next/headers"
+import { ReactNode } from "react"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layouts/AppSidebar";  
 import React from "react";
+import "./../../globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,12 +12,12 @@ const inter = Inter({
   display: "swap",
 });
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
+export async function RootLayout({ children }: { children: React.ReactNode }) {
+  
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+  
+    return (
     <html lang="en" className={inter.className}>
       <body>
         <SidebarProvider
