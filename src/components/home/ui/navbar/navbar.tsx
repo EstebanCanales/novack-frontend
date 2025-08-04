@@ -26,17 +26,19 @@ export const Navbar = () => {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center m-4
+        className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center m-2 sm:m-4 md:m-4
         ${
           isScrolled
-            ? "bg-white/60 backdrop-blur-xl shadow-lg border-opacity-30"
-            : "bg-white"
+            ? "bg-black/40 backdrop-blur-xl shadow-lg border-white/20"
+            : "bg-white/5 backdrop-blur-sm"
         } 
-        border-2 border-gray-200 rounded-normal p-3 px-4 transition-all duration-300`}
+        border border-white/10 rounded-xl p-3 px-4 transition-all duration-300`}
       >
         <div className="flex justify-center items-center gap-3">
-          <div className="h-10 w-10 bg-primary rounded-md"></div>
-          <div className="text-xl font-bold text-primary pb-0.3">Novack</div>
+          <div className="h-10 w-10 bg-gradient-to-br from-[#07D9D9] to-[#0596A6] rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-lg">N</span>
+          </div>
+          <div className="text-xl font-bold text-white">Novack</div>
         </div>
 
         <div className="hidden md:flex gap-8 font-medium">
@@ -45,12 +47,12 @@ export const Navbar = () => {
           <NavbarLink href="/" title="Link 3" />
         </div>
 
-        <button className="hidden md:block text-sm border-3 border-primary hover:bg-primary px-6 py-2 rounded-normal hover:text-white bg-transparent text-primary hover:shadow-lg transition-all duration-300">
+        <button className="hidden md:block text-sm border-2 border-[#07D9D9] rounded-xl hover:bg-[#07D9D9] px-6 py-2 hover:text-[#010440] bg-transparent text-[#07D9D9] hover:shadow-lg transition-all duration-300">
           Find a plan
         </button>
 
         <button
-          className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-full bg-primary p-2"
+          className="md:hidden flex flex-col justify-center items-center w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm p-2 border border-white/20"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span
@@ -73,7 +75,7 @@ export const Navbar = () => {
 
       {/* Menú móvil desplegable */}
       <div
-        className={`fixed top-24 left-4 right-4 bg-white/90 backdrop-blur-xl border border-gray-200 rounded-xl p-6 md:hidden z-40 shadow-xl transform transition-all duration-500 ease-in-out ${
+        className={`fixed top-24 left-4 right-4 bg-black/40 backdrop-blur-xl border border-white/20 rounded-xl p-8 md:hidden z-40 shadow-xl transform transition-all duration-500 ease-in-out ${
           isOpen
             ? "translate-y-0 opacity-100 scale-100"
             : "-translate-y-10 opacity-0 scale-95 pointer-events-none"
@@ -83,7 +85,7 @@ export const Navbar = () => {
           <NavbarMobileLink href="/" title="Link 1" />
           <NavbarMobileLink href="/" title="Link 2" />
           <NavbarMobileLink href="/" title="Link 3" />
-          <button className="text-lg mt-4 bg-primary px-3 py-3 rounded-3xl text-white hover:bg-white hover:text-primary hover:shadow-md hover:border-primary border-2 border-transparent transition-all duration-300">
+          <button className="text-lg mt-4 bg-[#07D9D9] px-3 py-3 rounded-xl text-[#010440] hover:bg-[#0596A6] hover:shadow-md transition-all duration-300">
             Find a plan
           </button>
         </div>
