@@ -9,6 +9,8 @@ export default function Page() {
       <section className="w-80 bg-red-50 p-5 m-2 border-r border-gray-200 overflow-hidden">
         <div className="flex w-full items-center gap-2 mb-3">
           {/* Search bar */}
+          <Input type="email" placeholder="Nombre" />
+
           <Input type="email" placeholder="Email" />
           <Button type="submit" variant="outline">
             <Search />

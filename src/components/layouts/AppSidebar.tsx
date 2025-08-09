@@ -70,15 +70,15 @@ const collapsibleItems = [
     initiallyOpen: false,
     items: [
       {
-        title: "Pagos",
-        url: "/payments",
-        icon: BadgeDollarSign,
+        title: "Perfil",
+        url: "/management/supplier/supplierProfile",
+        icon: User,
       },
       {
         title: "Permisos",
-        url: "/permissions",
-        icon: Lock,
-      }
+        url: "/management/supplier/permissionAdmin",
+        icon: BadgeDollarSign,
+      },
     ]
   },
   {
@@ -88,14 +88,14 @@ const collapsibleItems = [
     items: [
       {
         title: "Admin Usuarios",
-        url: "/user-admin",
+        url: "/management/supplier/adminUser",
         icon: Users,
       },
       {
-        title: "Admin Sesiones",
-        url: "/session-admin",
-        icon: Monitor,
-      }
+        title: "Admin subscipciones",
+        url: "/management/supplier/subscription",
+        icon: Users,
+      },
     ]
   }
 ];
@@ -103,12 +103,12 @@ const collapsibleItems = [
 const standaloneItems = [
   {
     title: "Formulario para padres",
-    url: "/parent-form",
+    url: "/management/supplier/parentForm",
     icon: ClipboardList,
   },
   {
     title: "Administración de tarjetas",
-    url: "/card-management",
+    url: "/management/supplier/cardAdmin",
     icon: CreditCard,
   }
 ];
@@ -147,7 +147,7 @@ export function AppSidebar() {
         collapsible="icon"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        className="transition-all duration-300 ease-in-out"
+        className="transition-all duration-300 ${open ? 'w-[250px]' : 'w-[60px]'}`"
       >
 
         <SidebarHeader>
