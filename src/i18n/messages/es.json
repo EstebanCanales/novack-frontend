@@ -44,7 +44,7 @@
       "alwaysAvailable": "Siempre disponible"
     },
     "example": {
-      "titleHtml": "Protege tus operaciones.<br /> Simplifica tu flujo de trabajo.",
+      "titleHtml": "Protege tus operaciones. Simplifica tu flujo de trabajo.",
       "weeklyActivity": "Actividad semanal",
       "dow": {"mon": "Lun", "tue": "Mar", "wed": "Mié", "thu": "Jue", "fri": "Vie", "sat": "Sáb", "sun": "Dom"},
       "monitorTitle": "Monitorea a tus usuarios",

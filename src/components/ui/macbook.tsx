@@ -59,7 +59,7 @@ export const MacbookScroll = ({
     [0, 0.3],
     [0.6, isMobile ? 1 : 1.5]
   );
-  const translate = useTransform(scrollYProgress, [0, 1], [0, 1500]);
+  const translate = useTransform(scrollYProgress, [0, 1], [0, 250]);
   const rotate = useTransform(scrollYProgress, [0.1, 0.12, 0.3], [-28, -28, 0]);
   const textTransform = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
@@ -67,7 +67,7 @@ export const MacbookScroll = ({
   return (
     <div
       ref={ref}
-      className="flex min-h-[200vh] shrink-0 scale-[0.35] transform flex-col items-center justify-start py-0 [perspective:800px] sm:scale-50 md:scale-100 md:py-40"
+      className="flex min-h-[100vh] shrink-0 scale-[0.35] transform flex-col items-center justify-start py-0 [perspective:800px] sm:scale-50 md:scale-80 md:py-40"
     >
       <motion.h2
         style={{
@@ -91,7 +91,7 @@ export const MacbookScroll = ({
         translate={translate}
       />
       {/* Base area */}
-      <div className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-[#272729]">
+      <div className="relative -z-10 h-[16rem] w-[32rem] overflow-hidden rounded-2xl bg-[#272729]">
         {/* above keyboard bar */}
         <div className="relative h-10 w-full">
           <div className="absolute inset-x-0 mx-auto h-4 w-[80%] bg-[#050505]" />
@@ -131,6 +131,19 @@ export const Lid = ({
   translate: MotionValue<number>;
   src?: string;
 }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoaded(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+    setImageError(false);
+  };
+
   return (
     <div className="relative [perspective:800px]">
       <div
@@ -139,7 +152,7 @@ export const Lid = ({
           transformOrigin: "bottom",
           transformStyle: "preserve-3d",
         }}
-        className="relative h-[12rem] w-[32rem] rounded-2xl bg-[#010101] p-2"
+        className="relative h-[8rem] w-[32rem] rounded-2xl bg-[#010101] p-2"
       >
         <div
           style={{
@@ -161,14 +174,26 @@ export const Lid = ({
           transformStyle: "preserve-3d",
           transformOrigin: "top",
         }}
-        className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2"
+        className="absolute inset-0 h-64 w-[32rem] rounded-2xl bg-[#010101] p-2"
       >
-        <div className="absolute inset-0 rounded-lg bg-[#272729]" />
-        <img
-          src={src as string}
-          alt="aceternity logo"
-          className="absolute inset-0 h-full w-full rounded-lg object-cover object-left-top"
-        />
+        {src && !imageError ? (
+          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-gradient-to-br from-gray-800 to-gray-900">
+            <div className="text-center text-gray-400">
+              <AceternityLogo />
+              <p className="mt-2 text-sm">No image available</p>
+            </div>
+          </div>
+        ) : (
+          <img
+            src={src}
+            alt="aceternity logo"
+            className={`absolute inset-0 h-full w-full rounded-lg object-cover object-left-top transition-opacity duration-300 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+          />
+        )}
       </motion.div>
     </div>
   );
@@ -637,18 +662,20 @@ const AceternityLogo = () => {
     <svg
       width="66"
       height="65"
-      viewBox="0 0 66 65"
+      viewBox="0 0 70 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="h-3 w-3 text-white"
+      className="h-12 w-12 text-white"
+      preserveAspectRatio="xMidYMid meet"
     >
       <path
         d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696"
         stroke="currentColor"
-        strokeWidth="15"
+        strokeWidth="8"
         strokeMiterlimit="3.86874"
         strokeLinecap="round"
       />
     </svg>
+
   );
 };
