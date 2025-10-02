@@ -9,6 +9,7 @@ import { VerificationStep } from "./steps/VerificationStep";
 import { SuccessStep } from "./steps/SuccessStep";
 import { registrationSteps } from "@/data/steps";
 import { api, extractDigits, lastNDigits } from "@/lib/api";
+import { useAuth } from "@/hooks/useAuth";
 
 import type {
   RegistrationData,
@@ -48,12 +49,13 @@ async function createEmployee(payload: EmployeeData) {
     position: payload.position || undefined,
     department: payload.department || undefined,
   };
-  const { data } = await api.post("/employees", body);
+  const { data } = await api.post("/employees/public/register", body);
   return data as { id: string };
 }
 
 export default function RegistrationStepper() {
   const router = useRouter();
+  const { login } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [registrationData, setRegistrationData] = useState<RegistrationData>({
     employee: {
@@ -74,15 +76,24 @@ export default function RegistrationStepper() {
   async function loginAndGoHome(email: string, password: string) {
     try {
       const { data } = await api.post("/auth/login", { email, password });
-      const token = data?.access_token || data?.token || data?.accessToken;
-      if (token) {
-        localStorage.setItem("token", token);
-        api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+      if (data.access_token && data.employee) {
+        login(
+          {
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+          },
+          data.employee
+        );
+
+        setIsRedirecting(true);
+        // Pequeña animación antes de redirigir
+        setTimeout(() => router.replace("/home"), 600);
+      } else {
+        throw new Error("No se pudo obtener la información de autenticación");
       }
-      setIsRedirecting(true);
-      // Pequeña animación antes de redirigir
-      setTimeout(() => router.replace("/home"), 600);
     } catch (e) {
+      console.error("Error en login después del registro:", e);
       router.replace("/login");
     }
   }

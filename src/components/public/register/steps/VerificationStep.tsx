@@ -72,20 +72,15 @@ export function VerificationStep({
         await new Promise((resolve) => setTimeout(resolve, 1200));
       } else {
         if (method === "sms") {
-          const res = await fetch(
-            `${
-              process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
-            }/2fa/sms/public/initiate`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                employee_id: employeeId,
-                employee_email: employeeEmail,
-                phone_number: phone.replace(/\s/g, ""),
-              }),
-            }
-          );
+          const res = await fetch(`/api/2fa/sms/public/initiate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              employee_id: employeeId,
+              employee_email: employeeEmail,
+              phone_number: phone.replace(/\s/g, ""),
+            }),
+          });
           if (!res.ok) {
             const text = await res.text();
             throw new Error(
@@ -96,18 +91,13 @@ export function VerificationStep({
           if (!employeeEmail) {
             throw new Error("Email requerido para verificación por correo");
           }
-          const res = await fetch(
-            `${
-              process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
-            }/2fa/email/public/initiate`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                employee_email: employeeEmail,
-              }),
-            }
-          );
+          const res = await fetch(`/api/2fa/email/public/initiate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              employee_email: employeeEmail,
+            }),
+          });
           if (!res.ok) {
             const text = await res.text();
             throw new Error(
@@ -133,11 +123,10 @@ export function VerificationStep({
       onNext(submitted);
       return;
     }
-    const urlBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
     const endpoint =
       method === "sms"
-        ? `${urlBase}/2fa/sms/public/verify`
-        : `${urlBase}/2fa/email/public/verify`;
+        ? `/api/2fa/sms/public/verify`
+        : `/api/2fa/email/public/verify`;
     const payload =
       method === "sms"
         ? {
@@ -150,11 +139,20 @@ export function VerificationStep({
             otp: submitted,
           };
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    let res: Response;
+    try {
+      res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (err: any) {
+      alert(
+        err?.message ||
+          "No se pudo conectar con el servidor. Verifica tu conexión."
+      );
+      return;
+    }
     if (!res.ok) {
       const text = await res.text();
       alert(text || "No se pudo verificar el código");
