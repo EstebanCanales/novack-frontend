@@ -21,6 +21,7 @@ import {
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 import { 
   Home, 
   Calendar, 
@@ -114,7 +115,7 @@ const standaloneItems = [
 ];
 
 export function AppSidebar() {
-  const [open, setOpen] = React.useState(false);
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [openSections, setOpenSections] = React.useState(
     collapsibleItems.reduce((acc, item) => {
       acc[item.title] = item.initiallyOpen || false;
@@ -122,18 +123,6 @@ export function AppSidebar() {
     }, {} as Record<string, boolean>)
   );
 
-  React.useEffect(() => {
-    if (!open) {
-      setOpenSections(prev => {
-        const newState = {...prev};
-        Object.keys(newState).forEach(key => {
-          newState[key] = false;
-        });
-        return newState;
-      });
-    }
-  }, [open]);
-  
   const toggleSection = (section: string) => {
     setOpenSections(prev => ({
       ...prev,
@@ -142,190 +131,96 @@ export function AppSidebar() {
   };
 
   return (
-    <SidebarProvider open={open} onOpenChange={setOpen}>
-      <Sidebar
-        collapsible="icon"
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        className="transition-all duration-300 ${open ? 'w-[250px]' : 'w-[60px]'}`"
-      >
-
-        <SidebarHeader>
-          {open ? (
-            <div className="flex items-center space-x-2 px-4 py-2">
-              <Badge />
+    <Sidebar
+      collapsible="icon"
+      className="bg-background border-r"
+    >
+      <SidebarHeader>
+        <div className="flex items-center space-x-2 px-2 py-4">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Badge className="size-4" />
+          </div>
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: "auto" }}
+              exit={{ opacity: 0, width: 0 }}
+              className="overflow-hidden"
+            >
               <div>
-                <div className="text-lg font-bold">Novack</div>
-                <div className="text-sm text-gray-400">Enterprise</div>
+                <div className="text-sm font-semibold">Novack</div>
+                <div className="text-xs text-muted-foreground">Enterprise</div>
               </div>
-            </div>
-          ) : (
-            <div className="px-4 py-2 text-lg font-semibold flex items-center justify-center">
-              <div>
-                <Badge />
-              </div>
-            </div>
-          )}
-        </SidebarHeader>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </SidebarHeader>
 
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>
-              <AnimatePresence>
-                {open && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    Seguridad
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {mainItems.map((item) => (
-                  <SidebarMenuItem key={item.title} className="list-none">
-                    <SidebarMenuButton asChild>
-                      <a href={item.url} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
-                        <item.icon className="w-4 h-4 min-w-[1rem]" />
-                        <AnimatePresence>
-                          {open && (
-                            <motion.span
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="truncate"
-                            >
-                              {item.title}
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-
-          <SidebarGroup>
-            <SidebarGroupLabel>
-              <AnimatePresence>
-                {open && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    Administración
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {collapsibleItems.map((item) => (
-                  <Collapsible key={item.title} open={openSections[item.title]} onOpenChange={() => toggleSection(item.title)}>
-                    <SidebarMenuItem className="list-none">
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton className="w-full px-4">
-                          <div className="flex items-center justify-between w-full">
-                            <div className="flex items-center gap-3">
-                              <item.icon className="w-4 h-4 min-w-[1rem]" />
-                              <AnimatePresence>
-                                {open && (
-                                  <motion.span
-                                    initial={{ opacity: 0, x: -5 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -5 }}
-                                    transition={{ duration: 0.15 }}
-                                  >
-                                    {item.title}
-                                  </motion.span>
-                                )}
-                              </AnimatePresence>
-                            </div>
-                            {open && (
-                              <motion.div
-                                animate={{ 
-                                  rotate: openSections[item.title] ? 90 : 0,
-                                }}
-                                transition={{ 
-                                  duration: 0.2,
-                                  ease: "easeInOut"
-                                }}
-                              >
-                                <ChevronRight className="w-4 h-4" />
-                              </motion.div>
-                            )}
-                          </div>
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                    </SidebarMenuItem>
-                    
-                    <AnimatePresence>
-                      {openSections[item.title] && (
-                        <motion.div
-                          initial={{ 
-                            height: 0,
-                            opacity: 0,
-                            y: -10
-                          }}
-                          animate={{
-                            height: 'auto',
-                            opacity: 1,
-                            y: 0
-                          }}
-                          exit={{
-                            height: 0,
-                            opacity: 0,
-                            y: -10
-                          }}
-                          transition={{ 
-                            duration: 0.25,
-                            ease: "easeInOut"
-                          }}
-                          className="overflow-hidden"
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            <AnimatePresence>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                Seguridad
+              </motion.span>
+            </AnimatePresence>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {mainItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url} className="flex items-center gap-3">
+                      <item.icon className="size-4" />
+                      <AnimatePresence>
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="truncate"
                         >
-                          <SidebarMenu className="ml-4">
-                            {item.items.map((subItem) => (
-                              <SidebarMenuItem key={subItem.title} className="list-none">
-                                <SidebarMenuButton asChild>
-                                  <a href={subItem.url} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
-                                    <subItem.icon className="w-4 h-4 min-w-[1rem]" />
-                                    <AnimatePresence>
-                                      {open && (
-                                        <motion.span
-                                          initial={{ opacity: 0 }}
-                                          animate={{ opacity: 1 }}
-                                          exit={{ opacity: 0 }}
-                                          transition={{ duration: 0.15 }}
-                                          className="truncate"
-                                        >
-                                          {subItem.title}
-                                        </motion.span>
-                                      )}
-                                    </AnimatePresence>
-                                  </a>
-                                </SidebarMenuButton>
-                              </SidebarMenuItem>
-                            ))}
-                          </SidebarMenu>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </Collapsible>
-                ))}
+                          {item.title}
+                        </motion.span>
+                      </AnimatePresence>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-                {standaloneItems.map((item) => (
-                  <SidebarMenuItem key={item.title} className="list-none">
-                    <SidebarMenuButton asChild>
-                      <a href={item.url} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
-                        <item.icon className="w-4 h-4 min-w-[1rem]" />
-                        <AnimatePresence>
-                          {open && (
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            <AnimatePresence>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                Administración
+              </motion.span>
+            </AnimatePresence>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {collapsibleItems.map((item) => (
+                <Collapsible 
+                  key={item.title} 
+                  open={openSections[item.title]} 
+                  onOpenChange={() => toggleSection(item.title)}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton>
+                        <div className="flex items-center gap-3">
+                          <item.icon className="size-4" />
+                          <AnimatePresence>
                             <motion.span
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
@@ -334,44 +229,83 @@ export function AppSidebar() {
                             >
                               {item.title}
                             </motion.span>
-                          )}
-                        </AnimatePresence>
-                      </a>
-                    </SidebarMenuButton>
+                          </AnimatePresence>
+                        </div>
+                        <ChevronRight className="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    
+                    <CollapsibleContent>
+                      <SidebarMenu>
+                        {item.items.map((subItem) => (
+                          <SidebarMenuItem key={subItem.title}>
+                            <SidebarMenuButton asChild className="pl-11">
+                              <a href={subItem.url} className="flex items-center gap-3">
+                                <subItem.icon className="size-4" />
+                                <AnimatePresence>
+                                  <motion.span
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="truncate"
+                                  >
+                                    {subItem.title}
+                                  </motion.span>
+                                </AnimatePresence>
+                              </a>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        ))}
+                      </SidebarMenu>
+                    </CollapsibleContent>
                   </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
+                </Collapsible>
+              ))}
 
-        <SidebarFooter>
-          {open ? (
-            <div className="flex items-center space-x-2 px-4 py-2">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="#9CA3AF" strokeWidth="2"/>
-                <path d="M16 16.5C16 14.0147 14.2091 12 12 12C9.79086 12 8 14.0147 8 16.5" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round"/>
-                <circle cx="12" cy="8" r="3" stroke="#9CA3AF" strokeWidth="2"/>
-              </svg>
-              <div>
-                <div className="text-lg font-bold">Nombre de Usuario</div>
-                <div className="text-sm text-gray-400">usuario@ejemplo.com</div>
-              </div>
-            </div>
-          ) : (
-            <div className="px-4 py-2 text-lg font-semibold flex items-center justify-center">
-              <div>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="10" stroke="#9CA3AF" strokeWidth="2"/>
-                  <path d="M16 16.5C16 14.0147 14.2091 12 12 12C9.79086 12 8 14.0147 8 16.5" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round"/>
-                  <circle cx="12" cy="8" r="3" stroke="#9CA3AF" strokeWidth="2"/>
-                </svg>
-              </div>
-            </div>
-          )}
-        </SidebarFooter>
+              {standaloneItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url} className="flex items-center gap-3">
+                      <item.icon className="size-4" />
+                      <AnimatePresence>
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="truncate"
+                        >
+                          {item.title}
+                        </motion.span>
+                      </AnimatePresence>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-      </Sidebar>
-    </SidebarProvider>
-  );
+      <SidebarFooter>
+        <div className="flex items-center gap-2 px-2 py-4">
+          <div className="flex size-8 items-center justify-center rounded-full bg-muted">
+            <User className="size-4" />
+          </div>
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: "auto" }}
+              exit={{ opacity: 0, width: 0 }}
+              className="overflow-hidden"
+            >
+              <div>
+                <div className="text-sm font-medium">{user?.first_name} {user?.last_name}</div>
+                <div className="text-xs text-muted-foreground">{user?.email}</div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </SidebarFooter>
+    </Sidebar>
+  )
 }

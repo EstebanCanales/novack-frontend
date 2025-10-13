@@ -1,31 +1,26 @@
-import { cookies } from "next/headers";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layouts/AppSidebar";
-import React from "react";
+import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/layouts/AppSidebar"
+import React from "react"
 
-export default async function Layout({
+export default async function PrivateLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-
+}>) {
   return (
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "256px",
-          "--sidebar-trigger-width": "50px",
-          "--sidebar-trigger-height": "50px",
+          "--sidebar-width": "250px",
+          "--sidebar-width-icon": "60px",
         } as React.CSSProperties
       }
     >
       <AppSidebar />
-      <main>
+      <SidebarInset>
         <SidebarTrigger />
         {children}
-      </main>
+      </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }
