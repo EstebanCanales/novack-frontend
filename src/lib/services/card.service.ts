@@ -1,17 +1,29 @@
 import { api } from "../api";
 
+export interface CardLocation {
+  id: string;
+  latitude: number;
+  longitude: number;
+  accuracy?: number;
+  timestamp: string;
+  created_at: string;
+}
+
 export interface Card {
   id: string;
-  card_uuid: string;
-  battery_percentage?: number;
-  status: "active" | "inactive" | "lost" | "damaged";
-  last_seen?: string;
-  assigned_to_employee_id?: string;
-  assigned_to_visitor_id?: string;
+  card_number: string;
+  is_active: boolean;
+  issued_at?: string;
+  expires_at?: string;
+  latitude?: number;
+  longitude?: number;
+  accuracy?: number;
+  additional_info?: Record<string, any>;
   supplier_id: string;
+  assigned_to_id?: string;
   created_at: string;
   updated_at: string;
-  employee?: {
+  assigned_to?: {
     id: string;
     first_name: string;
     last_name: string;
@@ -23,6 +35,7 @@ export interface Card {
     last_name: string;
     email: string;
   };
+  locations?: CardLocation[];
 }
 
 export interface CreateCardDto {
@@ -172,6 +185,53 @@ class CardService {
   }> {
     const params = supplierId ? { supplierId } : {};
     const response = await api.get("/cards/stats", { params });
+    return response.data;
+  }
+
+  /**
+   * Obtener historial de ubicaciones de una tarjeta
+   */
+  async getLocationHistory(cardId: string): Promise<CardLocation[]> {
+    const response = await api.get<CardLocation[]>(`/cards/${cardId}/locations`);
+    return response.data;
+  }
+
+  /**
+   * Registrar ubicación de una tarjeta
+   */
+  async recordLocation(
+    cardId: string,
+    latitude: number,
+    longitude: number,
+    accuracy?: number
+  ): Promise<CardLocation> {
+    const response = await api.post<CardLocation>(`/cards/${cardId}/location`, {
+      latitude,
+      longitude,
+      accuracy,
+    });
+    return response.data;
+  }
+
+  /**
+   * Obtener última ubicación de una tarjeta
+   */
+  async getLastLocation(cardId: string): Promise<CardLocation | null> {
+    const response = await api.get<CardLocation | null>(`/cards/${cardId}/last-location`);
+    return response.data;
+  }
+
+  /**
+   * Obtener tarjetas cercanas a una ubicación
+   */
+  async getNearbyCards(
+    latitude: number,
+    longitude: number,
+    radius: number = 100
+  ): Promise<Card[]> {
+    const response = await api.get<Card[]>("/cards/nearby", {
+      params: { lat: latitude, lng: longitude, radius },
+    });
     return response.data;
   }
 }
