@@ -10,7 +10,7 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-black">
       <Navbar />
-      <main className="sm:mt-24.5 md:mt-24.5 mt-22">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <HeroSection />
         <BentoSection />
         <HowItWorksSection />

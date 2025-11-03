@@ -2,7 +2,7 @@
 
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { createMapPinElement } from "./mapPin";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
 interface MapUserProps {
   lat: number;
@@ -33,6 +33,7 @@ const MapUser = ({
     const map = new google.maps.Map(mapRef.current, {
       center: { lat, lng },
       zoom: 15,
+      mapId: "novack_map_id", // Required for Advanced Markers
       mapTypeId: "roadmap",
       mapTypeControl: true,
       mapTypeControlOptions: {
@@ -48,55 +49,63 @@ const MapUser = ({
       fullscreenControlOptions: {
         position: google.maps.ControlPosition.RIGHT_TOP,
       },
-
-      // Customize the styling of the map.
-      // styles: [
-      //  {
-      //    featureType: "all",
-      //    elementType: "geometry",
-      //    stylers: [{ color: "#1d2c4d" }],
-      //  },
-      //  {
-      //    featureType: "water",
-      //    elementType: "geometry",
-      //    stylers: [{ color: "#17263c" }],
-      //  },
-      //  {
-      //    featureType: "landscape",
-      //    elementType: "geometry",
-      //    stylers: [{ color: "#2c5aa0" }],
-      //  },
-      //  {
-      //    featureType: "poi",
-      //    elementType: "geometry",
-      //    stylers: [{ color: "#2c5aa0" }],
-      //  },
-      //  {
-      //    featureType: "road",
-      //    elementType: "geometry",
-      //    stylers: [{ color: "#2c5aa0" }],
-      //  },
-      //  {
-      //    featureType: "all",
-      //    elementType: "labels.text.fill",
-      //    stylers: [{ color: "#ffffff" }],
-      //  },
-      //  {
-      //    featureType: "all",
-      //    elementType: "labels.text.stroke",
-      //    stylers: [{ color: "#000000" }, { weight: 2 }],
-      //  },
-      //],
+      // Los estilos se configuran desde Google Maps Cloud Console cuando se usa mapId
     });
+
+    const pinElement = createMapPinElement(userName, "#07D9D9");
 
     const marker = new google.maps.marker.AdvancedMarkerElement({
       position: { lat, lng },
       map,
       title: userName,
-      content: 
-      
+      content: pinElement,
     });
-  });
+
+    markerRef.current = marker;
+
+    return () => {
+      if (markerRef.current) {
+        markerRef.current.map = null;
+      }
+    };
+  }, [lat, lng, userName]);
+
+  return <div ref={mapRef} className={className || "w-full h-full rounded-lg"} />;
 };
 
-export default MapUser;
+const render = (status: Status) => {
+  switch (status) {
+    case Status.LOADING:
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+        </div>
+      );
+    case Status.FAILURE:
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          <p className="text-red-500">Error al cargar el mapa</p>
+        </div>
+      );
+    case Status.SUCCESS:
+      return null;
+  }
+};
+
+export default function MapUserWrapper(props: MapUserProps) {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  if (!apiKey) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <p className="text-red-500">API Key de Google Maps no configurada</p>
+      </div>
+    );
+  }
+
+  return (
+    <Wrapper apiKey={apiKey} render={render} libraries={["marker"]}>
+      <MapUser {...props} />
+    </Wrapper>
+  );
+}

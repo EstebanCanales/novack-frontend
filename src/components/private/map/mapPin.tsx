@@ -1,16 +1,15 @@
 import ReactDOMServer from 'react-dom/server';
 import { MapPin } from 'lucide-react';
 
-export const createMapPinElement = (userName: string): HTMLElement => {
+export const createMapPinElement = (userName: string, primaryColor: string = '#07d9d9'): HTMLElement => {
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.cursor = 'pointer';
   container.style.display = 'flex';
   container.style.alignItems = 'center';
   container.style.justifyContent = 'center';
-  const primaryColor = '#07d9d9'; // --sidebar-primary
   const foregroundColor = '#ffffff'; // --sidebar-foreground
-  const glowColor = '#07d9d9'; // --sidebar-ring
+  const glowColor = primaryColor; // --sidebar-ring
 
   const iconHtml = ReactDOMServer.renderToString(
     <MapPin

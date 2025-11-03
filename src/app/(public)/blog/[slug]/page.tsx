@@ -6,7 +6,6 @@ import ArticleLayout from "@/components/blog/ArticleLayout";
 import { getPostData } from "@/lib/blog";
 import fs from "fs/promises";
 import path from "path";
-import { getServerLocale, getServerMessages, tServer } from "@/i18n/server";
 
 // Static params from markdown slugs
 export async function generateStaticParams() {
@@ -23,8 +22,6 @@ const BlogPostPage = async ({
   params: Promise<{ slug: string }> | { slug: string };
 }) => {
   const { slug } = await (params as any);
-  const locale = await getServerLocale();
-  const messages = await getServerMessages(locale);
 
   // Read post from markdown (frontmatter + content)
   let post: Awaited<ReturnType<typeof getPostData>>;
@@ -39,11 +36,10 @@ const BlogPostPage = async ({
           <article className="w-full py-24">
             <div className="mx-auto px-4 sm:px-6 max-w-3xl text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                {tServer(messages, "blog.notFoundTitle") || "Post Not Found"}
+                Artículo no encontrado
               </h1>
               <p className="text-white/70">
-                {tServer(messages, "blog.notFoundSubtitle") ||
-                  "El artículo no existe o fue movido."}
+                El artículo no existe o fue movido.
               </p>
             </div>
           </article>

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useI18n } from "@/i18n/I18nProvider";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -10,29 +9,28 @@ import { AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
-    question: "Can I change plans anytime?",
+    question: "¿Puedo cambiar de plan en cualquier momento?",
     answer:
-      "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately with no downtime.",
+      "Sí, puedes actualizar o degradar tu plan en cualquier momento. Los cambios tienen efecto inmediatamente sin tiempo de inactividad.",
   },
   {
-    question: "Is there a free trial?",
+    question: "¿Hay una prueba gratuita?",
     answer:
-      "We offer a 14-day free trial on all plans. No credit card required to start. Full access to all features.",
+      "Ofrecemos una prueba gratuita de 14 días en todos los planes. No se requiere tarjeta de crédito para comenzar. Acceso completo a todas las funciones.",
   },
   {
-    question: "What payment methods do you accept?",
+    question: "¿Qué métodos de pago aceptan?",
     answer:
-      "We accept all major credit cards, PayPal, and bank transfers for annual plans. Secure payment processing.",
+      "Aceptamos todas las tarjetas de crédito principales, PayPal y transferencias bancarias para planes anuales. Procesamiento de pagos seguro.",
   },
   {
-    question: "Do you offer refunds?",
+    question: "¿Ofrecen reembolsos?",
     answer:
-      "We offer a 30-day money-back guarantee. If you're not satisfied, we'll refund your payment no questions asked.",
+      "Ofrecemos una garantía de devolución de dinero de 30 días. Si no estás satisfecho, te devolveremos tu pago sin preguntas.",
   },
 ];
 
 export function FaqSection() {
-  const { t } = useI18n();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
@@ -49,9 +47,9 @@ export function FaqSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            {t("pricing.faq.titlePrefix")}{" "}
+            Preguntas{" "}
             <span className="text-[#07D9D9]">
-              {t("pricing.faq.titleHighlight")}
+              Frecuentes
             </span>
           </motion.h2>
         </motion.div>

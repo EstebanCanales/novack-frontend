@@ -63,15 +63,15 @@ export default async function BlogPage({
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
-      <main className="sm:mt-24.5 md:mt-24.5 mt-22">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="w-full py-16 md:py-24">
           <div className="mx-auto px-2 sm:px-4">
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-6xl font-bold text-white">
-                Novack Journal
+                El Diario Novack
               </h1>
               <p className="text-white/70 mt-4 text-lg">
-                Ideas, insights and updates from the Novack team.
+                Ideas, perspectivas y actualizaciones del equipo Novack.
               </p>
             </div>
 
@@ -93,13 +93,7 @@ export default async function BlogPage({
                     }`}
                   >
                     {cat === "All"
-                      ? "All"
-                      : cat === "Desarrollo"
-                      ? "Development"
-                      : cat === "Proceso"
-                      ? "Process"
-                      : cat === "Mejoras"
-                      ? "Improvements"
+                      ? "Todos"
                       : cat}
                   </Link>
                 );
@@ -135,7 +129,7 @@ export default async function BlogPage({
                               {featured.excerpt}
                             </p>
                             <div className="flex items-center gap-2 text-xs md:text-sm text-white/60 mt-auto">
-                              <span>By {featured.author}</span>
+                              <span>Por {featured.author}</span>
                               <span>&bull;</span>
                               <span>{featured.date}</span>
                             </div>
@@ -168,7 +162,7 @@ export default async function BlogPage({
                               {post.excerpt}
                             </p>
                             <div className="flex items-center gap-2 text-xs text-white/60 mt-auto">
-                              <span>By {post.author}</span>
+                              <span>Por {post.author}</span>
                               <span>&bull;</span>
                               <span>{post.date}</span>
                             </div>
@@ -182,7 +176,7 @@ export default async function BlogPage({
             ) : (
               <div className="text-center py-16">
                 <p className="text-white/70 text-lg">
-                  No posts found in this category.
+                  No se encontraron publicaciones en esta categoría.
                 </p>
               </div>
             )}

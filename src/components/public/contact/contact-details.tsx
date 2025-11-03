@@ -7,28 +7,28 @@ const ContactDetails = () => {
       icon: <Mail className="h-6 w-6 text-[#07D9D9]" />,
       title: "Email",
       value: "hello@novack.com",
-      description: "For general inquiries and support.",
+      description: "Para consultas generales y soporte.",
     },
     {
       icon: <Phone className="h-6 w-6 text-[#07D9D9]" />,
-      title: "Phone",
+      title: "Teléfono",
       value: "+1 (555) 123-4567",
-      description: "Mon-Fri, 9am - 5pm EST.",
+      description: "Lun-Vie, 9am - 5pm EST.",
     },
     {
       icon: <MapPin className="h-6 w-6 text-[#07D9D9]" />,
-      title: "Office",
+      title: "Oficina",
       value: "123 Innovation Drive, Tech City, 12345",
-      description: "Visits by appointment only.",
+      description: "Visitas solo con cita previa.",
     },
   ];
 
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-3xl font-bold text-white">Get in touch</h2>
+        <h2 className="text-3xl font-bold text-white">Ponte en contacto</h2>
         <p className="text-white/70 mt-2">
-          We'd love to hear from you. Here's how you can reach us.
+          Nos encantaría saber de ti. Así es como puedes contactarnos.
         </p>
       </div>
       <div className="space-y-6">

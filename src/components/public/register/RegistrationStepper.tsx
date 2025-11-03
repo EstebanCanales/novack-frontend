@@ -78,13 +78,7 @@ export default function RegistrationStepper() {
       const { data } = await api.post("/auth/login", { email, password });
 
       if (data.access_token && data.employee) {
-        login(
-          {
-            access_token: data.access_token,
-            refresh_token: data.refresh_token,
-          },
-          data.employee
-        );
+        login(data.access_token, data.refresh_token || "", data.employee);
 
         setIsRedirecting(true);
         // Pequeña animación antes de redirigir
@@ -157,7 +151,7 @@ export default function RegistrationStepper() {
         return;
       }
       if (!registrationData.employee.supplier_id) {
-        throw new Error("Supplier ID es requerido");
+        throw new Error("El ID del proveedor es requerido");
       }
       await createEmployee({
         ...registrationData.employee,
@@ -198,7 +192,7 @@ export default function RegistrationStepper() {
 
       // 2) No creador: requiere supplier_id existente
       if (!registrationData.employee.supplier_id) {
-        throw new Error("Supplier ID es requerido");
+        throw new Error("El ID del proveedor es requerido");
       }
 
       const employeePayload: EmployeeData = {

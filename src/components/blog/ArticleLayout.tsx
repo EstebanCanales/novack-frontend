@@ -36,12 +36,12 @@ export function ArticleLayout({
   const [toc, setToc] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const url = typeof window !== "undefined" ? window.location.href : "";
-  const [shareLabel, setShareLabel] = useState<string>("Share");
+  const [shareLabel, setShareLabel] = useState<string>("Compartir");
 
   const flashLabel = (text: string) => {
     setShareLabel(text);
     if (typeof window !== "undefined") {
-      window.setTimeout(() => setShareLabel("Share"), 1500);
+      window.setTimeout(() => setShareLabel("Compartir"), 1500);
     }
   };
 
@@ -78,7 +78,7 @@ export function ArticleLayout({
     if (typeof navigator !== "undefined" && (navigator as any).share) {
       try {
         await (navigator as any).share({ title, text: title, url });
-        flashLabel("Shared!");
+        flashLabel("¡Compartido!");
       } catch {}
     }
   };
@@ -86,7 +86,7 @@ export function ArticleLayout({
   const onCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      flashLabel("Link copied");
+      flashLabel("Enlace copiado");
     } catch {}
   };
 
@@ -100,21 +100,21 @@ export function ArticleLayout({
       url
     )}&text=${encodeURIComponent(title)}`;
     openWindow(shareUrl);
-    flashLabel("Opened X");
+    flashLabel("X abierto");
   };
   const onShareLinkedIn = () => {
     const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
       url
     )}`;
     openWindow(shareUrl);
-    flashLabel("Opened LinkedIn");
+    flashLabel("LinkedIn abierto");
   };
   const onShareFacebook = () => {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       url
     )}`;
     openWindow(shareUrl);
-    flashLabel("Opened Facebook");
+    flashLabel("Facebook abierto");
   };
 
   return (
@@ -135,7 +135,7 @@ export function ArticleLayout({
               className="inline-flex items-center gap-2 text-xs md:text-sm text-white/70 hover:text-white border border-white/15 hover:border-white/30 rounded-lg px-3 py-1.5 bg-white/5 backdrop-blur-sm"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>Back</span>
+              <span>Atrás</span>
             </Link>
             <div className="flex items-center gap-2">
               <span>{author}</span>
@@ -147,11 +147,7 @@ export function ArticleLayout({
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
               <span>
-                {minutes} min{" "}
-                {typeof window !== "undefined" &&
-                navigator.language.startsWith("es")
-                  ? "de lectura"
-                  : "read"}
+                {minutes} min de lectura
               </span>
             </div>
             <DropdownMenu>
@@ -169,31 +165,31 @@ export function ArticleLayout({
                   onClick={onShareNative}
                   className="focus:bg-white/10"
                 >
-                  Share...
+                  Compartir...
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={onCopyLink}
                   className="focus:bg-white/10"
                 >
-                  Copy link
+                  Copiar enlace
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={onShareTwitter}
                   className="focus:bg-white/10"
                 >
-                  Share on X (Twitter)
+                  Compartir en X (Twitter)
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={onShareLinkedIn}
                   className="focus:bg-white/10"
                 >
-                  Share on LinkedIn
+                  Compartir en LinkedIn
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={onShareFacebook}
                   className="focus:bg-white/10"
                 >
-                  Share on Facebook
+                  Compartir en Facebook
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -204,7 +200,7 @@ export function ArticleLayout({
           <aside className="hidden lg:block lg:col-span-3">
             <div className="sticky top-24 border border-white/10 rounded-xl bg-white/5 backdrop-blur-sm p-3">
               <div className="text-white/80 text-xs md:text-sm font-semibold mb-2">
-                On this page
+                En esta página
               </div>
               <nav className="space-y-2">
                 {toc.map((item) => (

@@ -7,21 +7,21 @@ const HowItWorksSection = () => {
   const steps = [
     {
       icon: <Settings className="h-8 w-8 text-[#07D9D9]" />,
-      title: "Configure Your Space",
+      title: "Configura tu Espacio",
       description:
-        "Customize the platform with your branding, set up your core security settings, and define the services you offer in minutes.",
+        "Personaliza la plataforma con tu marca, configura tus ajustes de seguridad principales y define los servicios que ofreces en minutos.",
     },
     {
       icon: <UserPlus className="h-8 w-8 text-[#07D9D9]" />,
-      title: "Invite & Onboard",
+      title: "Invita y Onboard",
       description:
-        "Add your team members with specific roles and permissions. Seamlessly import your existing clients or let them register through your portal.",
+        "Añade a los miembros de tu equipo con roles y permisos específicos. Importa sin problemas tus clientes existentes o déjalos registrarse a través de tu portal.",
     },
     {
       icon: <Zap className="h-8 w-8 text-[#07D9D9]" />,
-      title: "Automate & Grow",
+      title: "Automatiza y Crece",
       description:
-        "Activate automated reminders, invoicing, and follow-ups. Let the platform handle the repetitive tasks so you can focus on growth.",
+        "Activa recordatorios, facturación y seguimientos automatizados. Deja que la plataforma maneje las tareas repetitivas para que puedas enfocarte en el crecimiento.",
     },
   ];
 
@@ -39,13 +39,13 @@ const HowItWorksSection = () => {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
           >
-            Get started in minutes
+            Comienza en minutos
           </motion.h2>
           <motion.p
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed"
           >
-            Our intuitive platform makes it easy to get up and running.
+            Nuestra plataforma intuitiva facilita el inicio y la ejecución.
           </motion.p>
         </motion.div>
 

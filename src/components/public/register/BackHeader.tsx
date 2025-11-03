@@ -28,19 +28,19 @@ export default function BackHeader() {
           </div>
           <button
             onClick={() => router.back()}
-            aria-label="Back"
+            aria-label="Atrás"
             className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 text-cyan-300 hover:bg-cyan-500/10 px-3 py-1.5 transition-colors text-sm"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="text-sm">Back</span>
+            <span className="text-sm">Atrás</span>
           </button>
         </div>
         <div className="mt-4 pt-4 border-t border-white/10 text-left">
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-            Create your account
+            Crea tu cuenta
           </h1>
           <p className="text-white/70 text-sm sm:text-base">
-            Follow the steps to complete your registration
+            Sigue los pasos para completar tu registro
           </p>
         </div>
       </div>

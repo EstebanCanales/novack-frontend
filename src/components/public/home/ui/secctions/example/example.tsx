@@ -3,10 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { MacbookScroll } from "@/components/ui/macbook";
 import { motion } from "framer-motion"; // Ensure correct import
-import { useI18n } from "@/i18n/I18nProvider";
 
 export default function Example() {
-  const { t } = useI18n();
   return (
     <section className="w-full pt-2 md:pt-4">
       {" "}
@@ -17,15 +15,15 @@ export default function Example() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4">
           {/* Left Card - 60% on desktop, full width on mobile */}
           <motion.div
-            initial={{ x: -50, opacity: 0.5 }}
+            initial={{ x: -50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-3 bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden"
           >
             <div className="hidden lg:block">
               <MacbookScroll
-                title={<span>{t("home.example.titleHtml")}</span>}
+                title={<span>Protege tus operaciones. Simplifica tu flujo de trabajo.</span>}
                 src={`/linear.webp`} // Assuming this path is valid
                 showGradient={false}
               />
@@ -36,10 +34,10 @@ export default function Example() {
               <div className="backdrop-blur-sm rounded-xl p-6 border border-white/10">
                 {" "}
                 {/* Added border */}
-                {/* Weekly Activity Graph */}
+                  {/* Weekly Activity Graph */}
                 <div className="mb-6">
                   <h3 className="text-xl font-bold text-white mb-4">
-                    {t("home.example.weeklyActivity")}
+                    Actividad semanal
                   </h3>
 
                   {/* Graph Container - Simplified for clarity, keeping original SVG structure */}
@@ -102,15 +100,15 @@ export default function Example() {
 
                     {/* X-axis Labels */}
                     <div className="flex justify-between text-xs text-white/60 mt-2">
-                      <span>{t("home.example.dow.mon")}</span>
-                      <span>{t("home.example.dow.tue")}</span>
-                      <span>{t("home.example.dow.wed")}</span>
+                      <span>Lun</span>
+                      <span>Mar</span>
+                      <span>Mié</span>
                       <span className="text-[#07D9D9] font-semibold">
-                        {t("home.example.dow.thu")}
+                        Jue
                       </span>
-                      <span>{t("home.example.dow.fri")}</span>
-                      <span>{t("home.example.dow.sat")}</span>
-                      <span>{t("home.example.dow.sun")}</span>
+                      <span>Vie</span>
+                      <span>Sáb</span>
+                      <span>Dom</span>
                     </div>
                   </div>
                 </div>
@@ -118,10 +116,10 @@ export default function Example() {
                 <div className="flex items-start space-x-4">
                   <div>
                     <h4 className="text-lg font-bold text-white mb-2">
-                      {t("home.example.monitorTitle")}
+                      Monitorea a tus usuarios
                     </h4>
                     <p className="text-white/70 text-sm leading-relaxed">
-                      {t("home.example.monitorDescription")}
+                      Sigue su recorrido, mejora su productividad y garantiza cada acción en tiempo real.
                     </p>
                   </div>
                 </div>
@@ -131,25 +129,45 @@ export default function Example() {
 
           {/* Right Card - 40% on desktop, full width on mobile */}
           <motion.div
-            initial={{ x: 50, opacity: 0.5 }}
+            initial={{ x: 50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeInOut", delay: 0.1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-4 sm:p-6 md:p-8 flex flex-col justify-center items-center text-center"
           >
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#07D9D9] to-[#0596A6] flex items-center justify-center mb-6">
+            <motion.div 
+              initial={{ scale: 0, rotate: -180 }}
+              whileInView={{ scale: 1, rotate: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="w-24 h-24 rounded-full bg-gradient-to-br from-[#07D9D9] to-[#0596A6] flex items-center justify-center mb-6"
+            >
               <span className="text-white text-4xl font-bold">🔒</span>{" "}
               {/* Placeholder icon */}
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-3">
-              {t("home.example.securityTitle")}
-            </h3>
-            <p className="text-white/70 leading-relaxed">
-              {t("home.example.securityDescription")}
-            </p>
+            </motion.div>
+            <motion.h3 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="text-2xl font-bold text-white mb-3"
+            >
+              Seguridad de nivel empresarial
+            </motion.h3>
+            <motion.p 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="text-white/70 leading-relaxed"
+            >
+              Construida con los más altos estándares para proteger tus datos y la privacidad de tus clientes.
+            </motion.p>
           </motion.div>
         </div>
       </div>
     </section>
   );
 }
+
+

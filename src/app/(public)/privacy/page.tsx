@@ -5,7 +5,7 @@ const PrivacyPolicyPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
-      <main className="sm:mt-24.5 md:mt-24.5 mt-22">
+      <main className="pt-20 sm:pt-24 md:pt-28">
         <div className="w-full py-16 md:py-24">
           <div className="mx-auto px-4 sm:px-6 max-w-7xl">
             <div className="text-center mb-12">

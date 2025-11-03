@@ -111,7 +111,7 @@ export function FeatureCard({ feature, index }: FeatureCardProps) {
         {feature.certifications && (
           <div className="border-t border-white/10 pt-4">
             <div className="text-xs text-white/60 mb-2 font-medium">
-              Certifications & Compliance:
+              Certificaciones y Cumplimiento:
             </div>
             <div className="flex flex-wrap gap-2">
               {feature.certifications.map((cert, idx) => (

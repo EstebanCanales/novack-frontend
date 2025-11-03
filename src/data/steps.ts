@@ -3,26 +3,26 @@ import type { Step } from "@/types/registration"
 export const registrationSteps: Step[] = [
   {
     id: 1,
-    title: "Basic Information",
-    description: "Employee personal details",
+    title: "Información Básica",
+    description: "Datos personales del empleado",
     isCompleted: false,
   },
   {
     id: 2,
-    title: "Supplier Information",
-    description: "Supplier details or existing ID",
+    title: "Información del Proveedor",
+    description: "Datos del proveedor o ID existente",
     isCompleted: false,
   },
   {
     id: 3,
-    title: "SMS Verification",
-    description: "Confirm your phone number",
+    title: "Verificación SMS",
+    description: "Confirma tu número de teléfono",
     isCompleted: false,
   },
   {
     id: 4,
-    title: "Confirmation",
-    description: "Registration completed successfully",
+    title: "Confirmación",
+    description: "Registro completado exitosamente",
     isCompleted: false,
   },
 ]

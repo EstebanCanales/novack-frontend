@@ -18,10 +18,10 @@ export function StepIndicator({
       <div className="h-full flex flex-col">
         <div className="mb-3">
           <h2 className="text-base sm:text-lg font-semibold text-white">
-            Progress
+            Progreso
           </h2>
           <p className="text-xs sm:text-sm text-white/70">
-            Step {currentStep + 1} of {steps.length}
+            Paso {currentStep + 1} de {steps.length}
           </p>
         </div>
         <nav className="flex-1" aria-label="Steps">
@@ -75,10 +75,10 @@ export function StepIndicator({
     <div className="w-full">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-base sm:text-lg font-semibold text-white">
-          Progress
+          Progreso
         </h2>
         <p className="text-xs sm:text-sm text-white/70">
-          Step {currentStep + 1} of {steps.length}
+          Paso {currentStep + 1} de {steps.length}
         </p>
       </div>
 

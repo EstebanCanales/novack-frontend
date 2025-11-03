@@ -7,24 +7,24 @@ import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 const faqs = [
   {
-    question: "Is my data secure with Novack?",
+    question: "¿Mis datos están seguros con Novack?",
     answer:
-      "Absolutely. Security is our top priority. We use end-to-end encryption for all data, secure cloud infrastructure, and provide tools for role-based access control to ensure your data is always protected.",
+      "Absolutamente. La seguridad es nuestra máxima prioridad. Usamos cifrado de extremo a extremo para todos los datos, infraestructura en la nube segura y proporcionamos herramientas para control de acceso basado en roles para asegurar que tus datos siempre estén protegidos.",
   },
   {
-    question: "Can I integrate Novack with other tools I use?",
+    question: "¿Puedo integrar Novack con otras herramientas que uso?",
     answer:
-      "Yes. Novack is designed to fit into your existing workflow. We offer integrations with popular payment gateways, accounting software, and other business tools. We are also constantly expanding our integration library.",
+      "Sí. Novack está diseñado para encajar en tu flujo de trabajo existente. Ofrecemos integraciones con pasarelas de pago populares, software de contabilidad y otras herramientas comerciales. También estamos expandiendo constantemente nuestra biblioteca de integraciones.",
   },
   {
-    question: "What happens if I need to change my plan?",
+    question: "¿Qué pasa si necesito cambiar mi plan?",
     answer:
-      "You can upgrade or downgrade your plan at any time directly from your account settings. The changes are prorated and take effect immediately, with no downtime.",
+      "Puedes actualizar o degradar tu plan en cualquier momento directamente desde la configuración de tu cuenta. Los cambios son prorrateados y tienen efecto inmediatamente, sin tiempo de inactividad.",
   },
   {
-    question: "Do you offer support if I run into issues?",
+    question: "¿Ofrecen soporte si tengo problemas?",
     answer:
-      "Of course. We offer 24/7 email support on all plans. Our higher-tier plans also include priority support and a dedicated account manager to help you get the most out of Novack.",
+      "Por supuesto. Ofrecemos soporte por email 24/7 en todos los planes. Nuestros planes de nivel superior también incluyen soporte prioritario y un gerente de cuenta dedicado para ayudarte a aprovechar al máximo Novack.",
   },
 ];
 
@@ -45,7 +45,7 @@ const FaqSection = () => {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
           >
-            Frequently Asked Questions
+            Preguntas Frecuentes
           </motion.h2>
         </motion.div>
 

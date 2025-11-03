@@ -68,9 +68,7 @@ export default function Footer() {
             </div>
 
             <p className="text-white/80 mb-6 leading-relaxed max-w-md">
-              Transform your business operations with our powerful management
-              platform. Join thousands of companies that trust Novack for their
-              success.
+              Transforma tus operaciones con nuestra plataforma de gestión. Únete a miles de empresas que confían en Novack.
             </p>
 
             {/* Social Links */}
@@ -123,16 +121,16 @@ export default function Footer() {
             className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 relative p-6 md:p-8"
           >
             <h3 className="text-lg font-semibold mb-6 text-white">
-              Stay Updated
+              Mantente al día
             </h3>
             <p className="text-white/70 mb-4 text-sm">
-              Get the latest updates and insights delivered to your inbox.
+              Recibe novedades y perspectivas directamente en tu correo.
             </p>
             <form ref={formRef} className="flex gap-2" action={subscribe}>
               <input
                 name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Ingresa tu correo"
                 required
                 className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-[#07D9D9] transition-colors"
               />
@@ -185,7 +183,7 @@ export default function Footer() {
             transition={{ duration: 0.5, ease: "easeInOut", delay: 0.2 }}
             className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 relative p-6 md:p-8"
           >
-            <h3 className="text-lg font-semibold mb-6 text-white">Company</h3>
+            <h3 className="text-lg font-semibold mb-6 text-white">Compañía</h3>
             <ul className="space-y-4">
               <li>
                 <Link
@@ -193,7 +191,7 @@ export default function Footer() {
                   className="text-white/70 hover:text-[#07D9D9] transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#07D9D9] rounded-full group-hover:scale-150 transition-transform"></span>
-                  Features
+                  Características
                 </Link>
               </li>
               <li>
@@ -211,7 +209,7 @@ export default function Footer() {
                   className="text-white/70 hover:text-[#07D9D9] transition-colors flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#07D9D9] rounded-full group-hover:scale-150 transition-transform"></span>
-                  Contact
+                  Contacto
                 </Link>
               </li>
             </ul>
@@ -226,7 +224,7 @@ export default function Footer() {
           >
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="text-white/60 text-sm">
-                © 2024 Novack. All rights reserved.
+                © 2024 Novack. Todos los derechos reservados.
               </div>
 
               <div className="flex gap-6 text-sm">
@@ -234,19 +232,19 @@ export default function Footer() {
                   href="/privacy"
                   className="text-white/60 hover:text-[#07D9D9] transition-colors"
                 >
-                  Privacy Policy
+                  Política de Privacidad
                 </Link>
                 <Link
                   href="/terms"
                   className="text-white/60 hover:text-[#07D9D9] transition-colors"
                 >
-                  Terms of Service
+                  Términos de Servicio
                 </Link>
                 <Link
                   href="/cookies"
                   className="text-white/60 hover:text-[#07D9D9] transition-colors"
                 >
-                  Cookie Policy
+                  Política de Cookies
                 </Link>
               </div>
             </div>

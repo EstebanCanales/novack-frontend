@@ -34,10 +34,10 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
     <div className="h-full flex flex-col">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white mb-2">
-          Employee Basic Information
+          Información Básica del Empleado
         </h2>
         <p className="text-white/70">
-          Enter your personal details to get started
+          Ingresa tus datos personales para comenzar
         </p>
       </div>
 
@@ -46,20 +46,20 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="first_name" className="text-white/80">
-                First name *
+                Nombre *
               </Label>
               <Input
                 id="first_name"
                 {...register("first_name", {
-                  required: "First name is required",
-                  minLength: { value: 2, message: "Minimum 2 characters" },
+                  required: "El nombre es requerido",
+                  minLength: { value: 2, message: "Mínimo 2 caracteres" },
                   pattern: {
                     value: /^[A-Za-z' -]+$/,
-                    message: "Only letters and spaces",
+                    message: "Solo letras y espacios",
                   },
                   setValueAs: (v) => (typeof v === "string" ? v.trim() : v),
                 })}
-                placeholder="Enter your first name"
+                placeholder="Ingresa tu nombre"
                 className="rounded-xl bg-white/10 border-white/20 text-white placeholder-white/50"
               />
               {errors.first_name && (
@@ -71,20 +71,20 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
 
             <div className="space-y-2">
               <Label htmlFor="last_name" className="text-white/80">
-                Last name *
+                Apellido *
               </Label>
               <Input
                 id="last_name"
                 {...register("last_name", {
-                  required: "Last name is required",
-                  minLength: { value: 2, message: "Minimum 2 characters" },
+                  required: "El apellido es requerido",
+                  minLength: { value: 2, message: "Mínimo 2 caracteres" },
                   pattern: {
                     value: /^[A-Za-z' -]+$/,
-                    message: "Only letters and spaces",
+                    message: "Solo letras y espacios",
                   },
                   setValueAs: (v) => (typeof v === "string" ? v.trim() : v),
                 })}
-                placeholder="Enter your last name"
+                placeholder="Ingresa tu apellido"
                 className="rounded-xl bg-white/10 border-white/20 text-white placeholder-white/50"
               />
               {errors.last_name && (
@@ -103,10 +103,10 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
               id="email"
               type="email"
               {...register("email", {
-                required: "Email is required",
+                required: "El email es requerido",
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email",
+                  message: "Email inválido",
                 },
                 setValueAs: (v) => (typeof v === "string" ? v.trim() : v),
               })}
@@ -120,20 +120,20 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
 
           <div className="space-y-2">
             <Label htmlFor="password" className="text-white/80">
-              Password *
+              Contraseña *
             </Label>
             <Input
               id="password"
               type="password"
               {...register("password", {
-                required: "Password is required",
-                minLength: { value: 6, message: "Minimum 6 characters" },
+                required: "La contraseña es requerida",
+                minLength: { value: 6, message: "Mínimo 6 caracteres" },
                 pattern: {
                   value: /^(?=.*[A-Za-z])(?=.*\d).{6,}$/,
-                  message: "Use letters and numbers",
+                  message: "Usa letras y números",
                 },
               })}
-              placeholder="Enter your password"
+              placeholder="Ingresa tu contraseña"
               className="rounded-xl bg-white/10 border-white/20 text-white placeholder-white/50"
             />
             {errors.password && (
@@ -143,23 +143,23 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
 
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-white/80">
-              Phone *
+              Teléfono *
             </Label>
             <PhoneInput
               id="phone"
               value={watch("phone") || ""}
               onChange={(val) => setValue("phone", val)}
-              placeholder="e.g. +506 8611 2403"
+              placeholder="ej. +506 8611 2403"
             />
             <input
               type="hidden"
               {...register("phone" as unknown as never, {
-                required: "Phone is required",
+                required: "El teléfono es requerido",
                 validate: (value: string) => {
                   const digits = (value || "").replace(/\D/g, "");
                   return (
                     (digits.length >= 8 && digits.length <= 15) ||
-                    "Enter a valid international phone number"
+                    "Ingresa un número de teléfono internacional válido"
                   );
                 },
               })}
@@ -173,28 +173,28 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="position" className="text-white/80">
-                Job title/Position
+                Título/Puesto
               </Label>
               <Input
                 id="position"
                 {...register("position", {
                   setValueAs: (v) => (typeof v === "string" ? v.trim() : v),
                 })}
-                placeholder="e.g. Developer"
+                placeholder="ej. Desarrollador"
                 className="rounded-xl bg-white/10 border-white/20 text-white placeholder-white/50"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="department" className="text-white/80">
-                Department
+                Departamento
               </Label>
               <Input
                 id="department"
                 {...register("department", {
                   setValueAs: (v) => (typeof v === "string" ? v.trim() : v),
                 })}
-                placeholder="e.g. Engineering"
+                placeholder="ej. Ingeniería"
                 className="rounded-xl bg-white/10 border-white/20 text-white placeholder-white/50"
               />
             </div>
@@ -210,7 +210,7 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
               htmlFor="is_creator"
               className="text-sm font-medium text-cyan-200"
             >
-              I am the supplier creator
+              Soy el creador del proveedor
             </Label>
           </div>
         </div>
@@ -221,7 +221,7 @@ export function BasicInfoStep({ data, onNext }: BasicInfoStepProps) {
               type="submit"
               className="w-full rounded-xl h-12 sm:h-12 text-base font-semibold shadow-[0_10px_30px_rgba(7,217,217,0.25)]"
             >
-              Continue
+              Continuar
             </Button>
           </div>
         </div>

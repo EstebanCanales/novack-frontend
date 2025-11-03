@@ -19,7 +19,7 @@ const HeroSection = () => {
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
-              Core Features
+              Características Principales
             </span>
           </motion.div>
 
@@ -27,14 +27,14 @@ const HeroSection = () => {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
           >
-            Everything you need, nothing you don't
+            Todo lo que necesitas, nada que no necesites
           </motion.h1>
           <motion.p
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed"
           >
-            Discover how Novack's powerful, secure, and intuitive features can
-            transform your business operations from the ground up.
+            Descubre cómo las funciones poderosas, seguras e intuitivas de Novack pueden
+            transformar las operaciones de tu negocio desde cero.
           </motion.p>
         </motion.div>
       </div>

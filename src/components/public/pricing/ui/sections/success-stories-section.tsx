@@ -1,12 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useI18n } from "@/i18n/I18nProvider";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { Star } from "lucide-react"; // Assuming Star icon is available from lucide-react
 
 export function SuccessStoriesSection() {
-  const { t } = useI18n();
   return (
     <section className="w-full pt-2 md:pt-4 pb-2 md:pb-4">
       <div className="mx-auto px-2 sm:px-4">
@@ -23,7 +21,7 @@ export function SuccessStoriesSection() {
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
-              {t("pricing.success.badge")}
+              Historias de éxito de nuestros clientes
             </span>
           </motion.div>
 
@@ -31,9 +29,9 @@ export function SuccessStoriesSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            {t("pricing.success.titlePrefix")}{" "}
+            Historias de{" "}
             <span className="text-[#07D9D9]">
-              {t("pricing.success.titleHighlight")}
+              Éxito
             </span>
           </motion.h2>
 
@@ -41,7 +39,7 @@ export function SuccessStoriesSection() {
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8"
           >
-            {t("pricing.success.subtitle")}
+            Descubre cómo empresas como la tuya transforman sus operaciones con Novack.
           </motion.p>
 
           {/* ROI Calculator Preview */}
@@ -51,10 +49,10 @@ export function SuccessStoriesSection() {
           >
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">
-                {t("pricing.success.roiTitle")}
+                Calcula tu ROI
               </h3>
               <p className="text-white/80 text-lg leading-relaxed mb-6">
-                {t("pricing.success.roiSubtitle")}
+                Descubre cuánto podrías ahorrar con Novack
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
@@ -62,7 +60,7 @@ export function SuccessStoriesSection() {
                     $2,400
                   </div>
                   <div className="text-white/60 text-sm">
-                    {t("pricing.success.roi.monthlySavings")}
+                    Ahorro mensual
                   </div>
                 </div>
                 <div className="text-center">
@@ -70,7 +68,7 @@ export function SuccessStoriesSection() {
                     15 hrs
                   </div>
                   <div className="text-white/60 text-sm">
-                    {t("pricing.success.roi.timeSaved")}
+                    Tiempo ahorrado/semana
                   </div>
                 </div>
                 <div className="text-center">
@@ -78,7 +76,7 @@ export function SuccessStoriesSection() {
                     300%
                   </div>
                   <div className="text-white/60 text-sm">
-                    {t("pricing.success.roi.sixMonths")}
+                    ROI en 6 meses
                   </div>
                 </div>
               </div>
@@ -106,30 +104,30 @@ export function SuccessStoriesSection() {
                   Medical Clinic Pro
                 </h3>
                 <p className="text-white/80 text-base leading-relaxed mb-6">
-                  "Novack helped us reduce no-shows by 85% and increased our
-                  daily patient capacity by 40%. The automated reminders are a
-                  game-changer."
+                  "Novack nos ayudó a reducir las ausencias en un 85% y aumentó nuestra
+                  capacidad diaria de pacientes en un 40%. Los recordatorios automatizados son
+                  un cambio total."
                 </p>
                 <div className="mb-6 p-4 bg-white/5 rounded-xl">
                   <div className="text-sm text-white/60 mb-3 font-medium">
-                    Results achieved:
+                    Resultados logrados:
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-white/80">No-shows:</span>
+                      <span className="text-white/80">Ausencias:</span>
                       <span className="text-[#07D9D9] font-bold">-85%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/80">Capacity:</span>
+                      <span className="text-white/80">Capacidad:</span>
                       <span className="text-[#07D9D9] font-bold">+40%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/80">Revenue:</span>
+                      <span className="text-white/80">Ingresos:</span>
                       <span className="text-[#07D9D9] font-bold">+60%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/80">Time saved:</span>
-                      <span className="text-[#07D9D9] font-bold">20hrs/wk</span>
+                      <span className="text-white/80">Tiempo ahorrado:</span>
+                      <span className="text-[#07D9D9] font-bold">20hrs/sem</span>
                     </div>
                   </div>
                 </div>
@@ -160,30 +158,30 @@ export function SuccessStoriesSection() {
                   TechStart Solutions
                 </h3>
                 <p className="text-white/80 text-base leading-relaxed mb-6">
-                  "We've streamlined our entire client onboarding process. What
-                  used to take days now happens in hours. Novack is essential to
-                  our growth."
+                  "Hemos optimizado todo nuestro proceso de incorporación de clientes. Lo que
+                  solía tomar días ahora sucede en horas. Novack es esencial para
+                  nuestro crecimiento."
                 </p>
                 <div className="mb-6 p-4 bg-white/5 rounded-xl">
                   <div className="text-sm text-white/60 mb-3 font-medium">
-                    Results achieved:
+                    Resultados logrados:
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-white/80">Onboarding:</span>
+                      <span className="text-white/80">Incorporación:</span>
                       <span className="text-[#07D9D9] font-bold">-80%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/80">Efficiency:</span>
+                      <span className="text-white/80">Eficiencia:</span>
                       <span className="text-[#07D9D9] font-bold">+300%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-white/80">Growth:</span>
+                      <span className="text-white/80">Crecimiento:</span>
                       <span className="text-[#07D9D9] font-bold">+150%</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/80">
-                        Client satisfaction:
+                        Satisfacción del cliente:
                       </span>
                       <span className="text-[#07D9D9] font-bold">98%</span>
                     </div>

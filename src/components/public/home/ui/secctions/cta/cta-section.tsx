@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useI18n } from "@/i18n/I18nProvider";
 
 export default function CtaSection() {
-  const { t } = useI18n();
   return (
     <section className="w-full pt-2 md:pt-4 pb-2 md:pb-4">
       {" "}
@@ -16,34 +14,52 @@ export default function CtaSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
           {/* Main CTA Card - Left side, larger */}
           <motion.div
-            initial={{ x: -50, opacity: 0.5 }}
+            initial={{ x: -50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-6 md:p-8 lg:p-12"
           >
             <div className="pt-8 md:pt-12 lg:pt-16 pb-6 md:pb-8 lg:pb-12">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight font-bold mb-6 text-white">
-                {t("home.cta.titlePrefix")}
+              <motion.h2 
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="text-3xl md:text-4xl lg:text-5xl leading-tight font-bold mb-6 text-white"
+              >
+                ¿Listo para transformar tu
                 <span className="text-[#07D9D9]">
                   {" "}
-                  {t("home.cta.titleHighlight")}
+                  negocio?
                 </span>
-              </h2>
+              </motion.h2>
 
-              <p className="text-base md:text-lg lg:text-xl text-white/80 mb-8 leading-relaxed">
-                {t("home.cta.description")}
-              </p>
+              <motion.p 
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="text-base md:text-lg lg:text-xl text-white/80 mb-8 leading-relaxed"
+              >
+                Únete a miles de empresas que ya optimizan sus operaciones con nuestra plataforma.
+              </motion.p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <motion.div 
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col sm:flex-row gap-4"
+              >
                 <div className="relative inline-flex items-center justify-center gap-4 group w-full sm:w-auto">
                   <div className="absolute inset-0 duration-1000 opacity-60 transition-all bg-gradient-to-r from-[#07D9D9] via-[#0596A6] to-[#07D9D9] rounded-xl blur-lg filter group-hover:opacity-100 group-hover:duration-200"></div>
                   <Link
-                    href="/"
+                    href="/register"
                     className="group relative inline-flex items-center justify-center text-sm sm:text-base rounded-xl bg-[#07D9D9] px-6 md:px-8 py-3 font-semibold text-[#010440] transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:shadow-[#07D9D9]/30 w-full sm:w-auto"
                   >
-                    {t("home.cta.primaryCta")}
+                    Comenzar gratis
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 10 10"
@@ -65,14 +81,14 @@ export default function CtaSection() {
                 </div>
 
                 <Link
-                  href="/"
+                  href="/contact"
                   className="h-12 border-2 border-[#07D9D9] flex justify-center items-center text-[#07D9D9] rounded-xl p-2 px-6 rounded-normal text-sm sm:text-base w-full sm:w-auto
                   transform transition-all duration-300 hover:bg-[#07D9D9] hover:text-[#010440]
                    hover:shadow-lg active:scale-95 hover:-translate-y-0.5"
                 >
-                  {t("home.cta.secondaryCta")}
+                  Agendar demo
                 </Link>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -80,10 +96,10 @@ export default function CtaSection() {
           <div className="flex flex-col gap-3 sm:gap-4">
             {/* 10K+ Stats Card */}
             <motion.div
-              initial={{ y: 50, opacity: 0.5 }}
+              initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeInOut", delay: 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
               className="bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-6 md:p-8"
             >
               <div className="text-center text-white">
@@ -91,20 +107,20 @@ export default function CtaSection() {
                   10K+
                 </div>
                 <div className="text-sm md:text-base text-white/80">
-                  {t("home.stats.activeUsers")}
+                  Usuarios activos
                 </div>
                 <div className="mt-4 text-xs text-white/60">
-                  {t("home.stats.growingDaily")}
+                  Creciendo cada día
                 </div>
               </div>
             </motion.div>
 
             {/* 99.9% Stats Card */}
             <motion.div
-              initial={{ y: 50, opacity: 0.5 }}
+              initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeInOut", delay: 0.2 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
               className="bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-6 md:p-8"
             >
               <div className="text-center text-white">
@@ -112,20 +128,20 @@ export default function CtaSection() {
                   99.9%
                 </div>
                 <div className="text-sm md:text-base text-white/80">
-                  {t("home.stats.uptime")}
+                  Disponibilidad
                 </div>
                 <div className="mt-4 text-xs text-white/60">
-                  {t("home.stats.reliableService")}
+                  Servicio confiable
                 </div>
               </div>
             </motion.div>
 
             {/* 24/7 Support Card */}
             <motion.div
-              initial={{ y: 50, opacity: 0.5 }}
+              initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeInOut", delay: 0.3 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
               className="bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-6 md:p-8"
             >
               <div className="text-center text-white">
@@ -133,10 +149,10 @@ export default function CtaSection() {
                   24/7
                 </div>
                 <div className="text-sm md:text-base text-white/80">
-                  {t("home.stats.support")}
+                  Soporte
                 </div>
                 <div className="mt-4 text-xs text-white/60">
-                  {t("home.stats.alwaysAvailable")}
+                  Siempre disponible
                 </div>
               </div>
             </motion.div>

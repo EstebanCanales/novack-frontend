@@ -116,7 +116,7 @@ export function VerificationStep({
   const onSubmit = async (data: { verification_code: string }) => {
     const submitted = (data.verification_code || code || "").replace(/\D/g, "");
     if (submitted.length !== 6) {
-      alert("Invalid code. Must be 6 digits");
+      alert("Código inválido. Debe tener 6 dígitos");
       return;
     }
     if (!employeeId && !employeeEmail) {
@@ -230,7 +230,7 @@ export function VerificationStep({
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center space-y-6 max-w-md">
               <p className="text-white/70">
-                Click the button to receive your verification code
+                Haz clic en el botón para recibir tu código de verificación
               </p>
               <Button
                 onClick={sendCode}
@@ -267,7 +267,7 @@ export function VerificationStep({
               onClick={onBack}
               className="w-full rounded-xl h-11 sm:h-12 text-sm sm:text-base bg-transparent border-white/20 text-white hover:bg-white/10"
             >
-              Back
+              Atrás
             </Button>
           </div>
         </div>
@@ -282,7 +282,7 @@ export function VerificationStep({
                 htmlFor="verification_code"
                 className="text-white/80 block text-center"
               >
-                Enter the 6‑digit code
+                Ingresa el código de 6 dígitos
               </Label>
               <div className="flex justify-center">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-3 w-fit">
@@ -302,10 +302,10 @@ export function VerificationStep({
               <input
                 type="hidden"
                 {...register("verification_code", {
-                  required: "Code is required",
+                  required: "El código es requerido",
                   pattern: {
                     value: /^[0-9]{6}$/,
-                    message: "The code must be 6 digits",
+                    message: "El código debe tener 6 dígitos",
                   },
                 })}
               />
@@ -330,10 +330,10 @@ export function VerificationStep({
                 disabled={isResending || countdown > 0}
                 variant="link"
               >
-                {isResending ? "Resending..." : "Resend code"}
+                {isResending ? "Reenviando..." : "Reenviar código"}
               </Button>
               {countdown > 0 && (
-                <span className="text-sm text-white/70">in {countdown}s</span>
+                <span className="text-sm text-white/70">en {countdown}s</span>
               )}
             </div>
           </div>
@@ -346,14 +346,14 @@ export function VerificationStep({
                 onClick={onBack}
                 className="w-full sm:w-auto rounded-xl h-11 sm:h-12 text-sm sm:text-base bg-transparent border-white/20 text-white hover:bg-white/10"
               >
-                Back
+                Atrás
               </Button>
               <div className="flex-1">
                 <Button
                   type="submit"
                   className="w-full rounded-xl h-12 text-base font-semibold shadow-[0_10px_30px_rgba(7,217,217,0.25)]"
                 >
-                  Verify
+                  Verificar
                 </Button>
               </div>
             </div>

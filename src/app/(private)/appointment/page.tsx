@@ -39,12 +39,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
-  visitorService,
+  appointmentService,
   Appointment,
-  Visitor,
-} from "@/lib/services/visitor.service";
+} from "@/lib/services/appointment.service";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import MapUser from "@/components/private/map/mapUser";
 
 export default function MeetingDetailPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -55,9 +55,14 @@ export default function MeetingDetailPage() {
     useState<Appointment | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "scheduled" | "checked_in" | "checked_out" | "cancelled"
+    "all" | "pendiente" | "en_progreso" | "completado" | "cancelado"
   >("all");
+  const [timeFilter, setTimeFilter] = useState<
+    "all" | "today" | "week" | "month"
+  >("all");
+  const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [activeView, setActiveView] = useState<"mapa" | "detalles">("mapa");
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -74,10 +79,8 @@ export default function MeetingDetailPage() {
   const loadAppointments = async () => {
     try {
       setLoading(true);
-      const visitors = await visitorService.getAll();
-      const allAppointments = visitors
-        .filter((v) => v.appointment)
-        .map((v) => ({ ...v.appointment!, visitor: v })) as Appointment[];
+      const supplierId = user?.supplier?.id;
+      const allAppointments = await appointmentService.getAll(supplierId);
 
       setAppointments(allAppointments);
 
@@ -93,17 +96,45 @@ export default function MeetingDetailPage() {
     }
   };
 
+  const handleCheckIn = async (appointmentId: string) => {
+    try {
+      const updatedAppointment = await appointmentService.checkIn(
+        appointmentId
+      );
+      toast.success("Check-in realizado exitosamente");
+
+      // Update both the list and selected appointment
+      setAppointments((prev) =>
+        prev.map((apt) => (apt.id === appointmentId ? updatedAppointment : apt))
+      );
+      if (selectedAppointment?.id === appointmentId) {
+        setSelectedAppointment(updatedAppointment);
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Error al realizar el check-in";
+      toast.error(errorMessage);
+    }
+  };
+
   const handleCheckOut = async (appointmentId: string) => {
     try {
-      const appointment = appointments.find((a) => a.id === appointmentId);
-      if (!appointment?.visitor_id) return;
-
-      await visitorService.checkOut(appointment.visitor_id);
+      const updatedAppointment = await appointmentService.checkOut(
+        appointmentId
+      );
       toast.success("Check-out realizado exitosamente");
-      loadAppointments();
-    } catch (error) {
-      console.error("Error al hacer check-out:", error);
-      toast.error("Error al realizar el check-out");
+
+      // Update both the list and selected appointment
+      setAppointments((prev) =>
+        prev.map((apt) => (apt.id === appointmentId ? updatedAppointment : apt))
+      );
+      if (selectedAppointment?.id === appointmentId) {
+        setSelectedAppointment(updatedAppointment);
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Error al realizar el check-out";
+      toast.error(errorMessage);
     }
   };
 
@@ -115,30 +146,65 @@ export default function MeetingDetailPage() {
         return false;
       }
 
+      // Filtro por tiempo
+      if (timeFilter !== "all") {
+        const appointmentDate = new Date(appointment.scheduled_time);
+        const now = new Date();
+        const today = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+        const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const monthFromNow = new Date(
+          today.getTime() + 30 * 24 * 60 * 60 * 1000
+        );
+
+        if (timeFilter === "today") {
+          const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+          if (appointmentDate < today || appointmentDate >= tomorrow)
+            return false;
+        } else if (timeFilter === "week") {
+          if (appointmentDate < today || appointmentDate >= weekFromNow)
+            return false;
+        } else if (timeFilter === "month") {
+          if (appointmentDate < today || appointmentDate >= monthFromNow)
+            return false;
+        }
+      }
+
       // Filtro por búsqueda
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const visitorName = `${appointment.visitor?.first_name || ""} ${
-          appointment.visitor?.last_name || ""
-        }`.toLowerCase();
-        const purpose = (appointment.purpose || "").toLowerCase();
+        const visitorName = (appointment.visitor?.name || "").toLowerCase();
+        const title = (appointment.title || "").toLowerCase();
         const location = (appointment.location || "").toLowerCase();
 
         return (
           visitorName.includes(query) ||
-          purpose.includes(query) ||
+          title.includes(query) ||
           location.includes(query)
         );
       }
 
       return true;
     });
-  }, [appointments, statusFilter, searchQuery]);
+  }, [appointments, statusFilter, timeFilter, searchQuery]);
 
   // Formatear fecha y hora
   const formatDateTime = (dateString: string) => {
+    if (!dateString) {
+      return { date: "N/A", time: "N/A" };
+    }
+
     try {
       const date = new Date(dateString);
+
+      // Verificar si la fecha es válida
+      if (isNaN(date.getTime())) {
+        return { date: "N/A", time: "N/A" };
+      }
+
       return {
         date: date.toLocaleDateString("es-ES", {
           day: "2-digit",
@@ -158,44 +224,53 @@ export default function MeetingDetailPage() {
   // Obtener color de badge por estado
   const getStatusColor = (
     status: string
-  ): { bg: string; text: string; icon: React.ReactNode } => {
+  ): { bg: string; text: string; icon: React.ReactNode; label: string } => {
     switch (status) {
-      case "scheduled":
+      case "pendiente":
         return {
-          bg: "bg-blue-500/10 border-blue-500/30",
-          text: "text-blue-400",
-          icon: <Calendar className="size-3" />,
+          bg: "bg-yellow-500/10 border-yellow-500/30",
+          text: "text-yellow-400",
+          icon: <Clock className="size-3" />,
+          label: "Pendiente",
         };
-      case "checked_in":
+      case "en_progreso":
+        return {
+          bg: "bg-[#07D9D9]/10 border-[#07D9D9]/30",
+          text: "text-[#07D9D9]",
+          icon: <CheckCircle className="size-3" />,
+          label: "En Progreso",
+        };
+      case "completado":
         return {
           bg: "bg-green-500/10 border-green-500/30",
           text: "text-green-400",
           icon: <CheckCircle className="size-3" />,
+          label: "Completado",
         };
-      case "checked_out":
-        return {
-          bg: "bg-gray-500/10 border-gray-500/30",
-          text: "text-gray-400",
-          icon: <XCircle className="size-3" />,
-        };
-      case "cancelled":
+      case "cancelado":
         return {
           bg: "bg-red-500/10 border-red-500/30",
           text: "text-red-400",
           icon: <XCircle className="size-3" />,
+          label: "Cancelado",
         };
       default:
         return {
           bg: "bg-gray-500/10 border-gray-500/30",
           text: "text-gray-400",
           icon: <Calendar className="size-3" />,
+          label: "Desconocido",
         };
     }
   };
 
-  // Obtener iniciales
-  const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  // Obtener iniciales del nombre completo
+  const getInitials = (name: string) => {
+    const names = name.split(" ");
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
   };
 
   if (authLoading) {
@@ -235,71 +310,115 @@ export default function MeetingDetailPage() {
 
       {/* Contenido principal */}
       <div className="flex-1 flex overflow-hidden gap-3">
-        {/* Lista de citas */}
+        {/* Lista de citas - Más pequeña */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
-          className="w-96 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden flex flex-col"
+          className="w-80 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden flex flex-col"
         >
           {/* Header */}
-          <div className="p-4 border-b border-white/10 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Calendar className="size-5 text-[#07D9D9]" />
-                Citas Programadas
-              </h2>
-              <Button
-                size="icon"
-                className="size-8 bg-gradient-to-r from-[#07D9D9] to-[#0596A6] hover:from-[#0596A6] hover:to-[#07D9D9] text-black"
-              >
-                <Plus className="size-4" />
-              </Button>
-            </div>
+          <div className="p-3 border-b border-white/10 space-y-3">
+            <h2 className="text-base font-semibold text-white flex items-center gap-2">
+              <Calendar className="size-4 text-[#07D9D9]" />
+              Citas
+            </h2>
 
             {/* Barra de búsqueda */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-500" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-gray-500" />
               <Input
                 type="text"
-                placeholder="Buscar citas..."
+                placeholder="Buscar..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#07D9D9] h-9"
+                className="pl-8 bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#07D9D9] h-8 text-xs"
               />
             </div>
 
-            {/* Filtros de estado */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                "all",
-                "scheduled",
-                "checked_in",
-                "checked_out",
-                "cancelled",
-              ].map((status) => (
-                <Button
-                  key={status}
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setStatusFilter(status as typeof statusFilter)}
-                  className={`h-8 text-xs transition-all ${
-                    statusFilter === status
-                      ? "bg-[#07D9D9]/10 border border-[#07D9D9]/30 text-[#07D9D9]"
-                      : "bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  {status === "all"
-                    ? "Todas"
-                    : status === "scheduled"
-                    ? "Programadas"
-                    : status === "checked_in"
-                    ? "En Curso"
-                    : status === "checked_out"
-                    ? "Finalizadas"
-                    : "Canceladas"}
-                </Button>
-              ))}
+            {/* Botón de filtros */}
+            <div className="relative">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:border-[#07D9D9]/50 transition-colors w-full"
+              >
+                <div className="flex flex-col gap-0.5">
+                  <div className="w-3 h-0.5 bg-[#07D9D9] rounded"></div>
+                  <div className="w-3 h-0.5 bg-[#07D9D9] rounded"></div>
+                  <div className="w-3 h-0.5 bg-[#07D9D9] rounded"></div>
+                </div>
+                <span className="text-[10px] text-gray-400">Filtros</span>
+                {(statusFilter !== "all" || timeFilter !== "all") && (
+                  <span className="ml-auto size-1.5 rounded-full bg-[#07D9D9]"></span>
+                )}
+              </button>
+
+              {showFilters && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f172a] border border-white/10 rounded-lg shadow-xl z-10 overflow-hidden">
+                  <div className="p-3 border-b border-white/10">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mb-2">
+                      Estado
+                    </p>
+                    <div className="space-y-1">
+                      {[
+                        { value: "all", label: "Todas" },
+                        { value: "pendiente", label: "Pendientes" },
+                        { value: "en_progreso", label: "En Progreso" },
+                        { value: "completado", label: "Completadas" },
+                        { value: "cancelado", label: "Canceladas" },
+                      ].map(({ value, label }) => (
+                        <button
+                          key={value}
+                          onClick={() => {
+                            setStatusFilter(value as typeof statusFilter);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors font-medium ${
+                            statusFilter === value
+                              ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                              : "text-gray-400 hover:text-white hover:bg-white/5"
+                          }`}
+                        >
+                          {statusFilter === value && (
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#07D9D9] mr-2"></span>
+                          )}
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="p-3">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold mb-2">
+                      Tiempo
+                    </p>
+                    <div className="space-y-1">
+                      {[
+                        { value: "all", label: "Todos" },
+                        { value: "today", label: "Hoy" },
+                        { value: "week", label: "Esta Semana" },
+                        { value: "month", label: "Este Mes" },
+                      ].map(({ value, label }) => (
+                        <button
+                          key={value}
+                          onClick={() => {
+                            setTimeFilter(value as typeof timeFilter);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors font-medium ${
+                            timeFilter === value
+                              ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                              : "text-gray-400 hover:text-white hover:bg-white/5"
+                          }`}
+                        >
+                          {timeFilter === value && (
+                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#07D9D9] mr-2"></span>
+                          )}
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -334,256 +453,367 @@ export default function MeetingDetailPage() {
             ) : (
               filteredAppointments.map((appointment) => {
                 const statusStyle = getStatusColor(appointment.status);
-                const checkInDateTime = formatDateTime(
-                  appointment.check_in_time
+                const scheduledDateTime = formatDateTime(
+                  appointment.scheduled_time
                 );
 
                 return (
-                  <motion.button
+                  <button
                     key={appointment.id}
                     onClick={() => setSelectedAppointment(appointment)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`w-full p-3 rounded-lg transition-all text-left ${
+                    className={`w-full p-2 rounded transition-all text-left ${
                       selectedAppointment?.id === appointment.id
                         ? "bg-[#07D9D9]/10 border border-[#07D9D9]/30"
-                        : "bg-white/5 border border-white/10 hover:bg-white/10"
+                        : "hover:bg-white/5"
                     }`}
                   >
-                    <div className="flex items-start gap-3 mb-3">
-                      <Avatar className="size-12 border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="size-8">
                         <AvatarImage
                           src={appointment.visitor?.profile_image_url}
                         />
-                        <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-black text-sm font-semibold">
-                          {getInitials(
-                            appointment.visitor?.first_name || "",
-                            appointment.visitor?.last_name || ""
-                          )}
+                        <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-black text-xs font-semibold">
+                          {getInitials(appointment.visitor?.name || "?")}
                         </AvatarFallback>
                       </Avatar>
 
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-white text-sm truncate">
-                          {appointment.visitor?.first_name}{" "}
-                          {appointment.visitor?.last_name}
+                        <h3 className="font-medium text-white text-xs truncate">
+                          {appointment.visitor?.name}
                         </h3>
-                        <p className="text-xs text-gray-400 truncate">
-                          {appointment.purpose}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-xs text-gray-400">
-                        <Clock className="size-3" />
-                        <span>
-                          {checkInDateTime.date} • {checkInDateTime.time}
+                        <div className="flex items-center gap-2 text-[10px] text-gray-400 mt-0.5">
+                          <Clock className="size-3" />
+                          <span>
+                            {scheduledDateTime.date} • {scheduledDateTime.time}
+                          </span>
+                        </div>
+                        <span
+                          className={`mt-1 inline-block px-1.5 py-0.5 rounded text-[9px] ${
+                            appointment.status === "pendiente"
+                              ? "bg-yellow-500/10 text-yellow-500"
+                              : appointment.status === "en_progreso"
+                              ? "bg-[#07D9D9]/10 text-[#07D9D9]"
+                              : appointment.status === "completado"
+                              ? "bg-green-500/10 text-green-500"
+                              : "bg-red-500/10 text-red-500"
+                          }`}
+                        >
+                          {statusStyle.label}
                         </span>
                       </div>
-                      <Badge
-                        className={`${statusStyle.bg} ${statusStyle.text} border text-xs flex items-center gap-1`}
-                      >
-                        {statusStyle.icon}
-                        {appointment.status}
-                      </Badge>
                     </div>
-                  </motion.button>
+                  </button>
                 );
               })
             )}
           </div>
         </motion.div>
 
-        {/* Detalles de la cita */}
+        {/* Panel derecho - Mapa o Detalles */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden"
+          className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden flex flex-col"
         >
-          {selectedAppointment ? (
-            <div className="h-full overflow-y-auto p-6">
-              <div className="space-y-6">
-                {/* Header del visitante */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="size-16 border-2 border-white/10">
-                      <AvatarImage
-                        src={selectedAppointment.visitor?.profile_image_url}
-                      />
-                      <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-black text-xl font-bold">
-                        {getInitials(
-                          selectedAppointment.visitor?.first_name || "",
-                          selectedAppointment.visitor?.last_name || ""
-                        )}
-                      </AvatarFallback>
-                    </Avatar>
+          {/* Información básica del usuario - Arriba del switch */}
+          {selectedAppointment && (
+            <div className="p-4 border-b border-white/10 space-y-3">
+              <div className="flex items-center gap-3">
+                <Avatar className="size-12 border-2 border-[#07D9D9]/20">
+                  <AvatarImage
+                    src={selectedAppointment.visitor?.profile_image_url}
+                  />
+                  <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-black text-sm font-bold">
+                    {getInitials(selectedAppointment.visitor?.name || "?")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-base font-semibold text-white truncate">
+                    {selectedAppointment.visitor?.name}
+                  </h2>
+                  <p className="text-xs text-gray-400 truncate">
+                    {selectedAppointment.visitor?.email}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {selectedAppointment.visitor?.phone}
+                  </p>
+                </div>
+                <span
+                  className={`px-2 py-1 rounded text-[10px] font-medium ${
+                    selectedAppointment.status === "pendiente"
+                      ? "bg-yellow-500/10 text-yellow-500"
+                      : selectedAppointment.status === "en_progreso"
+                      ? "bg-[#07D9D9]/10 text-[#07D9D9]"
+                      : selectedAppointment.status === "completado"
+                      ? "bg-green-500/10 text-green-500"
+                      : "bg-red-500/10 text-red-500"
+                  }`}
+                >
+                  {getStatusColor(selectedAppointment.status).label}
+                </span>
+              </div>
 
-                    <div>
-                      <h2 className="text-2xl font-bold text-white">
-                        {selectedAppointment.visitor?.first_name}{" "}
-                        {selectedAppointment.visitor?.last_name}
-                      </h2>
-                      <p className="text-gray-400">
-                        {selectedAppointment.visitor?.id_type}:{" "}
-                        {selectedAppointment.visitor?.id_number}
-                      </p>
+              {/* Botones de acción - Debajo del status */}
+              <div className="flex gap-2">
+                {selectedAppointment.status === "pendiente" && (
+                  <Button
+                    onClick={() => handleCheckIn(selectedAppointment.id)}
+                    className="flex-1 bg-gradient-to-r from-[#07D9D9] to-[#0596A6] hover:from-[#0596A6] hover:to-[#07D9D9] text-black font-semibold text-xs h-9"
+                  >
+                    <CheckCircle className="size-3 mr-1.5" />
+                    Check-in
+                  </Button>
+                )}
+
+                {selectedAppointment.status === "en_progreso" && (
+                  <Button
+                    onClick={() => handleCheckOut(selectedAppointment.id)}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold text-xs h-9"
+                  >
+                    <XCircle className="size-3 mr-1.5" />
+                    Check-out
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Mini menú switch */}
+          <div className="p-3 border-b border-white/10">
+            <div className="flex gap-2">
+              <button
+                onClick={() => setActiveView("mapa")}
+                className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeView === "mapa"
+                    ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                    : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                <MapPin className="size-4 inline-block mr-2" />
+                Mapa
+              </button>
+              <button
+                onClick={() => setActiveView("detalles")}
+                className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeView === "detalles"
+                    ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                    : "bg-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                <User className="size-4 inline-block mr-2" />
+                Detalles
+              </button>
+            </div>
+          </div>
+
+          {/* Vista de Mapa */}
+          {activeView === "mapa" && (
+            <div className="flex-1 p-4">
+              <div className="h-full rounded-lg overflow-hidden border border-white/10">
+                <MapUser
+                  lat={
+                    selectedAppointment
+                      ? 9.890120003476955 + (Math.random() - 0.5) * 0.01
+                      : 9.890120003476955
+                  }
+                  lng={
+                    selectedAppointment
+                      ? -84.08738029648394 + (Math.random() - 0.5) * 0.01
+                      : -84.08738029648394
+                  }
+                  userName={
+                    selectedAppointment?.visitor?.name || "Selecciona una cita"
+                  }
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Vista de Detalles */}
+          {activeView === "detalles" && selectedAppointment ? (
+            <div className="h-full overflow-y-auto p-4">
+              <div className="space-y-3">
+                {/* Información de contacto */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 hover:border-[#07D9D9]/30 transition-all">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                        <Mail className="size-4 text-[#07D9D9]" />
+                      </div>
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                        Email
+                      </span>
                     </div>
+                    <p className="text-sm text-white font-medium break-all">
+                      {selectedAppointment.visitor?.email}
+                    </p>
                   </div>
-
-                  {(() => {
-                    const statusStyle = getStatusColor(
-                      selectedAppointment.status
-                    );
-                    return (
-                      <Badge
-                        className={`${statusStyle.bg} ${statusStyle.text} border text-sm flex items-center gap-2 px-3 py-1`}
-                      >
-                        {statusStyle.icon}
-                        <span className="capitalize">
-                          {selectedAppointment.status}
-                        </span>
-                      </Badge>
-                    );
-                  })()}
+                  <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 hover:border-[#07D9D9]/30 transition-all">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                        <Phone className="size-4 text-[#07D9D9]" />
+                      </div>
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                        Teléfono
+                      </span>
+                    </div>
+                    <p className="text-sm text-white font-medium">
+                      {selectedAppointment.visitor?.phone}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Información de contacto */}
-                <Card className="bg-white/5 border-white/10">
-                  <CardHeader>
-                    <CardTitle className="text-white text-lg flex items-center gap-2">
-                      <User className="size-5 text-[#07D9D9]" />
-                      Información de Contacto
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <Mail className="size-4 text-gray-500" />
-                      <span className="text-sm">
-                        {selectedAppointment.visitor?.email}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <Phone className="size-4 text-gray-500" />
-                      <span className="text-sm">
-                        {selectedAppointment.visitor?.phone}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-
                 {/* Detalles de la cita */}
-                <Card className="bg-white/5 border-white/10">
-                  <CardHeader>
-                    <CardTitle className="text-white text-lg flex items-center gap-2">
-                      <Calendar className="size-5 text-[#07D9D9]" />
-                      Detalles de la Cita
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <label className="text-xs text-gray-500 uppercase tracking-wide">
-                        Propósito
-                      </label>
-                      <p className="text-white mt-1">
-                        {selectedAppointment.purpose}
+                <div className="space-y-3">
+                  <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                        <Calendar className="size-4 text-[#07D9D9]" />
+                      </div>
+                      <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                        Propósito de la visita
+                      </span>
+                    </div>
+                    <p className="text-sm text-white font-semibold">
+                      {selectedAppointment.title || "Sin título"}
+                    </p>
+                  </div>
+
+                  {selectedAppointment.description && (
+                    <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                          <Filter className="size-4 text-[#07D9D9]" />
+                        </div>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                          Detalles
+                        </span>
+                      </div>
+                      <p className="text-gray-300 text-xs leading-relaxed">
+                        {selectedAppointment.description}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="p-4 rounded-lg bg-linear-to-br from-[#07D9D9]/5 to-[#07D9D9]/2 border border-[#07D9D9]/20">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                          <Clock className="size-4 text-[#07D9D9]" />
+                        </div>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                          Programada
+                        </span>
+                      </div>
+                      <p className="text-white text-xs font-medium mb-1">
+                        {
+                          formatDateTime(selectedAppointment.scheduled_time)
+                            .date
+                        }
+                      </p>
+                      <p className="text-[#07D9D9] text-sm font-bold">
+                        {
+                          formatDateTime(selectedAppointment.scheduled_time)
+                            .time
+                        }
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs text-gray-500 uppercase tracking-wide">
-                          Check-in
-                        </label>
-                        <div className="flex items-center gap-2 text-white mt-1">
-                          <Clock className="size-4 text-[#07D9D9]" />
-                          <span className="text-sm">
-                            {
-                              formatDateTime(selectedAppointment.check_in_time)
-                                .date
-                            }
+                    {selectedAppointment.check_in_time && (
+                      <div className="p-4 rounded-lg bg-linear-to-br from-green-500/10 to-green-500/2 border border-green-500/30">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="p-2 rounded-lg bg-green-500/10">
+                            <CheckCircle className="size-4 text-green-400" />
+                          </div>
+                          <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                            Check-in
                           </span>
                         </div>
-                        <p className="text-gray-400 text-sm mt-1">
+                        <p className="text-white text-xs font-medium mb-1">
+                          {
+                            formatDateTime(selectedAppointment.check_in_time)
+                              .date
+                          }
+                        </p>
+                        <p className="text-green-400 text-sm font-bold">
                           {
                             formatDateTime(selectedAppointment.check_in_time)
                               .time
                           }
                         </p>
                       </div>
+                    )}
 
-                      {selectedAppointment.check_out_time && (
-                        <div>
-                          <label className="text-xs text-gray-500 uppercase tracking-wide">
-                            Check-out
-                          </label>
-                          <div className="flex items-center gap-2 text-white mt-1">
-                            <Clock className="size-4 text-[#07D9D9]" />
-                            <span className="text-sm">
-                              {
-                                formatDateTime(
-                                  selectedAppointment.check_out_time
-                                ).date
-                              }
-                            </span>
+                    {selectedAppointment.check_out_time && (
+                      <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="p-2 rounded-lg bg-white/5">
+                            <XCircle className="size-4 text-gray-400" />
                           </div>
-                          <p className="text-gray-400 text-sm mt-1">
-                            {
-                              formatDateTime(selectedAppointment.check_out_time)
-                                .time
-                            }
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {selectedAppointment.location && (
-                      <div>
-                        <label className="text-xs text-gray-500 uppercase tracking-wide">
-                          Ubicación
-                        </label>
-                        <div className="flex items-center gap-2 text-white mt-1">
-                          <MapPin className="size-4 text-[#07D9D9]" />
-                          <span className="text-sm">
-                            {selectedAppointment.location}
+                          <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                            Check-out
                           </span>
                         </div>
+                        <p className="text-white text-xs font-medium mb-1">
+                          {
+                            formatDateTime(selectedAppointment.check_out_time)
+                              .date
+                          }
+                        </p>
+                        <p className="text-gray-400 text-sm font-bold">
+                          {
+                            formatDateTime(selectedAppointment.check_out_time)
+                              .time
+                          }
+                        </p>
                       </div>
                     )}
-
-                    {selectedAppointment.host_employee && (
-                      <div>
-                        <label className="text-xs text-gray-500 uppercase tracking-wide">
-                          Anfitrión
-                        </label>
-                        <div className="flex items-center gap-2 text-white mt-1">
-                          <User className="size-4 text-[#07D9D9]" />
-                          <span className="text-sm">
-                            {selectedAppointment.host_employee.first_name}{" "}
-                            {selectedAppointment.host_employee.last_name}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Acciones */}
-                {selectedAppointment.status === "checked_in" && (
-                  <div className="flex gap-3">
-                    <Button
-                      onClick={() => handleCheckOut(selectedAppointment.id)}
-                      className="flex-1 bg-gradient-to-r from-[#07D9D9] to-[#0596A6] hover:from-[#0596A6] hover:to-[#07D9D9] text-black"
-                    >
-                      <CheckCircle className="size-4 mr-2" />
-                      Realizar Check-out
-                    </Button>
                   </div>
-                )}
+
+                  {selectedAppointment.location && (
+                    <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                          <MapPin className="size-4 text-[#07D9D9]" />
+                        </div>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                          Ubicación
+                        </span>
+                      </div>
+                      <p className="text-white text-xs font-medium">
+                        {selectedAppointment.location}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedAppointment.host_employee && (
+                    <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="p-2 rounded-lg bg-[#07D9D9]/10">
+                          <User className="size-4 text-[#07D9D9]" />
+                        </div>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">
+                          Anfitrión Asignado
+                        </span>
+                      </div>
+                      <p className="text-white text-xs font-semibold mb-1">
+                        {selectedAppointment.host_employee.first_name}{" "}
+                        {selectedAppointment.host_employee.last_name}
+                      </p>
+                      <p className="text-gray-400 text-[10px]">
+                        {selectedAppointment.host_employee.email}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          ) : (
+          ) : null}
+
+          {/* Mensaje cuando no hay cita seleccionada en vista detalles */}
+          {activeView === "detalles" && !selectedAppointment && (
             <div className="flex flex-col items-center justify-center h-full text-center p-8">
               <Calendar className="size-20 text-gray-600 mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">

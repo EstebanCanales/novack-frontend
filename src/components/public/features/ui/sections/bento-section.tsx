@@ -39,54 +39,54 @@ const BentoSection = () => {
           {/* 1. Scheduling */}
           <BentoCard variants={fadeInUp} className="md:col-span-2">
             <IconWrapper><Calendar className="h-6 w-6 text-[#07D9D9]" /></IconWrapper>
-            <h3 className="text-xl font-bold text-white mb-3">Secure Scheduling</h3>
+            <h3 className="text-xl font-bold text-white mb-3">Agendamiento Seguro</h3>
             <p className="text-white/80 leading-relaxed flex-grow">
-              Automate and manage appointments with an end-to-end encrypted calendar. Reduce no-shows with automated reminders.
+              Automatiza y gestiona citas con un calendario cifrado de extremo a extremo. Reduce las ausencias con recordatorios automatizados.
             </p>
           </BentoCard>
 
           {/* 2. Client Management */}
           <BentoCard variants={fadeInUp} className="md:col-span-2">
             <IconWrapper><Users className="h-6 w-6 text-[#07D9D9]" /></IconWrapper>
-            <h3 className="text-xl font-bold text-white mb-3">Client Management</h3>
+            <h3 className="text-xl font-bold text-white mb-3">Gestión de Clientes</h3>
             <p className="text-white/80 leading-relaxed flex-grow">
-              A unified, protected database for all your client information with granular access controls and audit logs.
+              Una base de datos unificada y protegida para toda la información de tus clientes con controles de acceso granulares y registros de auditoría.
             </p>
           </BentoCard>
           
           {/* 3. Secure Data Vault */}
           <BentoCard variants={fadeInUp} className="md:col-span-2 md:row-span-2 !bg-gradient-to-r from-[#07D9D9]/10 to-[#763DF2]/10">
             <IconWrapper><Database className="h-6 w-6 text-[#07D9D9]" /></IconWrapper>
-            <h3 className="text-2xl font-bold text-white mb-3">Secure Data Vault</h3>
+            <h3 className="text-2xl font-bold text-white mb-3">Bóveda de Datos Segura</h3>
             <p className="text-white/80 leading-relaxed flex-grow">
-              Store and share sensitive documents with confidence. Our vault uses AES-256 encryption to protect your most critical data at rest and in transit.
+              Almacena y comparte documentos sensibles con confianza. Nuestra bóveda usa cifrado AES-256 para proteger tus datos más críticos en reposo y en tránsito.
             </p>
           </BentoCard>
 
           {/* 4. Analytics */}
           <BentoCard variants={fadeInUp} className="">
             <IconWrapper><BarChart3 className="h-6 w-6 text-[#07D9D9]" /></IconWrapper>
-            <h3 className="text-xl font-bold text-white mb-3">Analytics</h3>
+            <h3 className="text-xl font-bold text-white mb-3">Analíticas</h3>
             <p className="text-white/80 leading-relaxed flex-grow">
-              Gain insights with reports on revenue, appointments, and client growth.
+              Obtén insights con reportes sobre ingresos, citas y crecimiento de clientes.
             </p>
           </BentoCard>
 
           {/* 5. Compliance */}
           <BentoCard variants={fadeInUp} className="">
             <IconWrapper><ShieldCheck className="h-6 w-6 text-[#07D9D9]" /></IconWrapper>
-            <h3 className="text-xl font-bold text-white mb-3">Compliance</h3>
+            <h3 className="text-xl font-bold text-white mb-3">Cumplimiento</h3>
             <p className="text-white/80 leading-relaxed flex-grow">
-              Built-in security measures to help you stay compliant with HIPAA and GDPR.
+              Medidas de seguridad integradas para ayudarte a cumplir con HIPAA y GDPR.
             </p>
           </BentoCard>
 
           {/* 6. Role-Based Access */}
           <BentoCard variants={fadeInUp} className="md:col-span-2">
             <IconWrapper><Lock className="h-6 w-6 text-[#07D9D9]" /></IconWrapper>
-            <h3 className="text-xl font-bold text-white mb-3">Role-Based Access</h3>
+            <h3 className="text-xl font-bold text-white mb-3">Control de Acceso Basado en Roles</h3>
             <p className="text-white/80 leading-relaxed flex-grow">
-              Ensure team members only see what they need to. Customize permissions for every role in your organization.
+              Asegúrate de que los miembros del equipo solo vean lo que necesitan. Personaliza permisos para cada rol en tu organización.
             </p>
           </BentoCard>
 

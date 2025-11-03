@@ -17,10 +17,10 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
           <CheckCircle className="w-16 h-16 text-emerald-400" />
         </div>
         <h2 className="text-2xl font-bold text-white mb-2">
-          Registration Completed!
+          ¡Registro Completado!
         </h2>
         <p className="text-white/70">
-          Your account has been created successfully
+          Tu cuenta ha sido creada exitosamente
         </p>
       </div>
 
@@ -29,11 +29,11 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
         <div className="bg-white/5 border border-white/10 rounded-xl p-4">
           <div className="flex items-center gap-3 mb-3">
             <User className="w-5 h-5 text-white/80" />
-            <h3 className="font-semibold text-white">Employee Information</h3>
+            <h3 className="font-semibold text-white">Información del Empleado</h3>
           </div>
           <div className="space-y-2 text-sm">
             <p className="text-white/80">
-              <strong>Name:</strong> {data.employee.first_name}{" "}
+              <strong>Nombre:</strong> {data.employee.first_name}{" "}
               {data.employee.last_name}
             </p>
             <div className="flex items-center gap-2">
@@ -46,12 +46,12 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
             </div>
             {data.employee.position && (
               <p className="text-white/80">
-                <strong>Position:</strong> {data.employee.position}
+                <strong>Puesto:</strong> {data.employee.position}
               </p>
             )}
             {data.employee.department && (
               <p className="text-white/80">
-                <strong>Department:</strong> {data.employee.department}
+                <strong>Departamento:</strong> {data.employee.department}
               </p>
             )}
           </div>
@@ -62,11 +62,11 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
           <div className="bg-white/5 border border-white/10 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-3">
               <Building className="w-5 h-5 text-white/80" />
-              <h3 className="font-semibold text-white">Supplier Information</h3>
+              <h3 className="font-semibold text-white">Información del Proveedor</h3>
             </div>
             <div className="space-y-2 text-sm">
               <p className="text-white/80">
-                <strong>Company:</strong> {data.supplier.supplier_name}
+                <strong>Empresa:</strong> {data.supplier.supplier_name}
               </p>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-white/60" />
@@ -92,7 +92,7 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
           <div className="bg-white/5 border border-white/10 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-3">
               <Building className="w-5 h-5 text-white/80" />
-              <h3 className="font-semibold text-white">Assigned Supplier</h3>
+              <h3 className="font-semibold text-white">Proveedor Asignado</h3>
             </div>
             <p className="text-sm text-white/80">
               <strong>ID:</strong> {data.employee.supplier_id}

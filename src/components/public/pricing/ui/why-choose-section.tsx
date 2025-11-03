@@ -1,71 +1,69 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useI18n } from "@/i18n/I18nProvider";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { FeatureCard } from "./feature-card";
 import { StatsGrid } from "./stats-grid";
 
 const industryStats = [
-  { value: "50+", label: "Industries Served" },
-  { value: "150+", label: "Countries" },
-  { value: "24/7", label: "Support" },
-  { value: "4.9/5", label: "Customer Rating" },
+  { value: "50+", label: "Industrias Atendidas" },
+  { value: "150+", label: "Países" },
+  { value: "24/7", label: "Soporte" },
+  { value: "4.9/5", label: "Calificación de Clientes" },
 ];
 
 const features = [
   {
     icon: "lightning",
-    title: "Lightning Fast",
+    title: "Ultra Rápido",
     description:
-      "Get up and running in minutes, not hours. Our intuitive interface and powerful automation save you time every day.",
+      "Pon tu sistema en funcionamiento en minutos, no horas. Nuestra interfaz intuitiva y automatización potente te ahorran tiempo cada día.",
     highlights: [
-      "Setup in under 5 minutes",
-      "99.9% uptime guarantee",
-      "Real-time synchronization",
-      "Instant deployment",
+      "Configuración en menos de 5 minutos",
+      "Garantía de 99.9% de disponibilidad",
+      "Sincronización en tiempo real",
+      "Despliegue instantáneo",
     ],
     gradient: "from-[#07D9D9] to-[#0596A6]",
     stats: [
-      { value: "5 min", label: "Setup Time" },
-      { value: "99.9%", label: "Uptime" },
+      { value: "5 min", label: "Tiempo de Configuración" },
+      { value: "99.9%", label: "Disponibilidad" },
     ],
   },
   {
     icon: "shield",
-    title: "Enterprise Security",
+    title: "Seguridad Empresarial",
     description:
-      "Bank-level encryption, GDPR compliance, and SOC 2 certification. Your data is always protected.",
+      "Cifrado de nivel bancario, cumplimiento GDPR y certificación SOC 2. Tus datos siempre están protegidos.",
     highlights: [
-      "AES-256 encryption",
-      "GDPR & HIPAA compliant",
-      "SOC 2 Type II certified",
-      "Zero-trust architecture",
+      "Cifrado AES-256",
+      "Cumplimiento GDPR e HIPAA",
+      "Certificado SOC 2 Type II",
+      "Arquitectura zero-trust",
     ],
     gradient: "from-[#763DF2] to-[#202473]",
     certifications: ["SOC 2", "GDPR", "HIPAA", "ISO 27001"],
   },
   {
     icon: "users",
-    title: "Team Collaboration",
+    title: "Colaboración en Equipo",
     description:
-      "Work seamlessly with your team. Real-time updates, shared calendars, and instant notifications.",
+      "Trabaja sin problemas con tu equipo. Actualizaciones en tiempo real, calendarios compartidos y notificaciones instantáneas.",
     highlights: [
-      "Unlimited team members",
-      "Role-based permissions",
-      "Real-time collaboration",
-      "Advanced integrations",
+      "Miembros ilimitados del equipo",
+      "Permisos basados en roles",
+      "Colaboración en tiempo real",
+      "Integraciones avanzadas",
     ],
     gradient: "from-[#0596A6] to-[#010440]",
     stats: [
-      { value: "∞", label: "Team Members" },
-      { value: "100+", label: "Integrations" },
+      { value: "∞", label: "Miembros del Equipo" },
+      { value: "100+", label: "Integraciones" },
     ],
   },
 ];
 
 export function WhyChooseSection() {
-  const { t } = useI18n();
   return (
     <section className="w-full pt-2 md:pt-4 pb-2 md:pb-4">
       <div className="mx-auto px-2 sm:px-4">
@@ -82,7 +80,7 @@ export function WhyChooseSection() {
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
-              {t("pricing.why.badge")}
+              Por qué las empresas eligen Novack
             </span>
           </motion.div>
 
@@ -90,7 +88,7 @@ export function WhyChooseSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            {t("pricing.why.titlePrefix")}{" "}
+            ¿Por qué elegir{" "}
             <span className="text-[#07D9D9]">Novack</span>?
           </motion.h2>
 
@@ -98,7 +96,7 @@ export function WhyChooseSection() {
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8"
           >
-            {t("pricing.why.subtitle")}
+            No somos otra herramienta de citas. Somos tu socio estratégico en crecimiento, con seguridad empresarial y rendimiento incomparable.
           </motion.p>
 
           <StatsGrid stats={industryStats} />
@@ -130,10 +128,10 @@ export function WhyChooseSection() {
           >
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-white mb-4">
-                {t("pricing.trust.title")}
+                Confiado por líderes de la industria
               </h3>
               <p className="text-white/80 text-lg leading-relaxed max-w-2xl mx-auto">
-                {t("pricing.trust.subtitle")}
+                Únete a miles de empresas que confían en Novack para sus operaciones críticas
               </p>
             </div>
 
@@ -143,7 +141,7 @@ export function WhyChooseSection() {
                   Fortune 500
                 </div>
                 <div className="text-white/80 text-sm">
-                  {t("pricing.trust.fortuneNote")}
+                  Empresas confían en nosotros
                 </div>
               </div>
               <div className="text-center">
@@ -151,7 +149,7 @@ export function WhyChooseSection() {
                   Healthcare
                 </div>
                 <div className="text-white/80 text-sm">
-                  {t("pricing.trust.hipaa")}
+                  Cumplimiento HIPAA
                 </div>
               </div>
               <div className="text-center">
@@ -159,7 +157,7 @@ export function WhyChooseSection() {
                   Financial
                 </div>
                 <div className="text-white/80 text-sm">
-                  {t("pricing.trust.bank")}
+                  Seguridad de nivel bancario
                 </div>
               </div>
             </div>

@@ -49,5 +49,14 @@ api.interceptors.response.use(
   }
 );
 
+// Utilidades para números de teléfono
+export function extractDigits(phone: string): string {
+  return phone.replace(/\D/g, "");
+}
+
+export function lastNDigits(digits: string, n: number): string {
+  return digits.slice(-n);
+}
+
 export { api };
 export default api;

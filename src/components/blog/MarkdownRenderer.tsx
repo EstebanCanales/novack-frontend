@@ -13,10 +13,10 @@ function CopyButton({ text }: { text: string }) {
     <button
       onClick={onCopy}
       className="absolute top-2 right-2 text-xs bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded-md border border-white/20"
-      aria-label="Copy code"
-      title="Copy"
+      aria-label="Copiar código"
+      title="Copiar"
     >
-      Copy
+      Copiar
     </button>
   );
 }

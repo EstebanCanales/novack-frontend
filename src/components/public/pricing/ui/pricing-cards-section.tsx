@@ -35,26 +35,26 @@ const plans = [
     annualPrice: "$290",
     period: "/month",
     annualPeriod: "/year",
-    description: "Perfect for small teams getting started",
+    description: "Perfecto para equipos pequeños que están comenzando",
     features: [
-      "Up to 5 team members",
-      "Basic appointment scheduling",
-      "Email support",
-      "Standard integrations",
-      "1GB storage",
-      "Basic analytics",
-      "Mobile app access",
-      "Calendar sync",
+      "Hasta 5 miembros del equipo",
+      "Agendamiento básico de citas",
+      "Soporte por email",
+      "Integraciones estándar",
+      "1GB de almacenamiento",
+      "Analíticas básicas",
+      "Acceso a aplicación móvil",
+      "Sincronización de calendario",
     ],
     popular: false,
     color: "from-[#07D9D9] to-[#0596A6]",
     icon: Users,
-    badge: "Perfect for startups",
-    savings: "Save 20% annually",
-    setupTime: "< 5 minutes",
-    responseTime: "24 hours",
+    badge: "Perfecto para startups",
+    savings: "Ahorra 20% anualmente",
+    setupTime: "< 5 minutos",
+    responseTime: "24 horas",
     storage: "1GB",
-    teamSize: "5 members",
+    teamSize: "5 miembros",
   },
   {
     name: "Professional",
@@ -62,36 +62,36 @@ const plans = [
     annualPrice: "$790",
     period: "/month",
     annualPeriod: "/year",
-    description: "Ideal for growing businesses",
+    description: "Ideal para negocios en crecimiento",
     features: [
-      "Up to 5 team members",
-      "Up to 25 team members",
-      "Basic appointment scheduling",
-      "Advanced scheduling",
-      "Email support",
-      "Priority support",
-      "Standard integrations",
-      "Advanced integrations",
-      "1GB storage",
-      "10GB storage",
-      "Basic analytics",
-      "Advanced analytics",
-      "Mobile app access",
-      "Calendar sync",
-      "Custom branding",
-      "API access",
-      "Automated reminders",
-      "Multi-location support",
+      "Hasta 5 miembros del equipo",
+      "Hasta 25 miembros del equipo",
+      "Agendamiento básico de citas",
+      "Agendamiento avanzado",
+      "Soporte por email",
+      "Soporte prioritario",
+      "Integraciones estándar",
+      "Integraciones avanzadas",
+      "1GB de almacenamiento",
+      "10GB de almacenamiento",
+      "Analíticas básicas",
+      "Analíticas avanzadas",
+      "Acceso a aplicación móvil",
+      "Sincronización de calendario",
+      "Marca personalizada",
+      "Acceso a API",
+      "Recordatorios automatizados",
+      "Soporte multi-ubicación",
     ],
     popular: true,
     color: "from-[#763DF2] to-[#202473]",
     icon: Zap,
-    badge: "Most popular choice",
-    savings: "Save 25% annually",
-    setupTime: "< 2 minutes",
-    responseTime: "4 hours",
+    badge: "Opción más popular",
+    savings: "Ahorra 25% anualmente",
+    setupTime: "< 2 minutos",
+    responseTime: "4 horas",
     storage: "10GB",
-    teamSize: "25 members",
+    teamSize: "25 miembros",
   },
   {
     name: "Enterprise",
@@ -99,201 +99,201 @@ const plans = [
     annualPrice: "$1990",
     period: "/month",
     annualPeriod: "/year",
-    description: "For large organizations with complex needs",
+    description: "Para organizaciones grandes con necesidades complejas",
     features: [
-      "Up to 5 team members",
-      "Up to 25 team members",
-      "Unlimited team members",
-      "Basic appointment scheduling",
-      "Advanced scheduling",
-      "Enterprise scheduling",
-      "Email support",
-      "Priority support",
-      "24/7 phone support",
-      "Standard integrations",
-      "Advanced integrations",
-      "Custom integrations",
-      "1GB storage",
-      "10GB storage",
-      "Unlimited storage",
-      "Basic analytics",
-      "Advanced analytics",
-      "Mobile app access",
-      "Calendar sync",
-      "Custom branding",
-      "API access",
-      "Automated reminders",
-      "Multi-location support",
-      "Dedicated account manager",
-      "Custom training",
-      "White-label solution",
-      "Advanced security",
+      "Hasta 5 miembros del equipo",
+      "Hasta 25 miembros del equipo",
+      "Miembros ilimitados del equipo",
+      "Agendamiento básico de citas",
+      "Agendamiento avanzado",
+      "Agendamiento empresarial",
+      "Soporte por email",
+      "Soporte prioritario",
+      "Soporte telefónico 24/7",
+      "Integraciones estándar",
+      "Integraciones avanzadas",
+      "Integraciones personalizadas",
+      "1GB de almacenamiento",
+      "10GB de almacenamiento",
+      "Almacenamiento ilimitado",
+      "Analíticas básicas",
+      "Analíticas avanzadas",
+      "Acceso a aplicación móvil",
+      "Sincronización de calendario",
+      "Marca personalizada",
+      "Acceso a API",
+      "Recordatorios automatizados",
+      "Soporte multi-ubicación",
+      "Gerente de cuenta dedicado",
+      "Capacitación personalizada",
+      "Solución white-label",
+      "Seguridad avanzada",
     ],
     popular: false,
     color: "from-[#0596A6] to-[#010440]",
     icon: Shield,
-    badge: "Enterprise-grade solution",
-    savings: "Save 30% annually",
-    setupTime: "Instant",
-    responseTime: "30 minutes",
-    storage: "Unlimited",
-    teamSize: "Unlimited",
+    badge: "Solución de nivel empresarial",
+    savings: "Ahorra 30% anualmente",
+    setupTime: "Instantáneo",
+    responseTime: "30 minutos",
+    storage: "Ilimitado",
+    teamSize: "Ilimitado",
   },
 ];
 
 // Lista completa de todas las características disponibles
 const allFeatures = [
-  { id: "team-5", name: "Up to 5 team members", icon: Users, category: "Team" },
+  { id: "team-5", name: "Hasta 5 miembros del equipo", icon: Users, category: "Equipo" },
   {
     id: "team-25",
-    name: "Up to 25 team members",
+    name: "Hasta 25 miembros del equipo",
     icon: Users,
-    category: "Team",
+    category: "Equipo",
   },
   {
     id: "team-unlimited",
-    name: "Unlimited team members",
+    name: "Miembros ilimitados del equipo",
     icon: Crown,
-    category: "Team",
+    category: "Equipo",
   },
   {
     id: "scheduling-basic",
-    name: "Basic appointment scheduling",
+    name: "Agendamiento básico de citas",
     icon: Calendar,
-    category: "Scheduling",
+    category: "Agendamiento",
   },
   {
     id: "scheduling-advanced",
-    name: "Advanced scheduling",
+    name: "Agendamiento avanzado",
     icon: Calendar,
-    category: "Scheduling",
+    category: "Agendamiento",
   },
   {
     id: "scheduling-enterprise",
-    name: "Enterprise scheduling",
+    name: "Agendamiento empresarial",
     icon: Calendar,
-    category: "Scheduling",
+    category: "Agendamiento",
   },
   {
     id: "support-email",
-    name: "Email support",
+    name: "Soporte por email",
     icon: MessageCircle,
-    category: "Support",
+    category: "Soporte",
   },
   {
     id: "support-priority",
-    name: "Priority support",
+    name: "Soporte prioritario",
     icon: MessageCircle,
-    category: "Support",
+    category: "Soporte",
   },
   {
     id: "support-24-7",
-    name: "24/7 phone support",
+    name: "Soporte telefónico 24/7",
     icon: Headphones,
-    category: "Support",
+    category: "Soporte",
   },
   {
     id: "integrations-standard",
-    name: "Standard integrations",
+    name: "Integraciones estándar",
     icon: Settings,
-    category: "Integrations",
+    category: "Integraciones",
   },
   {
     id: "integrations-advanced",
-    name: "Advanced integrations",
+    name: "Integraciones avanzadas",
     icon: Settings,
-    category: "Integrations",
+    category: "Integraciones",
   },
   {
     id: "integrations-custom",
-    name: "Custom integrations",
+    name: "Integraciones personalizadas",
     icon: Code,
-    category: "Integrations",
+    category: "Integraciones",
   },
   {
     id: "storage-1gb",
-    name: "1GB storage",
+    name: "1GB de almacenamiento",
     icon: Database,
-    category: "Storage",
+    category: "Almacenamiento",
   },
   {
     id: "storage-10gb",
-    name: "10GB storage",
+    name: "10GB de almacenamiento",
     icon: Database,
-    category: "Storage",
+    category: "Almacenamiento",
   },
   {
     id: "storage-unlimited",
-    name: "Unlimited storage",
+    name: "Almacenamiento ilimitado",
     icon: Database,
-    category: "Storage",
+    category: "Almacenamiento",
   },
   {
     id: "analytics-basic",
-    name: "Basic analytics",
+    name: "Analíticas básicas",
     icon: BarChart3,
-    category: "Analytics",
+    category: "Analíticas",
   },
   {
     id: "analytics-advanced",
-    name: "Advanced analytics",
+    name: "Analíticas avanzadas",
     icon: BarChart3,
-    category: "Analytics",
+    category: "Analíticas",
   },
   {
     id: "mobile-app",
-    name: "Mobile app access",
+    name: "Acceso a aplicación móvil",
     icon: Smartphone,
-    category: "Access",
+    category: "Acceso",
   },
   {
     id: "calendar-sync",
-    name: "Calendar sync",
+    name: "Sincronización de calendario",
     icon: Calendar,
-    category: "Access",
+    category: "Acceso",
   },
   {
     id: "custom-branding",
-    name: "Custom branding",
+    name: "Marca personalizada",
     icon: Palette,
-    category: "Customization",
+    category: "Personalización",
   },
-  { id: "api-access", name: "API access", icon: Code, category: "Development" },
+  { id: "api-access", name: "Acceso a API", icon: Code, category: "Desarrollo" },
   {
     id: "automated-reminders",
-    name: "Automated reminders",
+    name: "Recordatorios automatizados",
     icon: Bell,
-    category: "Automation",
+    category: "Automatización",
   },
   {
     id: "multi-location",
-    name: "Multi-location support",
+    name: "Soporte multi-ubicación",
     icon: MapPin,
-    category: "Business",
+    category: "Negocio",
   },
   {
     id: "dedicated-manager",
-    name: "Dedicated account manager",
+    name: "Gerente de cuenta dedicado",
     icon: Award,
-    category: "Support",
+    category: "Soporte",
   },
   {
     id: "custom-training",
-    name: "Custom training",
+    name: "Capacitación personalizada",
     icon: Award,
-    category: "Support",
+    category: "Soporte",
   },
   {
     id: "white-label",
-    name: "White-label solution",
+    name: "Solución white-label",
     icon: Shield,
-    category: "Enterprise",
+    category: "Empresarial",
   },
   {
     id: "advanced-security",
-    name: "Advanced security",
+    name: "Seguridad avanzada",
     icon: Lock,
-    category: "Security",
+    category: "Seguridad",
   },
 ];
 
@@ -339,7 +339,7 @@ export function PricingCardsSection() {
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
-              Choose your perfect plan
+              Elige tu plan perfecto
             </span>
           </motion.div>
 
@@ -347,15 +347,15 @@ export function PricingCardsSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            Simple, Transparent <span className="text-[#07D9D9]">Pricing</span>
+            Simple, Transparente <span className="text-[#07D9D9]">Precios</span>
           </motion.h2>
 
           <motion.p
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8"
           >
-            Start free, scale as you grow. All plans include our core features
-            with enterprise-grade security.
+            Empieza gratis, escala a medida que creces. Todos los planes incluyen nuestras funciones principales
+            con seguridad de nivel empresarial.
           </motion.p>
 
           {/* Plan Selection Buttons */}
@@ -393,7 +393,7 @@ export function PricingCardsSection() {
                 !isAnnual ? "text-white" : "text-white/60"
               }`}
             >
-              Monthly
+              Mensual
             </span>
             <button
               onClick={() => setIsAnnual(!isAnnual)}
@@ -412,11 +412,11 @@ export function PricingCardsSection() {
                 isAnnual ? "text-white" : "text-white/60"
               }`}
             >
-              Annual
+              Anual
             </span>
             {isAnnual && (
               <span className="bg-gradient-to-r from-[#07D9D9]/20 to-[#0596A6]/20 text-[#07D9D9] px-2 py-1 rounded-full text-xs font-semibold">
-                Save up to 30%
+                Ahorra hasta 30%
               </span>
             )}
           </motion.div>
@@ -442,7 +442,7 @@ export function PricingCardsSection() {
             {currentPlan.popular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span className="bg-gradient-to-r from-[#763DF2] to-[#202473] text-white px-4 py-1 rounded-full text-xs font-semibold shadow-lg">
-                  Most Popular
+                  Más Popular
                 </span>
               </div>
             )}
@@ -520,7 +520,7 @@ export function PricingCardsSection() {
                   : "bg-gradient-to-r from-[#07D9D9] to-[#0596A6] text-[#010440] hover:shadow-lg hover:shadow-[#07D9D9]/30"
               }`}
             >
-              Get Started with {currentPlan.name}
+              Comenzar con {currentPlan.name}
             </button>
           </motion.div>
 
@@ -529,7 +529,7 @@ export function PricingCardsSection() {
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
               <h4 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                 <BarChart3 className="w-5 h-5 text-[#07D9D9]" />
-                All Features Comparison
+                Comparativa Completa de Funciones
               </h4>
 
               <div className="space-y-6">
@@ -594,15 +594,15 @@ export function PricingCardsSection() {
         >
           <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
             <Star className="w-4 h-4 text-[#07D9D9]" />
-            <span className="font-medium">14-day free trial</span>
+            <span className="font-medium">Prueba gratis de 14 días</span>
           </div>
           <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
             <Shield className="w-4 h-4 text-[#07D9D9]" />
-            <span className="font-medium">No credit card required</span>
+            <span className="font-medium">No requiere tarjeta</span>
           </div>
           <div className="flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
             <Zap className="w-4 h-4 text-[#07D9D9]" />
-            <span className="font-medium">Cancel anytime</span>
+            <span className="font-medium">Cancela cuando quieras</span>
           </div>
         </motion.div>
       </div>
