@@ -1,8 +1,8 @@
 "use client";
 
+import React, { useRef, useEffect } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { createMapPinElement } from "./mapPin";
-import { useRef, useEffect } from "react";
 
 interface MapUserProps {
   lat: number;
@@ -73,7 +73,7 @@ const MapUser = ({
   return <div ref={mapRef} className={className || "w-full h-full rounded-lg"} />;
 };
 
-const render = (status: Status) => {
+const render = (status: Status): React.ReactElement => {
   switch (status) {
     case Status.LOADING:
       return (
@@ -88,7 +88,13 @@ const render = (status: Status) => {
         </div>
       );
     case Status.SUCCESS:
-      return null;
+      return <div />;
+    default:
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          <p className="text-red-500">Error al cargar el mapa</p>
+        </div>
+      );
   }
 };
 

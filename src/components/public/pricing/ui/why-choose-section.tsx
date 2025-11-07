@@ -76,7 +76,7 @@ export function WhyChooseSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
+            className="inline-flex items-center gap-2 bg-linear-to-rrom-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
@@ -88,15 +88,15 @@ export function WhyChooseSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            ¿Por qué elegir{" "}
-            <span className="text-[#07D9D9]">Novack</span>?
+            ¿Por qué elegir <span className="text-[#07D9D9]">Novack</span>?
           </motion.h2>
 
           <motion.p
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8"
           >
-            No somos otra herramienta de citas. Somos tu socio estratégico en crecimiento, con seguridad empresarial y rendimiento incomparable.
+            No somos otra herramienta de citas. Somos tu socio estratégico en
+            crecimiento, con seguridad empresarial y rendimiento incomparable.
           </motion.p>
 
           <StatsGrid stats={industryStats} />
@@ -124,14 +124,15 @@ export function WhyChooseSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="bg-gradient-to-r from-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+            className="bg-linear-to-r from-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
           >
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-white mb-4">
                 Confiado por líderes de la industria
               </h3>
               <p className="text-white/80 text-lg leading-relaxed max-w-2xl mx-auto">
-                Únete a miles de empresas que confían en Novack para sus operaciones críticas
+                Únete a miles de empresas que confían en Novack para sus
+                operaciones críticas
               </p>
             </div>
 
@@ -148,9 +149,7 @@ export function WhyChooseSection() {
                 <div className="text-3xl font-bold text-[#07D9D9] mb-2">
                   Healthcare
                 </div>
-                <div className="text-white/80 text-sm">
-                  Cumplimiento HIPAA
-                </div>
+                <div className="text-white/80 text-sm">Cumplimiento HIPAA</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-[#07D9D9] mb-2">

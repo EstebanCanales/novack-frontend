@@ -57,8 +57,8 @@ const HowItWorksSection = () => {
           className="relative"
         >
           {/* Connecting line for desktop */}
-          <div className="hidden md:block absolute top-12 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-          
+          <div className="hidden md:block absolute top-12 left-0 w-full h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative">
             {steps.map((step, index) => (
               <motion.div
@@ -67,11 +67,13 @@ const HowItWorksSection = () => {
                 className="text-center flex flex-col items-center"
               >
                 <div className="relative z-10 w-24 h-24 flex items-center justify-center bg-black rounded-full mb-6">
-                    <div className="w-full h-full bg-gradient-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full border-2 border-white/10 flex items-center justify-center">
-                        {step.icon}
-                    </div>
+                  <div className="w-full h-full bg-linear-to-rrom-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full border-2 border-white/10 flex items-center justify-center">
+                    {step.icon}
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
+                <h3 className="text-xl font-bold text-white mb-3">
+                  {step.title}
+                </h3>
                 <p className="text-white/80 leading-relaxed max-w-xs">
                   {step.description}
                 </p>

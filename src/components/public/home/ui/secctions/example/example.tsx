@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { MacbookScroll } from "@/components/ui/macbook";
 import { motion } from "framer-motion"; // Ensure correct import
 
@@ -23,7 +22,11 @@ export default function Example() {
           >
             <div className="hidden lg:block">
               <MacbookScroll
-                title={<span>Protege tus operaciones. Simplifica tu flujo de trabajo.</span>}
+                title={
+                  <span>
+                    Protege tus operaciones. Simplifica tu flujo de trabajo.
+                  </span>
+                }
                 src={`/linear.webp`} // Assuming this path is valid
                 showGradient={false}
               />
@@ -34,7 +37,7 @@ export default function Example() {
               <div className="backdrop-blur-sm rounded-xl p-6 border border-white/10">
                 {" "}
                 {/* Added border */}
-                  {/* Weekly Activity Graph */}
+                {/* Weekly Activity Graph */}
                 <div className="mb-6">
                   <h3 className="text-xl font-bold text-white mb-4">
                     Actividad semanal
@@ -103,9 +106,7 @@ export default function Example() {
                       <span>Lun</span>
                       <span>Mar</span>
                       <span>Mié</span>
-                      <span className="text-[#07D9D9] font-semibold">
-                        Jue
-                      </span>
+                      <span className="text-[#07D9D9] font-semibold">Jue</span>
                       <span>Vie</span>
                       <span>Sáb</span>
                       <span>Dom</span>
@@ -119,7 +120,8 @@ export default function Example() {
                       Monitorea a tus usuarios
                     </h4>
                     <p className="text-white/70 text-sm leading-relaxed">
-                      Sigue su recorrido, mejora su productividad y garantiza cada acción en tiempo real.
+                      Sigue su recorrido, mejora su productividad y garantiza
+                      cada acción en tiempo real.
                     </p>
                   </div>
                 </div>
@@ -135,33 +137,46 @@ export default function Example() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl shadow-md border border-white/10 relative p-4 sm:p-6 md:p-8 flex flex-col justify-center items-center text-center"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0, rotate: -180 }}
               whileInView={{ scale: 1, rotate: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="w-24 h-24 rounded-full bg-gradient-to-br from-[#07D9D9] to-[#0596A6] flex items-center justify-center mb-6"
+              transition={{
+                duration: 0.6,
+                delay: 0.3,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="w-24 h-24 rounded-full bg-linear-to-br from-[#07D9D9] to-[#0596A6] flex items-center justify-center mb-6"
             >
               <span className="text-white text-4xl font-bold">🔒</span>{" "}
               {/* Placeholder icon */}
             </motion.div>
-            <motion.h3 
+            <motion.h3
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 0.6,
+                delay: 0.4,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="text-2xl font-bold text-white mb-3"
             >
               Seguridad de nivel empresarial
             </motion.h3>
-            <motion.p 
+            <motion.p
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 0.6,
+                delay: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="text-white/70 leading-relaxed"
             >
-              Construida con los más altos estándares para proteger tus datos y la privacidad de tus clientes.
+              Construida con los más altos estándares para proteger tus datos y
+              la privacidad de tus clientes.
             </motion.p>
           </motion.div>
         </div>
@@ -169,5 +184,3 @@ export default function Example() {
     </section>
   );
 }
-
-

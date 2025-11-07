@@ -3,13 +3,14 @@ import { memo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Users, Bot } from "lucide-react";
+import type { ChatRoom } from "@/lib/services/websocket.service";
 
 interface ChatRoomItemProps {
-  room: any;
+  room: ChatRoom;
   isActive: boolean;
   onClick: () => void;
   getInitials: (name: string) => string;
-  getOtherParticipantName: (room: any) => string | null;
+  getOtherParticipantName: (room: ChatRoom) => string | null;
 }
 
 const ChatRoomItem = memo(function ChatRoomItem({
@@ -22,9 +23,19 @@ const ChatRoomItem = memo(function ChatRoomItem({
   const displayName =
     getOtherParticipantName(room) || room.name || "Chat";
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <div
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
       className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
         isActive
           ? "bg-[#07D9D9]/10 border border-[#07D9D9]/30"

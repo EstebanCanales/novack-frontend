@@ -66,8 +66,7 @@ export function PhoneInput({
   useEffect(() => {
     const c = COUNTRIES.find((x) => x.code === country) ?? COUNTRIES[0];
     const digits = national.replace(/[^0-9]/g, "");
-    // Mostrar agrupado, pero enviar E.164 sin espacios
-    const groupedDisplay = groupForDisplay(country, digits);
+    // Enviar E.164 sin espacios
     const e164 = `${c.dial}${digits}`;
     onChange(e164);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -28,11 +28,15 @@ export default function HeroSection() {
             className="flex-1 rounded-xl shadow-md bg-white/5 backdrop-blur-sm border border-white/10 relative p-4 sm:p-6 md:p-8 lg:pl-12 overflow-hidden"
           >
             <div className="pt-16 sm:pt-8 md:pt-12 lg:pt-16 pb-6 sm:pb-8 md:pb-12 lg:pb-16 relative z-10">
-              <motion.h2 
+              <motion.h2
                 initial={{ y: 20, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.1,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
                 className="text-3xl md:text-5xl lg:text-5xl leading-tight font-bold lg:text-left text-white"
               >
                 Gestiona cada minuto,
@@ -40,14 +44,19 @@ export default function HeroSection() {
                 <span className="sm:hidden"> </span>
                 encuentra cada punto.
               </motion.h2>
-              <motion.p 
+              <motion.p
                 initial={{ y: 20, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.2,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
                 className="text-base lg:text-xl md:text-lg mt-6 sm:mt-4 text-white/80 lg:text-left"
               >
-                Planifica tus citas con precisión, monitorea ubicaciones en tiempo real y optimiza tu día.
+                Planifica tus citas con precisión, monitorea ubicaciones en
+                tiempo real y optimiza tu día.
               </motion.p>
             </div>
 
@@ -70,15 +79,19 @@ export default function HeroSection() {
             </div>
 
             {/* CTA Buttons */}
-            <motion.div 
+            <motion.div
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 0.6,
+                delay: 0.3,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 z-10 relative mb-20 mt-10"
             >
               <div className="relative inline-flex items-center justify-center gap-4 group w-full sm:w-auto">
-                <div className="absolute inset-0 duration-1000 opacity-60 transition-all bg-gradient-to-r from-[#07D9D9] via-[#0596A6] to-[#07D9D9] rounded-xl blur-lg filter group-hover:opacity-100 group-hover:duration-200"></div>
+                <div className="absolute inset-0 duration-1000 opacity-60 transition-all bg-linear-to-rm-[#07D9D9] via-[#0596A6] to-[#07D9D9] rounded-xl blur-lg filter group-hover:opacity-100 group-hover:duration-200"></div>
                 <Link
                   role="button"
                   className="group relative inline-flex items-center justify-center text-sm sm:text-base rounded-xl bg-[#07D9D9] px-4 sm:px-6 md:px-8 py-3 font-semibold text-[#010440] transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:shadow-[#07D9D9]/30 w-full sm:w-auto"
@@ -125,7 +138,7 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="z-10 flex-1 rounded-xl shadow-md bg-white/5 backdrop-blur-sm border border-white/10 lg:flex justify-center lg:justify-end relative min-h-[300px] sm:min-h-[400px] md:min-h-[450px] lg:min-h-0 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#07D9D9]/10 via-[#0596A6]/5 to-[#763DF2]/10"></div>
+            <div className="absolute inset-0 bg-linear-to-br from-[#07D9D9]/10 via-[#0596A6]/5 to-[#763DF2]/10"></div>
             <div className="hidden lg:block absolute">
               <Circles />
             </div>

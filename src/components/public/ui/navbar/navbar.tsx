@@ -37,7 +37,7 @@ export const Navbar = () => {
                 : "bg-white/5 backdrop-blur-sm"
             }`}
           >
-            <div className="flex justify-center items-center flex-shrink-0">
+            <div className="flex justify-center items-center shrink">
               <Link href="/" className="flex items-center">
                 <Image
                   className="hidden md:block"
@@ -65,7 +65,7 @@ export const Navbar = () => {
               <NavbarLink href="/blog" title="Blog" />
             </nav>
 
-            <div className="hidden md:flex items-center gap-3 flex-shrink-0">
+            <div className="hidden md:flex items-center gap-3 shrink">
               <Link
                 href="/login"
                 className="text-sm border-2 border-[#07D9D9] rounded-xl hover:bg-[#07D9D9] px-4 py-2 hover:text-[#010440] bg-transparent text-[#07D9D9] hover:shadow-lg transition-all duration-300 whitespace-nowrap font-medium"

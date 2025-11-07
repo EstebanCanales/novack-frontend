@@ -1,7 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { api } from "./api";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -22,7 +21,11 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const payload: any = {
+          const payload: {
+            email: string;
+            password: string;
+            sms_otp_code?: string;
+          } = {
             email: credentials.email,
             password: credentials.password,
           };
@@ -31,13 +34,16 @@ export const authOptions: NextAuthOptions = {
             payload.sms_otp_code = credentials.smsOtpCode;
           }
 
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
             },
-            body: JSON.stringify(payload),
-          });
+          );
 
           if (!response.ok) {
             return null;
@@ -71,18 +77,21 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google" && user) {
         try {
           // Buscar o crear usuario en nuestro backend
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: user.email,
+                name: user.name,
+                googleId: user.id,
+                image: user.image,
+              }),
             },
-            body: JSON.stringify({
-              email: user.email,
-              name: user.name,
-              googleId: user.id,
-              image: user.image,
-            }),
-          });
+          );
 
           if (response.ok) {
             const data = await response.json();
@@ -97,18 +106,31 @@ export const authOptions: NextAuthOptions = {
 
       // Si es un login con credenciales
       if (user && "accessToken" in user) {
-        token.accessToken = user.accessToken;
-        token.role = user.role;
-        token.supplier_id = user.supplier_id;
+        const customUser = user as {
+          accessToken: string;
+          role?: string;
+          supplier_id?: string;
+        };
+        token.accessToken = customUser.accessToken;
+        if (customUser.role) {
+          token.role = customUser.role;
+        }
+        if (customUser.supplier_id) {
+          token.supplier_id = customUser.supplier_id;
+        }
       }
 
       return token;
     },
     async session({ session, token }) {
       if (token.accessToken) {
-        session.accessToken = token.accessToken as string;
-        session.user.role = token.role as string;
-        session.user.supplier_id = token.supplier_id as string;
+        (session as { accessToken?: string }).accessToken = token.accessToken as string;
+        if (token.role) {
+          (session.user as { role?: string }).role = token.role as string;
+        }
+        if (token.supplier_id) {
+          (session.user as { supplier_id?: string }).supplier_id = token.supplier_id as string;
+        }
       }
       return session;
     },

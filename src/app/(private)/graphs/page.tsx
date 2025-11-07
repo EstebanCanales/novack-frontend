@@ -2,13 +2,13 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import {
   Breadcrumb,
@@ -19,27 +19,231 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
-  Battery,
-  Users,
-  MapPin,
-  AlertTriangle,
-  History,
-  Activity,
-  Zap,
   Home,
-  ChartArea,
+  BarChart3,
+  TrendingUp,
+  CreditCard,
+  PieChart,
+  Calendar,
+  Clock,
+  GripVertical,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  dashboardService,
+  WeeklyStats,
+  CardStats,
+  VisitorTrend,
+  AppointmentStatus,
+  MonthlyTrend,
+  HourlyActivity,
+} from "@/lib/services/dashboard.service";
+import { WeeklyStatsChart } from "@/components/private/graphs/WeeklyStatsChart";
+import { VisitorTrendsChart } from "@/components/private/graphs/VisitorTrendsChart";
+import { CardStatsDisplay } from "@/components/private/graphs/CardStatsDisplay";
+import { AppointmentStatusChart } from "@/components/private/graphs/AppointmentStatusChart";
+import { MonthlyTrendsChart } from "@/components/private/graphs/MonthlyTrendsChart";
+import { HourlyActivityChart } from "@/components/private/graphs/HourlyActivityChart";
+import { createSwapy } from "swapy";
+import type { SlotItemMap } from "swapy";
+import {
+  userPreferenceService,
+  PreferenceType,
+} from "@/lib/services/user-preference.service";
 
-export default function MetricsDashboardPage() {
+const DEFAULT_LAYOUT = {
+  "slot-1": "weekly-stats",
+  "slot-2": "visitor-trends",
+  "slot-3": "monthly-trends",
+  "slot-4": "card-stats",
+  "slot-5": "appointment-status",
+  "slot-6": "hourly-activity",
+};
+
+const CHART_CONFIG = {
+  "weekly-stats": {
+    title: "Estadísticas Semanales",
+    description: "Actividad de visitantes de los últimos 7 días",
+    icon: BarChart3,
+  },
+  "visitor-trends": {
+    title: "Tendencias de Visitantes",
+    description: "Check-ins y check-outs por día",
+    icon: TrendingUp,
+  },
+  "card-stats": {
+    title: "Estado de Tarjetas",
+    description: "Resumen de tarjetas activas y batería",
+    icon: CreditCard,
+  },
+  "appointment-status": {
+    title: "Estado de Citas",
+    description: "Distribución por estado",
+    icon: PieChart,
+  },
+  "monthly-trends": {
+    title: "Tendencias Mensuales",
+    description: "Actividad de los últimos 6 meses",
+    icon: Calendar,
+  },
+  "hourly-activity": {
+    title: "Actividad por Hora",
+    description: "Picos de actividad del día",
+    icon: Clock,
+  },
+};
+
+export default function GraphsPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const [weeklyStats, setWeeklyStats] = useState<WeeklyStats[]>([]);
+  const [cardStats, setCardStats] = useState<CardStats | null>(null);
+  const [visitorTrends, setVisitorTrends] = useState<VisitorTrend[]>([]);
+  const [appointmentStatus, setAppointmentStatus] = useState<
+    AppointmentStatus[]
+  >([]);
+  const [monthlyTrends, setMonthlyTrends] = useState<MonthlyTrend[]>([]);
+  const [hourlyActivity, setHourlyActivity] = useState<HourlyActivity[]>([]);
+  const [loadingWeekly, setLoadingWeekly] = useState(true);
+  const [loadingCards, setLoadingCards] = useState(true);
+  const [loadingTrends, setLoadingTrends] = useState(true);
+  const [loadingStatus, setLoadingStatus] = useState(true);
+  const [loadingMonthly, setLoadingMonthly] = useState(true);
+  const [loadingHourly, setLoadingHourly] = useState(true);
+  const [slotItems, setSlotItems] = useState<SlotItemMap>(
+    DEFAULT_LAYOUT as unknown as SlotItemMap
+  );
+  const containerRef = useRef<HTMLDivElement>(null);
+  const swapyRef = useRef<any>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, isLoading, router]);
+
+  // Cargar layout guardado
+  useEffect(() => {
+    if (!user) return;
+
+    userPreferenceService
+      .getGraphsLayout()
+      .then((savedLayout) => {
+        if (savedLayout && savedLayout.slotItems) {
+          setSlotItems(savedLayout.slotItems as unknown as SlotItemMap);
+        }
+      })
+      .catch((error) => {
+        if (error.message !== "Error loading saved layout:") {
+          console.error("Error loading layout:", error);
+        }
+      });
+  }, [user]);
+
+  // Cargar datos
+  useEffect(() => {
+    if (!user?.supplier?.id) return;
+
+    const supplierId = user.supplier.id;
+
+    // Cargar estadísticas semanales
+    setLoadingWeekly(true);
+    dashboardService
+      .getWeeklyStats(supplierId)
+      .then(setWeeklyStats)
+      .catch(() => setWeeklyStats([]))
+      .finally(() => setLoadingWeekly(false));
+
+    // Cargar estadísticas de tarjetas
+    setLoadingCards(true);
+    dashboardService
+      .getCardStats(supplierId)
+      .then(setCardStats)
+      .catch(() => setCardStats(null))
+      .finally(() => setLoadingCards(false));
+
+    // Cargar tendencias de visitantes
+    setLoadingTrends(true);
+    dashboardService
+      .getVisitorTrends(7, supplierId)
+      .then(setVisitorTrends)
+      .catch(() => setVisitorTrends([]))
+      .finally(() => setLoadingTrends(false));
+
+    // Cargar estado de citas
+    setLoadingStatus(true);
+    dashboardService
+      .getAppointmentStatusBreakdown(supplierId)
+      .then(setAppointmentStatus)
+      .catch(() => setAppointmentStatus([]))
+      .finally(() => setLoadingStatus(false));
+
+    // Cargar tendencias mensuales
+    setLoadingMonthly(true);
+    dashboardService
+      .getMonthlyTrends(6, supplierId)
+      .then(setMonthlyTrends)
+      .catch(() => setMonthlyTrends([]))
+      .finally(() => setLoadingMonthly(false));
+
+    // Cargar actividad por hora
+    setLoadingHourly(true);
+    dashboardService
+      .getHourlyActivity(supplierId)
+      .then(setHourlyActivity)
+      .catch(() => setHourlyActivity([]))
+      .finally(() => setLoadingHourly(false));
+  }, [user?.supplier?.id]);
+
+  // Inicializar Swapy
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    try {
+      const swapy = createSwapy(containerRef.current, {
+        animation: "spring",
+        swapMode: "hover",
+      });
+
+      swapy.onSwap((event) => {
+        try {
+          if (!event) return;
+
+          // El evento contiene el SlotItemMap, necesitamos hacer una conversión segura
+          const newSlotItems = event as unknown as SlotItemMap;
+          setSlotItems(newSlotItems);
+
+          // Guardar layout en el backend
+          userPreferenceService
+            .create(PreferenceType.GRAPHS_LAYOUT, {
+              slotItems: newSlotItems,
+            })
+            .catch(() => {});
+        } catch (err) {
+          // Silently ignore swap errors
+        }
+      });
+
+      swapyRef.current = swapy;
+
+      return () => {
+        try {
+          swapy.destroy();
+        } catch (err) {
+          // Ignore cleanup errors
+        }
+      };
+    } catch (err) {
+      // Ignore initialization errors
+    }
+  }, []);
+
+  // Actualizar Swapy cuando cambie el layout
+  useEffect(() => {
+    if (swapyRef.current) {
+      swapyRef.current.update();
+    }
+  }, [slotItems]);
 
   if (isLoading) {
     return (
@@ -53,100 +257,95 @@ export default function MetricsDashboardPage() {
     return null;
   }
 
-  const batteryCards = [
-    { id: 1, percentage: 75, status: "active" },
-    { id: 2, percentage: 10, status: "low" },
-    { id: 3, percentage: 45, status: "active" },
-    { id: 4, percentage: 0, status: "disconnected" },
-  ];
+  // Función helper para obtener el itemId de un slot de forma segura
+  const getSlotItemId = (slotId: string): string | undefined => {
+    if (!slotItems) return undefined;
 
-  const metrics = [
-    {
-      category: "Cards",
-      items: [
-        {
-          title: "Active Cards",
-          value: "24",
-          icon: Activity,
-          color: "text-green-400",
-        },
-        {
-          title: "Battery Percentage",
-          value: "62%",
-          icon: Battery,
-          color: "text-yellow-400",
-        },
-        {
-          title: "Disconnected Cards",
-          value: "3",
-          icon: Zap,
-          color: "text-red-400",
-        },
-      ],
-    },
-    {
-      category: "Zones",
-      items: [
-        {
-          title: "Most transitted zones",
-          value: "Zone B",
-          icon: MapPin,
-          color: "text-blue-400",
-        },
-        {
-          title: "People per zone",
-          value: "48",
-          icon: Users,
-          color: "text-purple-400",
-        },
-      ],
-    },
-    {
-      category: "Events",
-      items: [
-        {
-          title: "Alerts for active cards",
-          value: "12",
-          icon: AlertTriangle,
-          color: "text-orange-400",
-        },
-        {
-          title: "Number of events",
-          value: "156",
-          icon: Activity,
-          color: "text-cyan-400",
-        },
-      ],
-    },
-    {
-      category: "History",
-      items: [
-        {
-          title: "Movement history",
-          value: "1.2K",
-          icon: History,
-          color: "text-indigo-400",
-        },
-        {
-          title: "Day comparison",
-          value: "+15%",
-          icon: Activity,
-          color: "text-green-400",
-        },
-      ],
-    },
-  ];
+    // Si slotItems tiene asObject (es un SlotItemMap real), usarlo
+    if (slotItems.asObject && typeof slotItems.asObject === "object") {
+      return slotItems.asObject[slotId];
+    }
 
-  const getBatteryColor = (percentage: number) => {
-    if (percentage >= 50) return "text-green-400";
-    if (percentage >= 20) return "text-yellow-400";
-    return "text-red-400";
+    // Si slotItems es un objeto plano (como DEFAULT_LAYOUT), acceder directamente
+    if (typeof slotItems === "object" && slotItems !== null) {
+      const items = slotItems as unknown as Record<string, string>;
+      return items[slotId];
+    }
+
+    return undefined;
   };
 
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 50) return "bg-green-400";
-    if (percentage >= 20) return "bg-yellow-400";
-    return "bg-red-400";
+  const renderChart = (itemId: string) => {
+    const config = CHART_CONFIG[itemId as keyof typeof CHART_CONFIG];
+    if (!config) return null;
+
+    const Icon = config.icon;
+
+    const renderContent = () => {
+      switch (itemId) {
+        case "weekly-stats":
+          if (loadingWeekly) return <LoadingSpinner />;
+          if (weeklyStats.length === 0) return <EmptyState />;
+          return <WeeklyStatsChart data={weeklyStats} />;
+
+        case "visitor-trends":
+          if (loadingTrends) return <LoadingSpinner />;
+          if (visitorTrends.length === 0) return <EmptyState />;
+          return <VisitorTrendsChart data={visitorTrends} />;
+
+        case "card-stats":
+          if (loadingCards) return <LoadingSpinner />;
+          if (!cardStats) return <EmptyState />;
+          return <CardStatsDisplay stats={cardStats} />;
+
+        case "appointment-status":
+          if (loadingStatus) return <LoadingSpinner />;
+          if (appointmentStatus.length === 0) return <EmptyState />;
+          return <AppointmentStatusChart data={appointmentStatus} />;
+
+        case "monthly-trends":
+          if (loadingMonthly) return <LoadingSpinner />;
+          if (monthlyTrends.length === 0) return <EmptyState />;
+          return <MonthlyTrendsChart data={monthlyTrends} />;
+
+        case "hourly-activity":
+          if (loadingHourly) return <LoadingSpinner />;
+          if (hourlyActivity.length === 0) return <EmptyState />;
+          return <HourlyActivityChart data={hourlyActivity} />;
+
+        default:
+          return <EmptyState />;
+      }
+    };
+
+    return (
+      <Card
+        className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#07D9D9]/40 transition-all duration-500 shadow-lg hover:shadow-[#07D9D9]/20 hover:bg-white/[0.07]"
+        data-swapy-item={itemId}
+      >
+        <CardHeader className="pb-3 space-y-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-[#07D9D9]/10 border border-[#07D9D9]/20">
+                <Icon className="w-4 h-4 text-[#07D9D9]" />
+              </div>
+              <div>
+                <CardTitle className="text-base font-semibold text-white">
+                  {config.title}
+                </CardTitle>
+                <CardDescription className="text-[10px] text-gray-400 mt-0.5">
+                  {config.description}
+                </CardDescription>
+              </div>
+            </div>
+            <GripVertical className="w-5 h-5 text-gray-500 cursor-grab active:cursor-grabbing hover:text-[#07D9D9] transition-colors" />
+          </div>
+        </CardHeader>
+        <CardContent className="pb-4">
+          <div className="h-[300px]">{renderContent()}</div>
+        </CardContent>
+      </Card>
+    );
   };
 
   return (
@@ -158,170 +357,72 @@ export default function MetricsDashboardPage() {
         className="mb-3"
       >
         <Breadcrumb>
-          <BreadcrumbList>
+          <BreadcrumbList className="text-white">
             <BreadcrumbItem>
-              <BreadcrumbLink href="/home">
+              <BreadcrumbLink
+                href="/home"
+                className="text-white hover:text-[#07D9D9]"
+              >
                 <Home className="h-4 w-4" />
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbSeparator className="text-white" />
             <BreadcrumbItem>
-              <BreadcrumbPage>Métricas</BreadcrumbPage>
+              <BreadcrumbPage className="text-white">
+                Gráficas y Estadísticas
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </motion.div>
 
-      {/* Main Content */}
+      {/* Main Content with Swapy */}
       <main className="flex-1 overflow-auto">
-        <div className="space-y-8">
-          {/* Battery Cards Section */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {batteryCards.map((card, index) => (
-                <motion.div
-                  key={card.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                >
-                  <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-md hover:border-[#07D9D9]/20 transition-all duration-300">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center justify-between text-sm font-medium">
-                        <span className="text-gray-400">Card #{card.id}</span>
-                        <Battery
-                          className={`w-5 h-5 ${getBatteryColor(
-                            card.percentage
-                          )}`}
-                        />
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-center">
-                        <div
-                          className={`text-3xl font-bold mb-3 ${getBatteryColor(
-                            card.percentage
-                          )}`}
-                        >
-                          {card.percentage}%
-                        </div>
-                        <div className="text-xs text-gray-400 capitalize">
-                          {card.status}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Metrics Grid */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <h2 className="text-2xl font-bold text-white mb-6">
-              Estadísticas del Sistema
-            </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-              {metrics.map((metricGroup, groupIndex) => (
-                <motion.div
-                  key={metricGroup.category}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 + groupIndex * 0.1 }}
-                >
-                  <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-md h-full">
-                    <CardHeader>
-                      <CardTitle className="text-lg font-semibold text-[#07D9D9]">
-                        {metricGroup.category}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {metricGroup.items.map((item, itemIndex) => (
-                        <div
-                          key={itemIndex}
-                          className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-200 group cursor-pointer"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-white/5 group-hover:bg-[#07D9D9]/20 transition-colors duration-200">
-                              <item.icon className={`w-4 h-4 ${item.color}`} />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-white group-hover:text-[#07D9D9] transition-colors">
-                                {item.title}
-                              </p>
-                            </div>
-                          </div>
-                          <span className="text-lg font-bold text-white">
-                            {item.value}
-                          </span>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Additional Stats */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-md p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-green-500/20 border border-green-500/30">
-                  <Activity className="h-6 w-6 text-green-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    Sistema Activo
-                  </h3>
-                  <p className="text-2xl font-bold text-green-400">98%</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-md p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-blue-500/20 border border-blue-500/30">
-                  <Users className="h-6 w-6 text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    Usuarios Activos
-                  </h3>
-                  <p className="text-2xl font-bold text-blue-400">156</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl shadow-md p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-xl bg-purple-500/20 border border-purple-500/30">
-                  <MapPin className="h-6 w-6 text-purple-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    Zonas Monitoreadas
-                  </h3>
-                  <p className="text-2xl font-bold text-purple-400">24</p>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
+        <div
+          ref={containerRef}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-4"
+        >
+          {["slot-1", "slot-2", "slot-3", "slot-4", "slot-5", "slot-6"].map(
+            (slotId, index) => (
+              <motion.div
+                key={slotId}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.1 + index * 0.05,
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
+                data-swapy-slot={slotId}
+                className="will-change-transform"
+              >
+                {(() => {
+                  const itemId = getSlotItemId(slotId);
+                  return itemId ? renderChart(itemId) : null;
+                })()}
+              </motion.div>
+            )
+          )}
         </div>
       </main>
+    </div>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="h-full flex items-center justify-center">
+      <div className="animate-spin rounded-full h-10 w-10 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="h-full flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-gray-400 text-sm">No hay datos disponibles</div>
+      </div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ import ContactList from "@/components/chat/ContactList";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ChatRoomItem from "@/components/chat/ChatRoomItem";
 import ChatMessages from "@/components/chat/ChatMessages";
-import { Badge } from "@/components/ui/badge";
+import { ChatRoom } from "@/lib/services/websocket.service";
 
 export default function ChatPage() {
   const { user } = useAuth();
@@ -44,17 +44,23 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Obtener el nombre del otro participante en chat privado (memoizado)
-  const getOtherParticipantName = useCallback((room: any) => {
-    if (room.roomType === "private" && room.participants) {
-      const otherParticipant = room.participants.find(
-        (p: any) => p.id !== user?.id
-      );
-      if (otherParticipant) {
-        return `${otherParticipant.first_name || ""} ${otherParticipant.last_name || ""}`.trim() || otherParticipant.email;
+  const getOtherParticipantName = useCallback(
+    (room: ChatRoom): string | null => {
+      if (room.roomType === "private" && room.participants) {
+        const otherParticipant = room.participants.find(
+          (p) => p.id !== user?.id
+        );
+        if (otherParticipant) {
+          const name = `${otherParticipant.first_name || ""} ${
+            otherParticipant.last_name || ""
+          }`.trim();
+          return name || otherParticipant.email || null;
+        }
       }
-    }
-    return null;
-  }, [user?.id]);
+      return null;
+    },
+    [user?.id]
+  );
 
   const getInitials = useCallback((name: string) => {
     if (!name) return "U";
@@ -78,9 +84,17 @@ export default function ChatPage() {
     }
   }, []);
 
-  const isOwnMessage = useCallback((message: any) => {
-    return message.senderId === user?.id && message.senderType === "employee";
-  }, [user?.id]);
+  type Message = {
+    senderId: string;
+    senderType: string;
+  };
+
+  const isOwnMessage = useCallback(
+    (message: Message) => {
+      return message.senderId === user?.id && message.senderType === "employee";
+    },
+    [user?.id]
+  );
 
   // Auto-focus en el input
   useEffect(() => {
@@ -90,9 +104,12 @@ export default function ChatPage() {
   }, [currentRoom]);
 
   // Memoizar el handler de join room
-  const handleJoinRoom = useCallback((room: any) => {
-    joinRoom(room);
-  }, [joinRoom]);
+  const handleJoinRoom = useCallback(
+    (room: ChatRoom) => {
+      joinRoom(room);
+    },
+    [joinRoom]
+  );
 
   // Filtrar salas (memoizado)
   const filteredRooms = useMemo(() => {
@@ -131,7 +148,9 @@ export default function ChatPage() {
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div
-                className={`w-2 h-2 rounded-full ${isConnected ? "bg-green-400" : "bg-red-400"}`}
+                className={`w-2 h-2 rounded-full ${
+                  isConnected ? "bg-green-400" : "bg-red-400"
+                }`}
               />
               <span className="text-sm text-gray-300">
                 {isConnected ? "Conectado" : "Desconectado"}
@@ -141,7 +160,11 @@ export default function ChatPage() {
               variant="ghost"
               size="sm"
               onClick={() => setShowContacts(!showContacts)}
-              className={`h-7 w-7 p-0 ${showContacts ? "bg-[#07D9D9]/10 text-[#07D9D9]" : "text-gray-400 hover:text-[#07D9D9]"}`}
+              className={`h-7 w-7 p-0 ${
+                showContacts
+                  ? "bg-[#07D9D9]/10 text-[#07D9D9]"
+                  : "text-gray-400 hover:text-[#07D9D9]"
+              }`}
             >
               <UserPlus className="w-4 h-4" />
             </Button>

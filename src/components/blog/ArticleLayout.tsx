@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Calendar, Link as LinkIcon, Share2, ArrowLeft } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Calendar, Share2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -14,7 +14,7 @@ import { slugify } from "./slugify";
 interface TocItem {
   id: string;
   text: string;
-  level: number; // 1..4
+  level: number;
 }
 
 export function ArticleLayout({
@@ -48,7 +48,7 @@ export function ArticleLayout({
   useEffect(() => {
     if (!articleRef.current) return;
     const headings = Array.from(
-      articleRef.current.querySelectorAll("h1, h2, h3, h4")
+      articleRef.current.querySelectorAll("h1, h2, h3, h4"),
     ) as HTMLHeadingElement[];
     const items: TocItem[] = headings.map((h) => {
       const text = h.innerText.trim();
@@ -68,18 +68,32 @@ export function ArticleLayout({
           }
         }
       },
-      { rootMargin: "0px 0px -60% 0px", threshold: 0.1 }
+      { rootMargin: "0px 0px -60% 0px", threshold: 0.1 },
     );
     headings.forEach((h) => observer.observe(h));
     return () => observer.disconnect();
   }, [children]);
 
   const onShareNative = async () => {
-    if (typeof navigator !== "undefined" && (navigator as any).share) {
+    if (
+      typeof navigator !== "undefined" &&
+      "share" in navigator &&
+      typeof navigator.share === "function"
+    ) {
       try {
-        await (navigator as any).share({ title, text: title, url });
+        await navigator.share({ title, text: title, url });
         flashLabel("¡Compartido!");
-      } catch {}
+      } catch (err) {
+        type ErrorWithMessage = {
+          response?: { data?: { message?: unknown } };
+          message?: unknown;
+        };
+        const e = err as ErrorWithMessage;
+        const raw =
+          e?.response?.data?.message ?? e?.message ?? "Error al compartir";
+        const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
+        console.error("❌ Error compartiendo:", message);
+      }
     }
   };
 
@@ -87,7 +101,17 @@ export function ArticleLayout({
     try {
       await navigator.clipboard.writeText(url);
       flashLabel("Enlace copiado");
-    } catch {}
+    } catch (err) {
+      type ErrorWithMessage = {
+        response?: { data?: { message?: unknown } };
+        message?: unknown;
+      };
+      const e = err as ErrorWithMessage;
+      const raw =
+        e?.response?.data?.message ?? e?.message ?? "Error al copiar enlace";
+      const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
+      console.error("❌ Error copiando enlace:", message);
+    }
   };
 
   const openWindow = (href: string) => {
@@ -97,21 +121,21 @@ export function ArticleLayout({
 
   const onShareTwitter = () => {
     const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-      url
+      url,
     )}&text=${encodeURIComponent(title)}`;
     openWindow(shareUrl);
     flashLabel("X abierto");
   };
   const onShareLinkedIn = () => {
     const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-      url
+      url,
     )}`;
     openWindow(shareUrl);
     flashLabel("LinkedIn abierto");
   };
   const onShareFacebook = () => {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      url
+      url,
     )}`;
     openWindow(shareUrl);
     flashLabel("Facebook abierto");
@@ -146,9 +170,7 @@ export function ArticleLayout({
             </div>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-              <span>
-                {minutes} min de lectura
-              </span>
+              <span>{minutes} min de lectura</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

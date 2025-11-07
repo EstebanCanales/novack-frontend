@@ -1,8 +1,8 @@
 "use client";
 
+import React, { useRef, useEffect, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { createMapPinElement } from "./mapPin";
-import { useRef, useEffect, useState } from "react";
 
 export interface MapCard {
   id: string;
@@ -67,7 +67,9 @@ const Map = ({ cards }: { cards: MapCard[] }) => {
     });
 
     // Limpiar marcadores anteriores
-    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current.forEach((marker) => {
+      marker.map = null;
+    });
     markersRef.current = [];
 
     // Crear marcadores para cada tarjeta válida
@@ -144,7 +146,9 @@ const Map = ({ cards }: { cards: MapCard[] }) => {
     });
 
     return () => {
-      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current.forEach((marker) => {
+        marker.map = null;
+      });
     };
   }, [cards]);
 
@@ -232,7 +236,7 @@ export default function GlobalMap({ cards, className = "" }: GlobalMapProps) {
     );
   }
 
-  const render = (status: Status) => {
+  const render = (status: Status): React.ReactElement => {
     switch (status) {
       case Status.LOADING:
         return <LoadingMap />;
@@ -240,6 +244,8 @@ export default function GlobalMap({ cards, className = "" }: GlobalMapProps) {
         return <ErrorMap />;
       case Status.SUCCESS:
         return <Map cards={cards} />;
+      default:
+        return <ErrorMap />;
     }
   };
 

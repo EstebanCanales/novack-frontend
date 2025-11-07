@@ -12,18 +12,27 @@ export interface CardLocation {
 export interface Card {
   id: string;
   card_number: string;
+  card_uuid: string;
   is_active: boolean;
+  status?: "active" | "inactive" | "lost" | "damaged" | "assigned" | "available";
+  battery_percentage?: number;
   issued_at?: string;
   expires_at?: string;
   latitude?: number;
   longitude?: number;
   accuracy?: number;
-  additional_info?: Record<string, any>;
+  additional_info?: Record<string, unknown>;
   supplier_id: string;
   assigned_to_id?: string;
   created_at: string;
   updated_at: string;
   assigned_to?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  employee?: {
     id: string;
     first_name: string;
     last_name: string;
@@ -192,7 +201,9 @@ class CardService {
    * Obtener historial de ubicaciones de una tarjeta
    */
   async getLocationHistory(cardId: string): Promise<CardLocation[]> {
-    const response = await api.get<CardLocation[]>(`/cards/${cardId}/locations`);
+    const response = await api.get<CardLocation[]>(
+      `/cards/${cardId}/locations`,
+    );
     return response.data;
   }
 
@@ -203,7 +214,7 @@ class CardService {
     cardId: string,
     latitude: number,
     longitude: number,
-    accuracy?: number
+    accuracy?: number,
   ): Promise<CardLocation> {
     const response = await api.post<CardLocation>(`/cards/${cardId}/location`, {
       latitude,
@@ -217,7 +228,9 @@ class CardService {
    * Obtener última ubicación de una tarjeta
    */
   async getLastLocation(cardId: string): Promise<CardLocation | null> {
-    const response = await api.get<CardLocation | null>(`/cards/${cardId}/last-location`);
+    const response = await api.get<CardLocation | null>(
+      `/cards/${cardId}/last-location`,
+    );
     return response.data;
   }
 
@@ -227,7 +240,7 @@ class CardService {
   async getNearbyCards(
     latitude: number,
     longitude: number,
-    radius: number = 100
+    radius: number = 100,
   ): Promise<Card[]> {
     const response = await api.get<Card[]>("/cards/nearby", {
       params: { lat: latitude, lng: longitude, radius },

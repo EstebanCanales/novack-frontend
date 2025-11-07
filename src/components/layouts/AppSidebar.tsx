@@ -29,12 +29,9 @@ import {
   ChartArea,
   Badge as BadgeIcon,
   BadgeDollarSign,
-  Lock,
   Users,
-  Monitor,
   ClipboardList,
   CreditCard,
-  ChevronDown,
   ChevronRight,
   Settings,
   UserCog,
@@ -42,9 +39,11 @@ import {
   LogOut,
   Shield,
   Building2,
+  FileText,
+  Inbox,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +54,7 @@ import {
 
 const mainItems = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/home",
     icon: Home,
   },
@@ -65,14 +64,14 @@ const mainItems = [
     icon: Calendar,
   },
   {
+    title: "Visitantes",
+    url: "/visitor",
+    icon: Users,
+  },
+  {
     title: "Chat",
     url: "/chat",
     icon: MessageCircle,
-  },
-  {
-    title: "Gráficas",
-    url: "/graphs",
-    icon: ChartArea,
   },
 ];
 
@@ -89,7 +88,7 @@ const collapsibleItems = [
       },
       {
         title: "Tarjetas",
-        url: "/cards",
+        url: "/card",
         icon: CreditCard,
       },
       {
@@ -100,24 +99,19 @@ const collapsibleItems = [
     ],
   },
   {
-    title: "Configuración",
-    icon: UserCog,
+    title: "Formularios",
+    icon: FileText,
     initiallyOpen: false,
     items: [
       {
-        title: "Mi Perfil",
-        url: "/management/supplier/supplierProfile",
-        icon: User,
+        title: "Mis Formularios",
+        url: "/forms",
+        icon: FileText,
       },
       {
-        title: "Permisos",
-        url: "/management/supplier/permissionAdmin",
-        icon: Shield,
-      },
-      {
-        title: "Suscripción",
-        url: "/management/supplier/subscription",
-        icon: BadgeDollarSign,
+        title: "Submissions",
+        url: "/submissions",
+        icon: Inbox,
       },
     ],
   },
@@ -125,14 +119,14 @@ const collapsibleItems = [
 
 const standaloneItems = [
   {
-    title: "Formulario Visitantes",
-    url: "/management/supplier/parentForm",
-    icon: ClipboardList,
+    title: "Gráficas",
+    url: "/graphs",
+    icon: ChartArea,
   },
 ];
 
 export function AppSidebar() {
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -163,8 +157,8 @@ export function AppSidebar() {
     <Sidebar className="bg-transparent border-none">
       <SidebarHeader className="bg-transparent px-3 py-2" data-sidebar="header">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#07D9D9] to-[#0596A6] shadow-lg flex-shrink-0">
-            <BadgeIcon className="size-5 text-[#010440]" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-linear-to-brrom-[#07D9D9] to-[#0596A6] shadow-lg shrink">
+            <img src="/logo.svg" alt="Novack" className="size-10" />
           </div>
           <div>
             <div className="text-sm font-bold text-white">Novack</div>
@@ -176,7 +170,7 @@ export function AppSidebar() {
       <SidebarContent className="py-2 px-2 bg-transparent overflow-y-auto scrollbar-hide flex-1">
         <SidebarGroup>
           <SidebarGroupLabel
-            className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2 mt-2 px-2"
+            className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 mt-2 px-2"
             data-sidebar="group-label"
           >
             Principal
@@ -193,7 +187,7 @@ export function AppSidebar() {
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                           active
                             ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30 shadow-lg shadow-[#07D9D9]/5"
-                            : "text-gray-400 hover:text-white hover:bg-white/5"
+                            : "text-slate-400 hover:text-white hover:bg-white/5"
                         }`}
                       >
                         <item.icon
@@ -213,7 +207,7 @@ export function AppSidebar() {
 
         <SidebarGroup className="mt-2">
           <SidebarGroupLabel
-            className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2 mt-2 px-2"
+            className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-2 mt-2 px-2"
             data-sidebar="group-label"
           >
             Administración
@@ -229,9 +223,9 @@ export function AppSidebar() {
                 >
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton className="w-full px-3 py-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all">
+                      <SidebarMenuButton className="w-full px-3 py-2.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all">
                         <div className="flex items-center gap-3">
-                          <item.icon className="size-4 flex-shrink-0" />
+                          <item.icon className="size-4 shrink" />
                           <span className="truncate font-medium">
                             {item.title}
                           </span>
@@ -252,7 +246,7 @@ export function AppSidebar() {
                                   className={`flex items-center gap-3 pl-11 pr-3 py-2 rounded-lg transition-all duration-200 ${
                                     active
                                       ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
-                                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                                      : "text-slate-400 hover:text-white hover:bg-white/5"
                                   }`}
                                 >
                                   <subItem.icon
@@ -284,7 +278,7 @@ export function AppSidebar() {
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                           active
                             ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
-                            : "text-gray-400 hover:text-white hover:bg-white/5"
+                            : "text-slate-400 hover:text-white hover:bg-white/5"
                         }`}
                       >
                         <item.icon
@@ -310,8 +304,9 @@ export function AppSidebar() {
               variant="ghost"
               className="w-full justify-start gap-3 px-3 py-3 h-auto hover:bg-white/5 rounded-lg"
             >
-              <Avatar className="h-9 w-9 border-2 border-[#07D9D9]/30 flex-shrink-0">
-                <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-[#010440] font-bold text-sm">
+              <Avatar className="h-9 w-9 border-2 border-[#07D9D9]/30 shrink">
+                <AvatarImage src={user?.profile_image_url || ""} alt={`${user?.first_name} ${user?.last_name}`} />
+                <AvatarFallback className="bg-[#07D9D9] text-black font-bold text-sm">
                   {user?.first_name?.[0]}
                   {user?.last_name?.[0]}
                 </AvatarFallback>
@@ -320,7 +315,7 @@ export function AppSidebar() {
                 <div className="text-sm font-semibold text-white truncate">
                   {user?.first_name} {user?.last_name}
                 </div>
-                <div className="text-xs text-gray-400 truncate">
+                <div className="text-xs text-slate-400 truncate">
                   {user?.email}
                 </div>
               </div>
@@ -328,20 +323,18 @@ export function AppSidebar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-56 bg-[#010440] border border-[#07D9D9]/20"
+            className="w-56 bg-slate-900 border border-white/10"
           >
             <DropdownMenuItem
-              onClick={() =>
-                router.push("/management/supplier/supplierProfile")
-              }
-              className="cursor-pointer text-gray-300 hover:text-white hover:bg-white/10"
+              onClick={() => router.push("/profile")}
+              className="cursor-pointer text-white hover:bg-white/10"
             >
               <User className="mr-2 h-4 w-4 text-[#07D9D9]" />
               <span>Mi Perfil</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => router.push("/settings")}
-              className="cursor-pointer text-gray-300 hover:text-white hover:bg-white/10"
+              className="cursor-pointer text-white hover:bg-white/10"
             >
               <Settings className="mr-2 h-4 w-4 text-[#07D9D9]" />
               <span>Configuración</span>

@@ -11,7 +11,7 @@ const CtaSection = () => {
           initial="initial"
           whileInView="animate"
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-12 border border-white/10 text-center"
+          className="bg-linear-to-rm-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-12 border border-white/10 text-center"
         >
           <motion.h2
             variants={fadeInUp}
@@ -23,11 +23,11 @@ const CtaSection = () => {
             variants={fadeInUp}
             className="text-white/80 mb-6 max-w-2xl mx-auto"
           >
-            Explora nuestras características con una prueba gratuita y descubre cómo Novack puede
-            transformar tu flujo de trabajo.
+            Explora nuestras características con una prueba gratuita y descubre
+            cómo Novack puede transformar tu flujo de trabajo.
           </motion.p>
           <motion.div variants={fadeInUp} className="flex gap-4 justify-center">
-            <button className="bg-gradient-to-r from-[#07D9D9] to-[#0596A6] text-[#010440] px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#07D9D9]/30 transition-all duration-300">
+            <button className="bg-linear-to-r from-[#07D9D9] to-[#0596A6] text-[#010440] px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#07D9D9]/30 transition-all duration-300">
               Comenzar Prueba Gratuita
             </button>
             <button className="border-2 border-[#07D9D9] text-[#07D9D9] px-6 py-3 rounded-xl font-semibold hover:bg-[#07D9D9] hover:text-[#010440] transition-all duration-300">

@@ -5,14 +5,15 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import ChatMessage from "./ChatMessage";
+import type { Message } from "@/lib/services/websocket.service";
 
 interface ChatMessagesProps {
-  messages: any[];
+  messages: Message[];
   hasMoreMessages: boolean;
   isLoadingMore: boolean;
   isLoadingMessages?: boolean;
   loadMoreMessages: () => void;
-  isOwnMessage: (message: any) => boolean;
+  isOwnMessage: (message: Message) => boolean;
   formatTime: (date: string) => string;
 }
 

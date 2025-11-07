@@ -17,7 +17,7 @@ export function SuccessStoriesSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
+            className="inline-flex items-center gap-2 bg-linear-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
@@ -29,23 +29,21 @@ export function SuccessStoriesSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            Historias de{" "}
-            <span className="text-[#07D9D9]">
-              Éxito
-            </span>
+            Historias de <span className="text-[#07D9D9]">Éxito</span>
           </motion.h2>
 
           <motion.p
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8"
           >
-            Descubre cómo empresas como la tuya transforman sus operaciones con Novack.
+            Descubre cómo empresas como la tuya transforman sus operaciones con
+            Novack.
           </motion.p>
 
           {/* ROI Calculator Preview */}
           <motion.div
             variants={fadeInUp}
-            className="bg-gradient-to-r from-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+            className="bg-linear-to-r from-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
           >
             <div className="text-center">
               <h3 className="text-2xl font-bold text-white mb-4">
@@ -59,9 +57,7 @@ export function SuccessStoriesSection() {
                   <div className="text-3xl font-bold text-[#07D9D9] mb-2">
                     $2,400
                   </div>
-                  <div className="text-white/60 text-sm">
-                    Ahorro mensual
-                  </div>
+                  <div className="text-white/60 text-sm">Ahorro mensual</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[#07D9D9] mb-2">
@@ -75,9 +71,7 @@ export function SuccessStoriesSection() {
                   <div className="text-3xl font-bold text-[#07D9D9] mb-2">
                     300%
                   </div>
-                  <div className="text-white/60 text-sm">
-                    ROI en 6 meses
-                  </div>
+                  <div className="text-white/60 text-sm">ROI en 6 meses</div>
                 </div>
               </div>
             </div>
@@ -96,7 +90,7 @@ export function SuccessStoriesSection() {
             className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all duration-300"
           >
             <div className="flex items-start space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-[#07D9D9] to-[#0596A6] rounded-2xl flex items-center justify-center flex-shrink-0">
+              <div className="w-16 h-16 bg-linear-to-r from-[#07D9D9] to-[#0596A6] rounded-2xl flex items-center justify-center shrink">
                 <span className="text-[#010440] font-bold text-2xl">M</span>
               </div>
               <div className="flex-1">
@@ -104,9 +98,9 @@ export function SuccessStoriesSection() {
                   Medical Clinic Pro
                 </h3>
                 <p className="text-white/80 text-base leading-relaxed mb-6">
-                  "Novack nos ayudó a reducir las ausencias en un 85% y aumentó nuestra
-                  capacidad diaria de pacientes en un 40%. Los recordatorios automatizados son
-                  un cambio total."
+                  &quot;Novack nos ayudó a reducir las ausencias en un 85% y
+                  aumentó nuestra capacidad diaria de pacientes en un 40%. Los
+                  recordatorios automatizados son un cambio total.&quot;
                 </p>
                 <div className="mb-6 p-4 bg-white/5 rounded-xl">
                   <div className="text-sm text-white/60 mb-3 font-medium">
@@ -127,7 +121,9 @@ export function SuccessStoriesSection() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-white/80">Tiempo ahorrado:</span>
-                      <span className="text-[#07D9D9] font-bold">20hrs/sem</span>
+                      <span className="text-[#07D9D9] font-bold">
+                        20hrs/sem
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -150,7 +146,7 @@ export function SuccessStoriesSection() {
             className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all duration-300"
           >
             <div className="flex items-start space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-[#763DF2] to-[#202473] rounded-2xl flex items-center justify-center flex-shrink-0">
+              <div className="w-16 h-16 bg-linear-to-r from-[#763DF2] to-[#202473] rounded-2xl flex items-center justify-center shrink">
                 <span className="text-white font-bold text-2xl">T</span>
               </div>
               <div className="flex-1">
@@ -158,9 +154,9 @@ export function SuccessStoriesSection() {
                   TechStart Solutions
                 </h3>
                 <p className="text-white/80 text-base leading-relaxed mb-6">
-                  "Hemos optimizado todo nuestro proceso de incorporación de clientes. Lo que
-                  solía tomar días ahora sucede en horas. Novack es esencial para
-                  nuestro crecimiento."
+                  &quot;Hemos optimizado todo nuestro proceso de incorporación
+                  de clientes. Lo que solía tomar días ahora sucede en horas.
+                  Novack es esencial para nuestro crecimiento.&quot;
                 </p>
                 <div className="mb-6 p-4 bg-white/5 rounded-xl">
                   <div className="text-sm text-white/60 mb-3 font-medium">

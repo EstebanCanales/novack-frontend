@@ -2,16 +2,9 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,18 +19,15 @@ import {
   Clock,
   MapPin,
   User,
-  Building,
   Phone,
-  Plus,
   Filter,
   CheckCircle,
   XCircle,
   Mail,
   Home,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
   appointmentService,
   Appointment,
@@ -63,6 +53,7 @@ export default function MeetingDetailPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<"mapa" | "detalles">("mapa");
+  const [viewMode, setViewMode] = useState<"active" | "archived">("active");
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -70,23 +61,43 @@ export default function MeetingDetailPage() {
     }
   }, [isAuthenticated, authLoading, router]);
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      loadAppointments();
-    }
-  }, [isAuthenticated, user]);
-
-  const loadAppointments = async () => {
+  const loadAppointments = useCallback(async () => {
+    if (!user?.supplier?.id) return;
     try {
       setLoading(true);
-      const supplierId = user?.supplier?.id;
-      const allAppointments = await appointmentService.getAll(supplierId);
+      const supplierId = user.supplier.id;
+
+      // Solo archivar cuando estamos en modo activo
+      if (viewMode === "active") {
+        try {
+          const archiveResult = await appointmentService.archiveOldAppointments(supplierId);
+
+          // Mostrar notificación solo si se archivaron citas
+          if (archiveResult.archived > 0) {
+            toast.info(
+              `${archiveResult.archived} ${archiveResult.archived === 1 ? "cita completada ha sido archivada" : "citas completadas han sido archivadas"}`,
+              {
+                description: "Las citas archivadas están disponibles en la pestaña de archivados",
+              }
+            );
+          }
+        } catch (archiveError) {
+          console.warn("No se pudieron archivar las citas antiguas:", archiveError);
+        }
+      }
+
+      // Obtener citas según el modo
+      const allAppointments = viewMode === "active"
+        ? await appointmentService.getAll(supplierId)
+        : await appointmentService.getArchived(supplierId);
 
       setAppointments(allAppointments);
 
       // Seleccionar la primera cita por defecto
       if (allAppointments.length > 0 && !selectedAppointment) {
         setSelectedAppointment(allAppointments[0]);
+      } else if (allAppointments.length === 0) {
+        setSelectedAppointment(null);
       }
     } catch (error) {
       console.error("Error al cargar citas:", error);
@@ -94,7 +105,21 @@ export default function MeetingDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.supplier?.id, selectedAppointment, viewMode]);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      loadAppointments();
+    }
+  }, [isAuthenticated, user, loadAppointments]);
+
+  // Recargar cuando cambie el modo de vista
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setSelectedAppointment(null);
+      loadAppointments();
+    }
+  }, [viewMode]);
 
   const handleCheckIn = async (appointmentId: string) => {
     try {
@@ -110,9 +135,16 @@ export default function MeetingDetailPage() {
       if (selectedAppointment?.id === appointmentId) {
         setSelectedAppointment(updatedAppointment);
       }
-    } catch (error: any) {
+    } catch (error) {
+      type ErrorWithResponse = {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const e = error as ErrorWithResponse;
       const errorMessage =
-        error?.response?.data?.message || "Error al realizar el check-in";
+        e?.response?.data?.message ||
+        e?.message ||
+        "Error al realizar el check-in";
       toast.error(errorMessage);
     }
   };
@@ -131,9 +163,16 @@ export default function MeetingDetailPage() {
       if (selectedAppointment?.id === appointmentId) {
         setSelectedAppointment(updatedAppointment);
       }
-    } catch (error: any) {
+    } catch (error) {
+      type ErrorWithResponse = {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const e = error as ErrorWithResponse;
       const errorMessage =
-        error?.response?.data?.message || "Error al realizar el check-out";
+        e?.response?.data?.message ||
+        e?.message ||
+        "Error al realizar el check-out";
       toast.error(errorMessage);
     }
   };
@@ -286,27 +325,38 @@ export default function MeetingDetailPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden p-3 pl-2">
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-3">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              href="/home"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-            >
-              <Home className="size-4" />
-              Inicio
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator className="text-gray-600" />
-          <BreadcrumbItem>
-            <BreadcrumbPage className="text-white font-medium flex items-center gap-2">
-              <Calendar className="size-4" />
-              Citas
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      {/* Breadcrumb y enlace a historial */}
+      <div className="flex items-center justify-between mb-3">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                href="/home"
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+              >
+                <Home className="size-4" />
+                Inicio
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-gray-600" />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-white font-medium flex items-center gap-2">
+                <Calendar className="size-4" />
+                Citas
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => router.push("/visitor")}
+          className="border-white/10 text-slate-400 hover:text-white hover:bg-white/10"
+        >
+          <User className="size-4 mr-2" />
+          Ver Historial de Visitantes
+        </Button>
+      </div>
 
       {/* Contenido principal */}
       <div className="flex-1 flex overflow-hidden gap-3">
@@ -319,10 +369,49 @@ export default function MeetingDetailPage() {
         >
           {/* Header */}
           <div className="p-3 border-b border-white/10 space-y-3">
-            <h2 className="text-base font-semibold text-white flex items-center gap-2">
-              <Calendar className="size-4 text-[#07D9D9]" />
-              Citas
-            </h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-semibold text-white flex items-center gap-2">
+                <Calendar className="size-4 text-[#07D9D9]" />
+                Citas
+              </h2>
+              <span className="text-[10px] text-slate-500 bg-white/5 px-2 py-1 rounded">
+                {appointments.length}
+              </span>
+            </div>
+
+            {/* Pestañas Activas/Archivadas */}
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setViewMode("active");
+                  setSelectedAppointment(null);
+                }}
+                className={`flex-1 h-8 text-xs ${
+                  viewMode === "active"
+                    ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                Activas
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setViewMode("archived");
+                  setSelectedAppointment(null);
+                }}
+                className={`flex-1 h-8 text-xs ${
+                  viewMode === "archived"
+                    ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                Archivadas
+              </Button>
+            </div>
 
             {/* Barra de búsqueda */}
             <div className="relative">
@@ -443,11 +532,15 @@ export default function MeetingDetailPage() {
             ) : filteredAppointments.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center p-6">
                 <Calendar className="size-16 text-gray-600 mb-4" />
-                <p className="text-gray-400">No se encontraron citas</p>
+                <p className="text-gray-400">
+                  {viewMode === "active" ? "No hay citas activas" : "No hay citas archivadas"}
+                </p>
                 <p className="text-gray-500 text-sm mt-1">
                   {searchQuery
                     ? "Intenta con otros términos de búsqueda"
-                    : "Agenda una nueva cita"}
+                    : viewMode === "active"
+                    ? "Agenda una nueva cita"
+                    : "Las citas se archivan 12 horas después del check-out"}
                 </p>
               </div>
             ) : (
@@ -472,7 +565,7 @@ export default function MeetingDetailPage() {
                         <AvatarImage
                           src={appointment.visitor?.profile_image_url}
                         />
-                        <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-black text-xs font-semibold">
+                        <AvatarFallback className="bg-linear-to-br from-[#07D9D9] to-[#0596A6] text-black text-xs font-semibold">
                           {getInitials(appointment.visitor?.name || "?")}
                         </AvatarFallback>
                       </Avatar>
@@ -524,7 +617,7 @@ export default function MeetingDetailPage() {
                   <AvatarImage
                     src={selectedAppointment.visitor?.profile_image_url}
                   />
-                  <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#0596A6] text-black text-sm font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-[#07D9D9] to-[#0596A6] text-black text-sm font-bold">
                     {getInitials(selectedAppointment.visitor?.name || "?")}
                   </AvatarFallback>
                 </Avatar>
@@ -559,7 +652,7 @@ export default function MeetingDetailPage() {
                 {selectedAppointment.status === "pendiente" && (
                   <Button
                     onClick={() => handleCheckIn(selectedAppointment.id)}
-                    className="flex-1 bg-gradient-to-r from-[#07D9D9] to-[#0596A6] hover:from-[#0596A6] hover:to-[#07D9D9] text-black font-semibold text-xs h-9"
+                    className="flex-1 bg-linear-to-r from-[#07D9D9] to-[#0596A6] hover:from-[#0596A6] hover:to-[#07D9D9] text-black font-semibold text-xs h-9"
                   >
                     <CheckCircle className="size-3 mr-1.5" />
                     Check-in
@@ -637,7 +730,7 @@ export default function MeetingDetailPage() {
               <div className="space-y-3">
                 {/* Información de contacto */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 hover:border-[#07D9D9]/30 transition-all">
+                  <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10 hover:border-[#07D9D9]/30 transition-all">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="p-2 rounded-lg bg-[#07D9D9]/10">
                         <Mail className="size-4 text-[#07D9D9]" />
@@ -650,7 +743,7 @@ export default function MeetingDetailPage() {
                       {selectedAppointment.visitor?.email}
                     </p>
                   </div>
-                  <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 hover:border-[#07D9D9]/30 transition-all">
+                  <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10 hover:border-[#07D9D9]/30 transition-all">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="p-2 rounded-lg bg-[#07D9D9]/10">
                         <Phone className="size-4 text-[#07D9D9]" />
@@ -667,7 +760,7 @@ export default function MeetingDetailPage() {
 
                 {/* Detalles de la cita */}
                 <div className="space-y-3">
-                  <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                  <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="p-2 rounded-lg bg-[#07D9D9]/10">
                         <Calendar className="size-4 text-[#07D9D9]" />
@@ -682,7 +775,7 @@ export default function MeetingDetailPage() {
                   </div>
 
                   {selectedAppointment.description && (
-                    <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                    <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="p-2 rounded-lg bg-[#07D9D9]/10">
                           <Filter className="size-4 text-[#07D9D9]" />
@@ -747,7 +840,7 @@ export default function MeetingDetailPage() {
                     )}
 
                     {selectedAppointment.check_out_time && (
-                      <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                      <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10">
                         <div className="flex items-center gap-2 mb-3">
                           <div className="p-2 rounded-lg bg-white/5">
                             <XCircle className="size-4 text-gray-400" />
@@ -773,7 +866,7 @@ export default function MeetingDetailPage() {
                   </div>
 
                   {selectedAppointment.location && (
-                    <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                    <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="p-2 rounded-lg bg-[#07D9D9]/10">
                           <MapPin className="size-4 text-[#07D9D9]" />
@@ -789,7 +882,7 @@ export default function MeetingDetailPage() {
                   )}
 
                   {selectedAppointment.host_employee && (
-                    <div className="p-4 rounded-lg bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10">
+                    <div className="p-4 rounded-lg bg-linear-to-br from-white/5 to-white/2 border border-white/10">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="p-2 rounded-lg bg-[#07D9D9]/10">
                           <User className="size-4 text-[#07D9D9]" />

@@ -1,8 +1,7 @@
 import { Navbar } from "@/components/public/ui/navbar/navbar";
 import Footer from "@/components/ui/footer/footer";
-import { Calendar, User } from "lucide-react";
-import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
-import ArticleLayout from "@/components/blog/ArticleLayout";
+import { MarkdownRenderer } from "@/components/blog/MarkdownRenderer";
+import { ArticleLayout } from "@/components/blog/ArticleLayout";
 import { getPostData } from "@/lib/blog";
 import fs from "fs/promises";
 import path from "path";
@@ -19,15 +18,15 @@ export async function generateStaticParams() {
 const BlogPostPage = async ({
   params,
 }: {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: Promise<{ slug: string }>;
 }) => {
-  const { slug } = await (params as any);
+  const { slug } = await params;
 
   // Read post from markdown (frontmatter + content)
   let post: Awaited<ReturnType<typeof getPostData>>;
   try {
     post = await getPostData(slug);
-  } catch (e: any) {
+  } catch {
     // Graceful 404 when file is missing or invalid
     return (
       <div className="min-h-screen bg-black text-white">
@@ -65,7 +64,7 @@ const BlogPostPage = async ({
             minutes={minutes}
           >
             <div
-              className={`w-full h-56 md:h-72 lg:h-80 rounded-2xl bg-gradient-to-br ${post.gradient} mb-8`}
+              className={`w-full h-56 md:h-72 lg:h-80 rounded-2xl bg-linear-to-br ${post.gradient} mb-8`}
             />
             <MarkdownRenderer content={post.content} className="prose-lg" />
           </ArticleLayout>

@@ -13,12 +13,19 @@ export async function getServerLocale(): Promise<Locale> {
 
 export async function getServerMessages(locale: Locale) {
   const mod = await import(`@/i18n/messages/${locale}.json`);
-  return mod.default as Record<string, any>;
+  return mod.default as Record<string, unknown>;
 }
 
-export function tServer(messages: Record<string, any>, key: string): string {
-  const value = key.split(".").reduce((acc: any, part) => (acc ? acc[part] : undefined), messages);
+export function tServer(
+  messages: Record<string, unknown>,
+  key: string,
+): string {
+  const value = key
+    .split(".")
+    .reduce(
+      (acc: Record<string, unknown> | undefined, part: string) =>
+        acc ? (acc[part] as Record<string, unknown> | undefined) : undefined,
+      messages,
+    );
   return typeof value === "string" ? value : key;
 }
-
-

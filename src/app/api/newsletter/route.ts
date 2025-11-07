@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (err) {
+  } catch {
     return new Response(JSON.stringify({ ok: false, error: "Bad request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },

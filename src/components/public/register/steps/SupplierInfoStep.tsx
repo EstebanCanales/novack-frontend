@@ -6,10 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PhoneInput } from "@/components/ui/phone-input";
-// import { registrationSteps } from "@/data/steps";
 
 import type { SupplierData, EmployeeData } from "@/types/registration";
-import { extractDigits, lastNDigits } from "@/lib/api";
 
 interface SupplierInfoStepProps {
   employeeData: EmployeeData;
@@ -115,7 +113,7 @@ export function SupplierInfoStep({
                   onChange={(val) =>
                     setValue(
                       "phone_number" as unknown as never,
-                      val as unknown as never
+                      val as unknown as never,
                     )
                   }
                   placeholder="ej. +506 8611 2403"
@@ -127,7 +125,10 @@ export function SupplierInfoStep({
                     validate: (value: string) => {
                       const e164 = (value || "").replace(/\s/g, "");
                       const ok = /^\+[1-9]\d{7,14}$/.test(e164);
-                      return ok || "Ingresa un número de teléfono internacional válido";
+                      return (
+                        ok ||
+                        "Ingresa un número de teléfono internacional válido"
+                      );
                     },
                   })}
                   value={(watch("phone_number") as string) || ""}
@@ -262,7 +263,8 @@ export function SupplierInfoStep({
           <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-400/20">
             <p className="text-sm text-amber-200">
               <strong>Nota:</strong> Si no tienes el ID del proveedor, contacta
-              a tu administrador o marca "Soy el creador del proveedor" en el paso anterior.
+              a tu administrador o marca &quot;Soy el creador del
+              proveedor&quot; en el paso anterior.
             </p>
           </div>
         </div>

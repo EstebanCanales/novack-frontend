@@ -5,15 +5,28 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogOut, Search, User, Shield, Check, X, MoreVertical } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Home, Search, Shield, Check, X, MoreVertical } from "lucide-react";
 import { motion } from "framer-motion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function PermissionAdminPage() {
-  const { user, isAuthenticated, logout, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -25,8 +38,11 @@ export default function PermissionAdminPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-white text-lg">Cargando...</div>
+      <div className="flex items-center justify-center h-full">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+          <div className="text-white text-lg">Cargando...</div>
+        </div>
       </div>
     );
   }
@@ -34,11 +50,6 @@ export default function PermissionAdminPage() {
   if (!isAuthenticated || !user) {
     return null;
   }
-
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
-  };
 
   const users = [
     {
@@ -48,7 +59,7 @@ export default function PermissionAdminPage() {
       role: "Administrador",
       permissions: ["dashboard", "users", "reports", "settings"],
       status: "active",
-      avatar: "MG"
+      avatar: "MG",
     },
     {
       id: 2,
@@ -57,7 +68,7 @@ export default function PermissionAdminPage() {
       role: "Coordinador",
       permissions: ["dashboard", "reports"],
       status: "active",
-      avatar: "CR"
+      avatar: "CR",
     },
     {
       id: 3,
@@ -66,7 +77,7 @@ export default function PermissionAdminPage() {
       role: "Profesor",
       permissions: ["dashboard"],
       status: "active",
-      avatar: "AM"
+      avatar: "AM",
     },
     {
       id: 4,
@@ -75,7 +86,7 @@ export default function PermissionAdminPage() {
       role: "Asistente",
       permissions: ["dashboard"],
       status: "inactive",
-      avatar: "LH"
+      avatar: "LH",
     },
     {
       id: 5,
@@ -84,87 +95,91 @@ export default function PermissionAdminPage() {
       role: "Administrador",
       permissions: ["dashboard", "users", "reports", "settings", "system"],
       status: "active",
-      avatar: "SL"
-    }
+      avatar: "SL",
+    },
   ];
 
   const availablePermissions = [
-    { id: "dashboard", name: "Dashboard", description: "Acceso al panel principal" },
-    { id: "users", name: "Gestión de Usuarios", description: "Administrar usuarios y permisos" },
+    {
+      id: "dashboard",
+      name: "Dashboard",
+      description: "Acceso al panel principal",
+    },
+    {
+      id: "users",
+      name: "Gestión de Usuarios",
+      description: "Administrar usuarios y permisos",
+    },
     { id: "reports", name: "Reportes", description: "Generar y ver reportes" },
-    { id: "settings", name: "Configuración", description: "Configuración del sistema" },
-    { id: "system", name: "Sistema", description: "Acceso completo al sistema" }
+    {
+      id: "settings",
+      name: "Configuración",
+      description: "Configuración del sistema",
+    },
+    {
+      id: "system",
+      name: "Sistema",
+      description: "Acceso completo al sistema",
+    },
   ];
 
   const togglePermission = (userId: number, permissionId: string) => {
-    // Aquí iría la lógica para actualizar permisos
     console.log(`Toggle permission ${permissionId} for user ${userId}`);
   };
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="bg-white/5 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <motion.h1 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-xl font-bold"
-              >
-                Administración de Permisos
-              </motion.h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-sm text-gray-300"
-              >
-                Hola, {user.first_name} {user.last_name}
-              </motion.span>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  size="sm"
-                  className="bg-transparent border-[#07D9D9] text-[#07D9D9] hover:bg-[#07D9D9] hover:text-[#010440] transition-all duration-300"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Cerrar Sesión
-                </Button>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="flex flex-col h-full p-3 pl-2 overflow-hidden">
+      {/* Breadcrumb */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-3"
+      >
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/home">
+                <Home className="h-4 w-4" />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Gestión</BreadcrumbPage>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Proveedores</BreadcrumbPage>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Administración de Permisos</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </motion.div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 overflow-auto space-y-3">
+        {/* Header */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
         >
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-3">
             <div className="p-3 rounded-xl bg-[#07D9D9]/20 border border-[#07D9D9]/30">
-              <Shield className="h-8 w-8 text-[#07D9D9]" />
+              <Shield className="h-6 w-6 text-[#07D9D9]" />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#07D9D9] to-[#0596A6] bg-clip-text text-transparent">
+              <h2 className="text-2xl font-bold text-white">
                 Gestión de Permisos
               </h2>
-              <p className="text-lg text-gray-300">
+              <p className="text-sm text-slate-400">
                 Administre los permisos y accesos de los usuarios del sistema
               </p>
             </div>
@@ -173,81 +188,117 @@ export default function PermissionAdminPage() {
 
         {/* Search Bar */}
         <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input
               placeholder="Buscar usuarios..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-400 focus:border-[#07D9D9]"
+              className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#07D9D9]"
             />
           </div>
         </motion.div>
 
         {/* Users List */}
         <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-3"
         >
           {filteredUsers.map((user, index) => (
             <motion.div
               key={user.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 + index * 0.1 }}
+              transition={{ delay: 0.3 + index * 0.05 }}
             >
               <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#07D9D9]/20 transition-all duration-300">
-                <CardContent className="p-6">
+                <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     {/* User Info */}
                     <div className="flex items-start gap-4 flex-1">
                       <Avatar className="h-12 w-12 border border-[#07D9D9]/30">
-                        <AvatarFallback className="bg-[#07D9D9] text-[#010440] font-semibold">
+                        <AvatarFallback className="bg-[#07D9D9] text-black font-semibold">
                           {user.avatar}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-white">{user.name}</h3>
-                          <Badge variant={user.status === "active" ? "default" : "secondary"}>
+                          <h3 className="text-lg font-semibold text-white">
+                            {user.name}
+                          </h3>
+                          <Badge
+                            variant={
+                              user.status === "active" ? "default" : "secondary"
+                            }
+                            className={
+                              user.status === "active"
+                                ? "bg-green-500/20 text-green-400 border-green-500/50"
+                                : "bg-slate-500/20 text-slate-400 border-slate-500/50"
+                            }
+                          >
                             {user.status === "active" ? "Activo" : "Inactivo"}
                           </Badge>
-                          <Badge variant="outline" className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-500/20 text-blue-400 border-blue-500/30"
+                          >
                             {user.role}
                           </Badge>
                         </div>
-                        <p className="text-gray-400 text-sm">{user.email}</p>
+                        <p className="text-slate-400 text-sm">{user.email}</p>
                       </div>
                     </div>
 
                     {/* Actions */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-gray-400 hover:text-[#07D9D9]">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-slate-400 hover:text-white hover:bg-white/5"
+                        >
                           <MoreVertical className="w-5 h-5" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent className="bg-black border-white/10">
-                        <DropdownMenuItem className="text-white">Editar Usuario</DropdownMenuItem>
-                        <DropdownMenuItem className="text-white">Resetear Contraseña</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-400">Desactivar</DropdownMenuItem>
+                      <DropdownMenuContent className="bg-slate-900 border-white/10">
+                        <DropdownMenuItem className="text-white hover:bg-white/10 cursor-pointer">
+                          Editar Usuario
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-white hover:bg-white/10 cursor-pointer">
+                          Resetear Contraseña
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-400 hover:bg-white/10 cursor-pointer">
+                          Desactivar
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
 
                   {/* Permissions Grid */}
-                  <div className="mt-6">
-                    <h4 className="text-sm font-semibold text-gray-300 mb-4">Permisos del Usuario</h4>
+                  <div className="mt-4">
+                    <h4 className="text-sm font-semibold text-slate-400 mb-3">
+                      Permisos del Usuario
+                    </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {availablePermissions.map((permission) => {
-                        const hasPermission = user.permissions.includes(permission.id);
+                        const hasPermission = user.permissions.includes(
+                          permission.id
+                        );
+                        const handleClick = () => {
+                          togglePermission(user.id, permission.id);
+                        };
+                        const handleKeyDown = (e: React.KeyboardEvent) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            togglePermission(user.id, permission.id);
+                          }
+                        };
                         return (
                           <div
                             key={permission.id}
@@ -256,26 +307,39 @@ export default function PermissionAdminPage() {
                                 ? "bg-[#07D9D9]/10 border-[#07D9D9]"
                                 : "bg-white/5 border-white/10 hover:bg-white/10"
                             }`}
-                            onClick={() => togglePermission(user.id, permission.id)}
+                            onClick={handleClick}
+                            onKeyDown={handleKeyDown}
+                            role="button"
+                            tabIndex={0}
                           >
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
                                 {hasPermission ? (
                                   <Check className="w-4 h-4 text-[#07D9D9]" />
                                 ) : (
-                                  <X className="w-4 h-4 text-gray-400" />
+                                  <X className="w-4 h-4 text-slate-400" />
                                 )}
-                                <span className={`text-sm font-medium ${
-                                  hasPermission ? "text-[#07D9D9]" : "text-white"
-                                }`}>
+                                <span
+                                  className={`text-sm font-medium ${
+                                    hasPermission
+                                      ? "text-[#07D9D9]"
+                                      : "text-white"
+                                  }`}
+                                >
                                   {permission.name}
                                 </span>
                               </div>
-                              <p className="text-xs text-gray-400">{permission.description}</p>
+                              <p className="text-xs text-slate-400">
+                                {permission.description}
+                              </p>
                             </div>
                             <Badge
                               variant={hasPermission ? "default" : "outline"}
-                              className={hasPermission ? "bg-[#07D9D9] text-[#010440]" : ""}
+                              className={
+                                hasPermission
+                                  ? "bg-[#07D9D9] text-black"
+                                  : "border-white/10 text-slate-400"
+                              }
                             >
                               {hasPermission ? "Activo" : "Inactivo"}
                             </Badge>
@@ -289,7 +353,7 @@ export default function PermissionAdminPage() {
             </motion.div>
           ))}
         </motion.div>
-      </main>
+      </div>
     </div>
   );
 }

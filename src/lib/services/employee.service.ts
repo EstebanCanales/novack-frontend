@@ -1,5 +1,12 @@
-import { api } from '../api';
-import type { Employee, CreateEmployeeDto, UpdateEmployeeDto } from '../types/api.types';
+import { api } from "../api";
+import type { AxiosRequestConfig } from "axios";
+import type {
+  Employee,
+  CreateEmployeeDto,
+  UpdateEmployeeDto,
+} from "../types/api.types";
+
+export type { Employee, CreateEmployeeDto, UpdateEmployeeDto };
 
 /**
  * Servicio para gestionar empleados
@@ -9,7 +16,7 @@ export const employeeService = {
    * Obtener todos los empleados
    */
   async getAll(): Promise<Employee[]> {
-    const { data } = await api.get<Employee[]>('/employees');
+    const { data } = await api.get<Employee[]>("/employees");
     return data;
   },
 
@@ -25,7 +32,9 @@ export const employeeService = {
    * Obtener empleados por proveedor
    */
   async getBySupplier(supplierId: string): Promise<Employee[]> {
-    const { data } = await api.get<Employee[]>(`/employees/supplier/${supplierId}`);
+    const { data } = await api.get<Employee[]>(
+      `/employees/supplier/${supplierId}`,
+    );
     return data;
   },
 
@@ -33,7 +42,7 @@ export const employeeService = {
    * Crear un nuevo empleado
    */
   async create(employee: CreateEmployeeDto): Promise<Employee> {
-    const { data } = await api.post<Employee>('/employees', employee);
+    const { data } = await api.post<Employee>("/employees", employee);
     return data;
   },
 
@@ -55,18 +64,21 @@ export const employeeService = {
   /**
    * Subir imagen de perfil del empleado
    */
-  async uploadProfileImage(id: string, file: File): Promise<{ message: string; url: string }> {
+  async uploadProfileImage(
+    id: string,
+    file: File,
+  ): Promise<{ message: string; url: string }> {
     const formData = new FormData();
-    formData.append('profileImage', file);
+    formData.append("profileImage", file);
 
     const { data } = await api.patch<{ message: string; url: string }>(
       `/employees/${id}/profile-image`,
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
 
     return data;
@@ -76,15 +88,23 @@ export const employeeService = {
    * Buscar empleado por UUID
    */
   async searchByUuid(uuid: string): Promise<Employee> {
-    const { data } = await api.get<Employee>(`/employees/search/by-uuid?uuid=${uuid}`);
+    const { data } = await api.get<Employee>(
+      `/employees/search/by-uuid?uuid=${uuid}`,
+    );
     return data;
   },
 
   /**
    * Buscar contactos por nombre o email
    */
-  async searchContacts(query: string, config?: any): Promise<Employee[]> {
-    const { data } = await api.get<Employee[]>(`/employees/search/contacts?q=${encodeURIComponent(query)}`, config);
+  async searchContacts(
+    query: string,
+    config?: AxiosRequestConfig,
+  ): Promise<Employee[]> {
+    const { data } = await api.get<Employee[]>(
+      `/employees/search/contacts?q=${encodeURIComponent(query)}`,
+      config,
+    );
     return data;
   },
 };

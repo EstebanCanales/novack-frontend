@@ -7,7 +7,9 @@ function CopyButton({ text }: { text: string }) {
   const onCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(text);
-    } catch {}
+    } catch (error) {
+      console.error("Error al copiar al portapapeles:", error);
+    }
   }, [text]);
   return (
     <button
@@ -76,12 +78,12 @@ export function MarkdownRenderer({
               },
             },
             strong: {
-              component: (props: any) => (
+              component: (props: React.HTMLAttributes<HTMLElement>) => (
                 <strong className="text-white font-semibold" {...props} />
               ),
             },
             em: {
-              component: (props: any) => (
+              component: (props: React.HTMLAttributes<HTMLElement>) => (
                 <em className="text-white/90 italic" {...props} />
               ),
             },
@@ -99,10 +101,24 @@ export function MarkdownRenderer({
               props: { className: "leading-relaxed" },
             },
             code: {
-              component: ({ className, children, ...props }: any) => {
+              component: ({
+                className,
+                children,
+                ...props
+              }: React.HTMLAttributes<HTMLElement> & {
+                className?: string;
+                children?: React.ReactNode;
+              }) => {
                 const isBlock =
                   (className || "").includes("lang-") ||
-                  (children as any)?.props?.className?.includes("language-");
+                  (typeof children === "object" &&
+                    children !== null &&
+                    "props" in children &&
+                    typeof children.props === "object" &&
+                    children.props !== null &&
+                    "className" in children.props &&
+                    typeof children.props.className === "string" &&
+                    children.props.className.includes("language-"));
                 if (isBlock) return <code {...props}>{children}</code>;
                 return (
                   <code
@@ -115,11 +131,25 @@ export function MarkdownRenderer({
               },
             },
             pre: {
-              component: ({ children, ...props }: any) => {
-                const text =
-                  typeof children === "string"
-                    ? children
-                    : children?.props?.children ?? "";
+              component: ({
+                children,
+                ...props
+              }: React.HTMLAttributes<HTMLElement> & {
+                children?: React.ReactNode;
+              }) => {
+                let text = "";
+                if (typeof children === "string") {
+                  text = children;
+                } else if (
+                  React.isValidElement(children) &&
+                  children.props &&
+                  "children" in children.props
+                ) {
+                  const childChildren = children.props.children;
+                  if (typeof childChildren === "string") {
+                    text = childChildren;
+                  }
+                }
                 return (
                   <div className="relative">
                     <pre
@@ -128,13 +158,18 @@ export function MarkdownRenderer({
                     >
                       {children}
                     </pre>
-                    <CopyButton text={typeof text === "string" ? text : ""} />
+                    <CopyButton text={text} />
                   </div>
                 );
               },
             },
             table: {
-              component: ({ children, ...props }: any) => (
+              component: ({
+                children,
+                ...props
+              }: React.HTMLAttributes<HTMLTableElement> & {
+                children?: React.ReactNode;
+              }) => (
                 <div className="overflow-x-auto border border-white/10 rounded-xl">
                   <table className="min-w-full text-sm" {...props}>
                     {children}

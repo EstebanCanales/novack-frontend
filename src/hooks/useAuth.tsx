@@ -17,6 +17,7 @@ interface User {
   last_name: string;
   email: string;
   is_creator: boolean;
+  profile_image_url?: string;
   supplier?: {
     id: string;
     supplier_name: string;
@@ -28,6 +29,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (accessToken: string, refreshToken: string, user: User) => void;
   logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
   isLoading: boolean;
 }
 
@@ -114,9 +116,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(false);
   }, [router]);
 
+  const updateUser = useCallback((userData: Partial<User>) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+      const updatedUser = { ...prevUser, ...userData };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return updatedUser;
+    });
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, logout, isLoading }}
+      value={{ user, isAuthenticated, login, logout, updateUser, isLoading }}
     >
       {children}
     </AuthContext.Provider>

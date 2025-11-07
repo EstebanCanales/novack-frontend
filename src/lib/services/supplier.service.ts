@@ -1,6 +1,8 @@
 import { api } from '../api';
 import type { Supplier, CreateSupplierDto, UpdateSupplierDto } from '../types/api.types';
 
+export type { Supplier, CreateSupplierDto, UpdateSupplierDto };
+
 /**
  * Servicio para gestionar proveedores
  */

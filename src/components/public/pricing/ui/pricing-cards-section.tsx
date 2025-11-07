@@ -1,6 +1,5 @@
 "use client";
-
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -14,7 +13,6 @@ import {
   BarChart3,
   Calendar,
   Smartphone,
-  Globe,
   Lock,
   Settings,
   Headphones,
@@ -26,7 +24,6 @@ import {
   Award,
 } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
-import { useState } from "react";
 
 const plans = [
   {
@@ -143,7 +140,12 @@ const plans = [
 
 // Lista completa de todas las características disponibles
 const allFeatures = [
-  { id: "team-5", name: "Hasta 5 miembros del equipo", icon: Users, category: "Equipo" },
+  {
+    id: "team-5",
+    name: "Hasta 5 miembros del equipo",
+    icon: Users,
+    category: "Equipo",
+  },
   {
     id: "team-25",
     name: "Hasta 25 miembros del equipo",
@@ -258,7 +260,12 @@ const allFeatures = [
     icon: Palette,
     category: "Personalización",
   },
-  { id: "api-access", name: "Acceso a API", icon: Code, category: "Desarrollo" },
+  {
+    id: "api-access",
+    name: "Acceso a API",
+    icon: Code,
+    category: "Desarrollo",
+  },
   {
     id: "automated-reminders",
     name: "Recordatorios automatizados",
@@ -335,7 +342,7 @@ export function PricingCardsSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
+            className="inline-flex items-center gap-2 bg-linear-to-rrom-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
@@ -354,8 +361,9 @@ export function PricingCardsSection() {
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8"
           >
-            Empieza gratis, escala a medida que creces. Todos los planes incluyen nuestras funciones principales
-            con seguridad de nivel empresarial.
+            Empieza gratis, escala a medida que creces. Todos los planes
+            incluyen nuestras funciones principales con seguridad de nivel
+            empresarial.
           </motion.p>
 
           {/* Plan Selection Buttons */}
@@ -369,7 +377,7 @@ export function PricingCardsSection() {
                 onClick={() => setSelectedPlan(index)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm ${
                   selectedPlan === index
-                    ? `bg-gradient-to-r ${plan.color} text-white shadow-lg`
+                    ? `bg-linear-to-r{plan.color} text-white shadow-lg`
                     : "bg-white/5 text-white/80 hover:bg-white/10 border border-white/10"
                 }`}
               >
@@ -415,7 +423,7 @@ export function PricingCardsSection() {
               Anual
             </span>
             {isAnnual && (
-              <span className="bg-gradient-to-r from-[#07D9D9]/20 to-[#0596A6]/20 text-[#07D9D9] px-2 py-1 rounded-full text-xs font-semibold">
+              <span className="bg-linear-to-r from-[#07D9D9]/20 to-[#0596A6]/20 text-[#07D9D9] px-2 py-1 rounded-full text-xs font-semibold">
                 Ahorra hasta 30%
               </span>
             )}
@@ -441,7 +449,7 @@ export function PricingCardsSection() {
           >
             {currentPlan.popular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-gradient-to-r from-[#763DF2] to-[#202473] text-white px-4 py-1 rounded-full text-xs font-semibold shadow-lg">
+                <span className="bg-linear-to-r from-[#763DF2] to-[#202473] text-white px-4 py-1 rounded-full text-xs font-semibold shadow-lg">
                   Más Popular
                 </span>
               </div>
@@ -450,7 +458,7 @@ export function PricingCardsSection() {
             {/* Header Section */}
             <div className="text-center mb-6">
               <div
-                className={`w-16 h-16 bg-gradient-to-r ${currentPlan.color} rounded-xl flex items-center justify-center mx-auto mb-4`}
+                className={`w-16 h-16 bg-linear-to-r ${currentPlan.color} rounded-xl flex items-center justify-center mx-auto mb-4`}
               >
                 {React.createElement(currentPlan.icon, {
                   className: "w-8 h-8 text-white",
@@ -481,7 +489,7 @@ export function PricingCardsSection() {
                   </p>
                 </div>
                 {isAnnual && (
-                  <div className="bg-gradient-to-r from-[#07D9D9]/20 to-[#0596A6]/20 rounded-full px-3 py-1">
+                  <div className="bg-linear-to-r from-[#07D9D9]/20 to-[#0596A6]/20 rounded-full px-3 py-1">
                     <p className="text-[#07D9D9] text-xs font-semibold">
                       {currentPlan.savings}
                     </p>
@@ -516,8 +524,8 @@ export function PricingCardsSection() {
             <button
               className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
                 currentPlan.popular
-                  ? "bg-gradient-to-r from-[#763DF2] to-[#202473] text-white hover:shadow-lg hover:shadow-[#763DF2]/30"
-                  : "bg-gradient-to-r from-[#07D9D9] to-[#0596A6] text-[#010440] hover:shadow-lg hover:shadow-[#07D9D9]/30"
+                  ? "bg-linear-to-r from-[#763DF2] to-[#202473] text-white hover:shadow-lg hover:shadow-[#763DF2]/30"
+                  : "bg-linear-to-r from-[#07D9D9] to-[#0596A6] text-[#010440] hover:shadow-lg hover:shadow-[#07D9D9]/30"
               }`}
             >
               Comenzar con {currentPlan.name}
@@ -552,7 +560,7 @@ export function PricingCardsSection() {
                               }`}
                             >
                               <div
-                                className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${
+                                className={`shrink w-8 h-8 rounded-lg flex items-center justify-center ${
                                   isIncluded
                                     ? "bg-[#07D9D9] text-[#010440]"
                                     : "bg-white/10 text-white/40"

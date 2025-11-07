@@ -1,12 +1,15 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MotionValue, motion, useScroll, useTransform } from "motion/react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   IconBrightnessDown,
   IconBrightnessUp,
   IconCaretRightFilled,
   IconCaretUpFilled,
+  IconCaretLeftFilled,
+  IconCaretDownFilled,
   IconChevronUp,
   IconMicrophone,
   IconMoon,
@@ -17,12 +20,10 @@ import {
   IconVolume,
   IconVolume2,
   IconVolume3,
+  IconSearch,
+  IconWorld,
+  IconCommand,
 } from "@tabler/icons-react";
-import { IconSearch } from "@tabler/icons-react";
-import { IconWorld } from "@tabler/icons-react";
-import { IconCommand } from "@tabler/icons-react";
-import { IconCaretLeftFilled } from "@tabler/icons-react";
-import { IconCaretDownFilled } from "@tabler/icons-react";
 
 export const MacbookScroll = ({
   src,
@@ -177,22 +178,26 @@ export const Lid = ({
         className="absolute inset-0 h-64 w-[32rem] rounded-2xl bg-[#010101] p-2"
       >
         {src && !imageError ? (
-          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-gradient-to-br from-gray-800 to-gray-900">
+          <div className="absolute inset-0 flex items-center justify-center rounded-lg overflow-hidden">
+            <Image
+              src={src}
+              alt="Macbook screen"
+              fill
+              className={`rounded-lg object-cover object-left-top transition-opacity duration-300 ${
+                imageLoaded ? "opacity-100" : "opacity-0"
+              }`}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              unoptimized
+            />
+          </div>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-linear-to-br from-gray-800 to-gray-900">
             <div className="text-center text-gray-400">
               <AceternityLogo />
               <p className="mt-2 text-sm">No image available</p>
             </div>
           </div>
-        ) : (
-          <img
-            src={src}
-            alt="aceternity logo"
-            className={`absolute inset-0 h-full w-full rounded-lg object-cover object-left-top transition-opacity duration-300 ${
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-          />
         )}
       </motion.div>
     </div>
@@ -676,6 +681,5 @@ const AceternityLogo = () => {
         strokeLinecap="round"
       />
     </svg>
-
   );
 };

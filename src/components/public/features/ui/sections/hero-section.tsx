@@ -15,7 +15,7 @@ const HeroSection = () => {
         >
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
+            className="inline-flex items-center gap-2 bg-linear-to-r from-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
           >
             <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
@@ -33,8 +33,8 @@ const HeroSection = () => {
             variants={fadeInUp}
             className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto leading-relaxed"
           >
-            Descubre cómo las funciones poderosas, seguras e intuitivas de Novack pueden
-            transformar las operaciones de tu negocio desde cero.
+            Descubre cómo las funciones poderosas, seguras e intuitivas de
+            Novack pueden transformar las operaciones de tu negocio desde cero.
           </motion.p>
         </motion.div>
       </div>

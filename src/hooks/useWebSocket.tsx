@@ -81,6 +81,15 @@ export const useWebSocket = () => {
     socketRef.current = null;
   }, [isConnected]);
 
+  // Mantener referencias actualizadas de connect y disconnect
+  const connectRef = useRef(connect);
+  const disconnectRef = useRef(disconnect);
+
+  useEffect(() => {
+    connectRef.current = connect;
+    disconnectRef.current = disconnect;
+  }, [connect, disconnect]);
+
   // Unirse a una sala
   const joinRoom = useCallback(
     async (room: ChatRoom) => {
@@ -175,7 +184,7 @@ export const useWebSocket = () => {
       setMessages((prev) => [...prev, optimisticMessage]);
 
       try {
-        await websocketService.sendMessage(currentRoom.id, content, "employee");
+        await websocketService.sendMessage(currentRoom.id, content);
         // El mensaje real reemplazará al optimista cuando llegue el evento 'newMessage'
       } catch (error) {
         console.error("Error al enviar mensaje:", error);
@@ -312,16 +321,15 @@ export const useWebSocket = () => {
   // Auto-conectar cuando el usuario está autenticado
   useEffect(() => {
     if (isAuthenticated && user && !isConnected) {
-      connect();
+      connectRef.current();
     }
 
-    // Cleanup al desmontar
     return () => {
       if (isConnected) {
-        disconnect();
+        disconnectRef.current();
       }
     };
-  }, [isAuthenticated, user]); // Removí isConnected, connect y disconnect de las dependencias
+  }, [isAuthenticated, user, isConnected]);
 
   return {
     // Estado

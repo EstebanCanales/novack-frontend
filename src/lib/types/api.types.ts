@@ -1,5 +1,3 @@
-// Tipos comunes para las respuestas de la API
-
 export interface ApiResponse<T> {
   data: T;
   message?: string;
@@ -12,8 +10,6 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
-// Tipos de entidades del backend
-
 export interface Employee {
   id: string;
   first_name: string;
@@ -22,6 +18,7 @@ export interface Employee {
   phone?: string;
   position?: string;
   department?: string;
+  address?: string;
   profile_image_url?: string;
   is_creator: boolean;
   created_at: string;
@@ -33,14 +30,21 @@ export interface Employee {
 export interface Supplier {
   id: string;
   supplier_name: string;
+  company_name?: string;
   supplier_creator: string;
+  contact_name?: string;
   contact_email: string;
+  contact_phone?: string;
   phone_number: string;
   address: string;
+  city?: string;
+  state?: string;
+  postal_code?: string;
+  country?: string;
   description: string;
   logo_url?: string;
   profile_image_url?: string;
-  additional_info?: Record<string, any>;
+  additional_info?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -48,7 +52,7 @@ export interface Supplier {
 export interface Card {
   id: string;
   card_number: string;
-  status: 'available' | 'assigned' | 'lost' | 'inactive';
+  status: "available" | "assigned" | "lost" | "inactive";
   battery_level?: number;
   last_seen?: string;
   assigned_to_id?: string;
@@ -68,7 +72,7 @@ export interface Visitor {
   purpose: string;
   check_in_time?: string;
   check_out_time?: string;
-  status: 'pending' | 'checked_in' | 'checked_out';
+  status: "pending" | "checked_in" | "checked_out";
   profile_image_url?: string;
   supplier_id: string;
   supplier?: Supplier;
@@ -84,7 +88,7 @@ export interface Appointment {
   supplier_id: string;
   appointment_date: string;
   appointment_time: string;
-  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+  status: "scheduled" | "in_progress" | "completed" | "cancelled";
   notes?: string;
   location?: string;
   visitor?: Visitor;
@@ -97,7 +101,7 @@ export interface Appointment {
 export interface ChatRoom {
   id: string;
   name?: string;
-  type: 'private' | 'group';
+  type: "private" | "group";
   created_at: string;
   updated_at: string;
   participants?: Employee[];
@@ -144,6 +148,7 @@ export interface UpdateEmployeeDto {
   phone?: string;
   position?: string;
   department?: string;
+  address?: string;
 }
 
 export interface CreateSupplierDto {
@@ -154,7 +159,7 @@ export interface CreateSupplierDto {
   address: string;
   description: string;
   logo_url?: string;
-  additional_info?: Record<string, any>;
+  additional_info?: Record<string, unknown>;
 }
 
 export interface UpdateSupplierDto {
@@ -164,7 +169,7 @@ export interface UpdateSupplierDto {
   address?: string;
   description?: string;
   logo_url?: string;
-  additional_info?: Record<string, any>;
+  additional_info?: Record<string, unknown>;
 }
 
 export interface CreateVisitorDto {
@@ -197,12 +202,6 @@ export interface CreateCardDto {
 
 export interface UpdateCardDto {
   card_number?: string;
-  status?: 'available' | 'assigned' | 'lost' | 'inactive';
+  status?: "available" | "assigned" | "lost" | "inactive";
   battery_level?: number;
 }
-
-
-
-
-
-

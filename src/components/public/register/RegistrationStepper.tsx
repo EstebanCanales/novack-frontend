@@ -6,7 +6,6 @@ import { StepIndicator } from "./StepIndicator";
 import { BasicInfoStep } from "./steps/BasicInfoStep";
 import { SupplierInfoStep } from "./steps/SupplierInfoStep";
 import { VerificationStep } from "./steps/VerificationStep";
-import { SuccessStep } from "./steps/SuccessStep";
 import { registrationSteps } from "@/data/steps";
 import { api, extractDigits, lastNDigits } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
@@ -162,56 +161,18 @@ export default function RegistrationStepper() {
         registrationData.employee.password
       );
     } catch (err) {
-      const e = err as any;
-      const msg =
-        e?.response?.data?.message ||
-        e?.message ||
-        "Error al finalizar registro";
-      console.error(Array.isArray(msg) ? msg.join(", ") : String(msg));
-      setIsFinishing(false);
-    }
-  };
-
-  const handleFinish = async () => {
-    try {
-      // 1) Si es creador, crear supplier primero y permitir que el backend cree al usuario creador
-      if (registrationData.employee.is_creator && registrationData.supplier) {
-        const supplierCreated = await createSupplier({
-          ...registrationData.supplier,
-          contact_email:
-            registrationData.supplier.contact_email ||
-            registrationData.employee.email,
-          supplier_creator:
-            `${registrationData.employee.first_name} ${registrationData.employee.last_name}`.trim(),
-        });
-        // Avanzar a verificación de SMS
-
-        setCurrentStep(2);
-        return;
-      }
-
-      // 2) No creador: requiere supplier_id existente
-      if (!registrationData.employee.supplier_id) {
-        throw new Error("El ID del proveedor es requerido");
-      }
-
-      const employeePayload: EmployeeData = {
-        ...registrationData.employee,
-        supplier_id: registrationData.employee.supplier_id,
-      };
-      const created = await createEmployee(employeePayload);
-
-      setCurrentStep(2);
-    } catch (err: unknown) {
       type ErrorWithResponse = {
         response?: { data?: { message?: unknown } };
         message?: unknown;
       };
       const e = err as ErrorWithResponse;
       const raw =
-        e?.response?.data?.message ?? e?.message ?? "Error en registro";
-      const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
-      console.error(`Error: ${message}`);
+        e?.response?.data?.message ??
+        e?.message ??
+        "Error al finalizar registro";
+      const msg = Array.isArray(raw) ? raw.join(", ") : String(raw);
+      console.error(msg);
+      setIsFinishing(false);
     }
   };
 

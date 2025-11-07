@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +25,6 @@ import {
   UserPlus,
   CalendarDays,
   Shield,
-  TrendingUp,
   Activity,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -34,19 +33,14 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [upcomingAppointments, setUpcomingAppointments] = useState<UpcomingAppointment[]>([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState<
+    UpcomingAppointment[]
+  >([]);
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadDashboardData();
-    // Refresh every 30 seconds
-    const interval = setInterval(loadDashboardData, 30000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -64,21 +58,24 @@ export default function DashboardPage() {
       setStats(statsData);
       setUpcomingAppointments(appointmentsData);
       setRecentActivity(activityData);
-    } catch (err: any) {
+    } catch (err) {
+      type ErrorWithMessage = {
+        message?: string;
+      };
+      const e = err as ErrorWithMessage;
       console.error("Error loading dashboard:", err);
-      setError(err.message || "Error al cargar datos del dashboard");
+      setError(e.message || "Error al cargar datos del dashboard");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
 
-  const formatTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("es-ES", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  useEffect(() => {
+    loadDashboardData();
+    // Refresh every 30 seconds
+    const interval = setInterval(loadDashboardData, 30000);
+    return () => clearInterval(interval);
+  }, [loadDashboardData]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -278,12 +275,25 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {upcomingAppointments.map((apt) => (
-                      <div
-                        key={apt.id}
-                        className="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
-                        onClick={() => router.push("/appointment")}
-                      >
+                    {upcomingAppointments.map((apt) => {
+                      const handleClick = () => {
+                        router.push("/appointment");
+                      };
+                      const handleKeyDown = (e: React.KeyboardEvent) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          router.push("/appointment");
+                        }
+                      };
+                      return (
+                        <div
+                          key={apt.id}
+                          className="p-4 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
+                          onClick={handleClick}
+                          onKeyDown={handleKeyDown}
+                          role="button"
+                          tabIndex={0}
+                        >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
@@ -322,7 +332,8 @@ export default function DashboardPage() {
                           </div>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>

@@ -2,21 +2,22 @@ import { api } from "../api";
 
 export interface Visitor {
   id: string;
-  first_name: string;
-  last_name: string;
-  id_type: string;
-  id_number: string;
+  name: string; // Backend uses 'name' not 'first_name' and 'last_name'
   email: string;
   phone: string;
+  location?: string;
+  state?: string;
   profile_image_url?: string;
-  additional_info?: any;
+  additional_info?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
-  supplier: {
+  supplier_id?: string;
+  supplier?: {
     id: string;
     supplier_name: string;
   };
-  appointment?: Appointment;
+  appointment?: Appointment; // For backward compatibility
+  appointments?: Appointment[]; // Backend returns this
 }
 
 export interface Appointment {
@@ -40,7 +41,7 @@ export interface Appointment {
   visitor?: Visitor;
 }
 
-export interface CreateVisitorDto {
+interface CreateVisitorDto {
   first_name: string;
   last_name: string;
   id_type: string;
@@ -53,7 +54,7 @@ export interface CreateVisitorDto {
   check_in_time: string;
   check_out_time?: string;
   location?: string;
-  additional_info?: any;
+  additional_info?: Record<string, unknown>;
 }
 
 export interface UpdateVisitorDto {
@@ -67,7 +68,7 @@ export interface UpdateVisitorDto {
   check_out_time?: string;
   location?: string;
   status?: "scheduled" | "checked_in" | "checked_out" | "cancelled";
-  additional_info?: any;
+  additional_info?: Record<string, unknown>;
 }
 
 class VisitorService {
@@ -92,7 +93,10 @@ class VisitorService {
    * Obtener visitantes por supplier
    */
   async getBySupplier(supplierId: string): Promise<Visitor[]> {
-    const response = await api.get<Visitor[]>(`/visitors/supplier/${supplierId}`);
+    const response = await api.get<Visitor[]>(
+      `/visitors/by-supplier`,
+      { params: { supplier_id: supplierId } }
+    );
     return response.data;
   }
 
@@ -133,7 +137,7 @@ class VisitorService {
   async uploadProfileImage(id: string, file: File): Promise<Visitor> {
     const formData = new FormData();
     formData.append("file", file);
-    
+
     const response = await api.post<Visitor>(
       `/visitors/${id}/profile-image`,
       formData,
@@ -141,7 +145,7 @@ class VisitorService {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
     return response.data;
   }
@@ -160,7 +164,7 @@ class VisitorService {
    * Obtener citas por estado
    */
   async getAppointmentsByStatus(
-    status: "scheduled" | "checked_in" | "checked_out" | "cancelled"
+    status: "scheduled" | "checked_in" | "checked_out" | "cancelled",
   ): Promise<Appointment[]> {
     const appointments = await this.getAllAppointments();
     return appointments.filter((a) => a.status === status);

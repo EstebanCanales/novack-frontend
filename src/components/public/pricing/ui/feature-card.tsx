@@ -54,11 +54,11 @@ export function FeatureCard({ feature, index }: FeatureCardProps) {
       custom={index}
       className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:bg-white/10 transition-all duration-300 group relative overflow-hidden"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      <div className="absolute inset-0 bg-linear-to-brrom-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       <div className="relative z-10">
         <div className="text-center mb-6">
           <div
-            className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+            className={`w-16 h-16 bg-linear-to-reature.gradient} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
           >
             <svg
               className={`w-8 h-8 ${
@@ -83,7 +83,7 @@ export function FeatureCard({ feature, index }: FeatureCardProps) {
         <div className="space-y-3 mb-6">
           {feature.highlights.map((highlight, idx) => (
             <div key={idx} className="flex items-center space-x-3">
-              <div className="flex-shrink-0 w-2 h-2 bg-[#07D9D9] rounded-full"></div>
+              <div className="shrink w-2 h-2 bg-[#07D9D9] rounded-full"></div>
               <span className="text-white/90 text-sm font-medium">
                 {highlight}
               </span>

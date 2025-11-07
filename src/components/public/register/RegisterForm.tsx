@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { api } from "@/lib/api";
 import Link from "next/link";
 
@@ -55,7 +61,10 @@ export default function RegisterForm() {
         email: formData.email,
         password: formData.password,
       });
-      const token = loginResponse.data?.access_token || loginResponse.data?.token || loginResponse.data?.accessToken;
+      const token =
+        loginResponse.data?.access_token ||
+        loginResponse.data?.token ||
+        loginResponse.data?.accessToken;
       if (token) {
         localStorage.setItem("token", token);
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -63,16 +72,25 @@ export default function RegisterForm() {
       } else {
         setError("Error al obtener token de autenticación.");
       }
-    } catch (err: any) {
-      const message = err?.response?.data?.message || "Error al registrarse. Verifica tus datos.";
-      setError(Array.isArray(message) ? message.join(", ") : message);
+    } catch (err) {
+      type ErrorWithResponse = {
+        response?: { data?: { message?: unknown } };
+        message?: unknown;
+      };
+      const e = err as ErrorWithResponse;
+      const raw =
+        e?.response?.data?.message ??
+        e?.message ??
+        "Error al registrarse. Verifica tus datos.";
+      const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black">
       <Card className="w-full max-w-md mx-4 bg-white/10 backdrop-blur-sm border-white/20 text-white">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Registrarse</CardTitle>
@@ -150,9 +168,7 @@ export default function RegisterForm() {
               />
             </div>
             {error && (
-              <div className="text-red-400 text-sm text-center">
-                {error}
-              </div>
+              <div className="text-red-400 text-sm text-center">{error}</div>
             )}
             <Button
               type="submit"
@@ -163,7 +179,10 @@ export default function RegisterForm() {
             </Button>
           </form>
           <div className="mt-4 text-center">
-            <Link href="/login" className="text-cyan-400 hover:text-cyan-300 text-sm">
+            <Link
+              href="/login"
+              className="text-cyan-400 hover:text-cyan-300 text-sm"
+            >
               ¿Ya tienes cuenta? Inicia sesión aquí
             </Link>
           </div>

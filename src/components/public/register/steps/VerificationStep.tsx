@@ -9,13 +9,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import {
-  Smartphone,
-  RefreshCw,
-  AlertCircle,
-  Mail,
-  Loader2,
-} from "lucide-react";
+import { Smartphone, AlertCircle, Mail, Loader2 } from "lucide-react";
 
 interface VerificationStepProps {
   phone: string;
@@ -146,11 +140,12 @@ export function VerificationStep({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-    } catch (err: any) {
-      alert(
-        err?.message ||
-          "No se pudo conectar con el servidor. Verifica tu conexión."
-      );
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "No se pudo conectar con el servidor. Verifica tu conexión.";
+      alert(errorMessage);
       return;
     }
     if (!res.ok) {
@@ -172,7 +167,7 @@ export function VerificationStep({
         <div className="relative mx-auto w-24 h-24 rounded-2xl flex items-center justify-center mb-4 overflow-hidden">
           {/* Resplandor suave sin animación */}
           <div
-            className={`absolute -inset-6 rounded-3xl bg-gradient-to-br ${gradientClass} opacity-30 blur-xl`}
+            className={`absolute -inset-6 rounded-3xl bg-linear-to-br ${gradientClass} opacity-30 blur-xl`}
           />
           {/* Anillo sutil */}
           <div className="absolute inset-0 rounded-2xl border border-white/10" />
@@ -235,7 +230,7 @@ export function VerificationStep({
               <Button
                 onClick={sendCode}
                 disabled={isResending}
-                className={`relative w-full rounded-xl h-11 sm:h-12 text-sm sm:text-base font-semibold overflow-hidden bg-gradient-to-r ${gradientClass} text-white shadow-[0_10px_30px_rgba(7,217,217,0.35)] hover:shadow-[0_14px_40px_rgba(7,217,217,0.45)] transition-shadow`}
+                className={`relative w-full rounded-xl h-11 sm:h-12 text-sm sm:text-base font-semibold overflow-hidden bg-linear-to-r ${gradientClass} text-white shadow-[0_10px_30px_rgba(7,217,217,0.35)] hover:shadow-[0_14px_40px_rgba(7,217,217,0.45)] transition-shadow`}
               >
                 {isResending ? (
                   <>
@@ -251,7 +246,7 @@ export function VerificationStep({
                 <div className="mx-auto mt-3 w-full max-w-md">
                   <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
                     <div
-                      className={`h-full bg-gradient-to-r ${gradientClass}`}
+                      className={`h-full bg-linear-to-r ${gradientClass}`}
                       style={{ width: `${countdownPercent}%` }}
                     />
                   </div>

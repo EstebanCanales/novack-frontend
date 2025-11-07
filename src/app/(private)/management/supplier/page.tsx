@@ -3,13 +3,80 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogOut, Building, Truck, Package, Plus } from "lucide-react";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Building,
+  Home,
+  School,
+  Crown,
+  Shield,
+  CreditCard,
+  UserCog,
+  User,
+  ArrowRight,
+} from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { motion } from "framer-motion";
 
+const hubSections = [
+  {
+    id: "institution",
+    title: "Gestión de Instituciones",
+    description: "Administra las instituciones asociadas a tu proveedor",
+    icon: School,
+    path: "/management/supplier/institution",
+  },
+  {
+    id: "subscription",
+    title: "Suscripciones",
+    description: "Gestiona planes y suscripciones de tu proveedor",
+    icon: Crown,
+    path: "/management/supplier/subscription",
+  },
+  {
+    id: "permission",
+    title: "Permisos y Accesos",
+    description: "Controla los permisos y accesos de usuarios",
+    icon: Shield,
+    path: "/management/supplier/permissionAdmin",
+  },
+  {
+    id: "cardAdmin",
+    title: "Administración de Tarjetas",
+    description: "Gestiona las tarjetas físicas y su estado",
+    icon: CreditCard,
+    path: "/management/supplier/cardAdmin",
+  },
+  {
+    id: "adminUser",
+    title: "Usuarios Administradores",
+    description: "Administra los usuarios con permisos de administración",
+    icon: UserCog,
+    path: "/management/supplier/adminUser",
+  },
+  {
+    id: "supplierProfile",
+    title: "Perfil del Proveedor",
+    description: "Visualiza y edita la información del proveedor",
+    icon: User,
+    path: "/management/supplier/supplierProfile",
+  },
+];
+
 export default function SupplierManagementPage() {
-  const { user, isAuthenticated, logout, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -20,8 +87,11 @@ export default function SupplierManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-white text-lg">Cargando...</div>
+      <div className="flex items-center justify-center h-full">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+          <p className="text-white text-lg">Cargando...</p>
+        </div>
       </div>
     );
   }
@@ -30,129 +100,101 @@ export default function SupplierManagementPage() {
     return null;
   }
 
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
-  };
-
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="bg-white/5 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <motion.h1 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-xl font-bold"
-              >
-                Gestión de Proveedores
-              </motion.h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-sm text-gray-300"
-              >
-                Hola, {user.first_name} {user.last_name}
-              </motion.span>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  size="sm"
-                  className="bg-transparent border-[#07D9D9] text-[#07D9D9] hover:bg-[#07D9D9] hover:text-[#010440] transition-all duration-300"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Cerrar Sesión
-                </Button>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="flex flex-col h-full p-3 pl-2 overflow-hidden">
+      <div className="flex-1 overflow-auto space-y-3">
+        {/* Breadcrumb */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 rounded-xl bg-[#07D9D9]/20 border border-[#07D9D9]/30">
-              <Building className="h-8 w-8 text-[#07D9D9]" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#07D9D9] to-[#0596A6] bg-clip-text text-transparent">
-              Gestión de Proveedores
-            </h2>
-          </div>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Administra todos los proveedores y servicios de tu institución
-          </p>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/home">
+                  <Home className="h-4 w-4" />
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Proveedores</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </motion.div>
 
+        {/* Main Content */}
         <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden flex flex-col"
         >
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#07D9D9]/20 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-[#07D9D9]">
-                <Truck className="w-5 h-5" />
-                Proveedores Activos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-white">18</div>
-            </CardContent>
-          </Card>
+          {/* Header */}
+          <div className="p-6 border-b border-white/10">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-lg bg-[#07D9D9]/10 border border-[#07D9D9]/20">
+                <Building className="h-6 w-6 text-[#07D9D9]" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">
+                  Centro de Gestión de Proveedores
+                </h2>
+                <p className="text-sm text-slate-400 mt-1">
+                  Accede a todas las herramientas de administración de tu
+                  proveedor
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#07D9D9]/20 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-[#07D9D9]">
-                <Package className="w-5 h-5" />
-                Servicios
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-white">24</div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          {/* Content */}
+          <div className="flex-1 overflow-auto p-6">
+            <div className="max-w-7xl mx-auto space-y-6">
+              {/* Navigation Hub Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {hubSections.map((section, index) => {
+                  const Icon = section.icon;
 
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center space-y-4"
-        >
-          <Button 
-            className="bg-[#07D9D9] hover:bg-[#0596A6] text-[#010440] font-semibold px-8 py-3"
-            onClick={() => router.back()}
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Agregar Proveedor
-          </Button>
-          <div>
-            <Button 
-              variant="outline" 
-              className="border-[#07D9D9] text-[#07D9D9] hover:bg-[#07D9D9] hover:text-[#010440]"
-              onClick={() => router.back()}
-            >
-              Volver Atrás
-            </Button>
+                  return (
+                    <motion.div
+                      key={section.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        delay: 0.1 + index * 0.05,
+                        duration: 0.3,
+                      }}
+                      whileHover={{ y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Card
+                        className="bg-white/5 border-white/10 hover:border-[#07D9D9]/40 hover:bg-white/[0.07] transition-all duration-300 cursor-pointer h-full group"
+                        onClick={() => router.push(section.path)}
+                      >
+                        <CardHeader>
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="p-3 rounded-lg bg-[#07D9D9]/10 border border-[#07D9D9]/20">
+                              <Icon className="h-5 w-5 text-[#07D9D9]" />
+                            </div>
+                            <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-[#07D9D9] group-hover:translate-x-1 transition-all duration-300" />
+                          </div>
+                          <CardTitle className="text-white text-base font-semibold mb-2">
+                            {section.title}
+                          </CardTitle>
+                          <CardDescription className="text-gray-400 text-sm">
+                            {section.description}
+                          </CardDescription>
+                        </CardHeader>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </motion.div>
-      </main>
+      </div>
     </div>
   );
 }

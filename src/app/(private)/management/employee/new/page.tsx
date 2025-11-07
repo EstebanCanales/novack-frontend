@@ -9,16 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ArrowLeft,
-  Save,
-  User,
-  Mail,
-  Phone,
-  Building,
-  Briefcase,
-  MapPin,
-} from "lucide-react";
+import { ArrowLeft, Save, User, Mail, Briefcase, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,7 +42,7 @@ export default function NewEmployeePage() {
   });
 
   const onSubmit = async (data: EmployeeFormData) => {
-    if (!user?.supplier_id) {
+    if (!user?.supplier?.id) {
       handleApiError(new Error("No se encontró el ID del proveedor"), "Error");
       return;
     }
@@ -60,7 +51,7 @@ export default function NewEmployeePage() {
       setIsSubmitting(true);
       await employeeService.create({
         ...data,
-        supplier_id: user.supplier_id,
+        supplier_id: user.supplier.id,
         is_creator: false,
       });
       showSuccess("Empleado creado", "El empleado ha sido creado exitosamente");
@@ -77,35 +68,33 @@ export default function NewEmployeePage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-black overflow-auto">
-      <div className="flex-1 p-6">
-        {/* Header */}
+    <div className="flex flex-col h-full p-3 pl-2 overflow-hidden">
+      <div className="flex-1 overflow-auto space-y-3">
+        {/* Header with Back Button */}
         <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="mb-6"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-4"
         >
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="mb-4 text-gray-400 hover:text-white hover:bg-white/5"
+            className="text-slate-400 hover:text-white hover:bg-white/5"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver
+            <ArrowLeft className="w-4 h-4" />
           </Button>
-
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#07D9D9] to-[#0596A6] bg-clip-text text-transparent">
-            Nuevo Empleado
-          </h1>
-          <p className="text-gray-400 mt-1">
-            Registra un nuevo empleado en el sistema
-          </p>
+          <div>
+            <h1 className="text-2xl font-bold text-white">Nuevo Empleado</h1>
+            <p className="text-sm text-slate-400">
+              Registra un nuevo empleado en el sistema
+            </p>
+          </div>
         </motion.div>
 
         {/* Form */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
           <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
@@ -125,13 +114,13 @@ export default function NewEmployeePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="first_name" className="text-gray-300">
+                      <Label htmlFor="first_name" className="text-white">
                         Nombre *
                       </Label>
                       <Input
                         id="first_name"
                         {...register("first_name")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         placeholder="Juan"
                       />
                       {errors.first_name && (
@@ -142,13 +131,13 @@ export default function NewEmployeePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="last_name" className="text-gray-300">
+                      <Label htmlFor="last_name" className="text-white">
                         Apellido *
                       </Label>
                       <Input
                         id="last_name"
                         {...register("last_name")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         placeholder="Pérez"
                       />
                       {errors.last_name && (
@@ -169,14 +158,14 @@ export default function NewEmployeePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-300">
+                      <Label htmlFor="email" className="text-white">
                         Email *
                       </Label>
                       <Input
                         id="email"
                         type="email"
                         {...register("email")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         placeholder="juan@empresa.com"
                       />
                       {errors.email && (
@@ -187,13 +176,13 @@ export default function NewEmployeePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-gray-300">
+                      <Label htmlFor="phone" className="text-white">
                         Teléfono *
                       </Label>
                       <Input
                         id="phone"
                         {...register("phone")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         placeholder="+1234567890"
                       />
                       {errors.phone && (
@@ -205,14 +194,14 @@ export default function NewEmployeePage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-gray-300">
+                    <Label htmlFor="password" className="text-white">
                       Contraseña *
                     </Label>
                     <Input
                       id="password"
                       type="password"
                       {...register("password")}
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       placeholder="Mínimo 8 caracteres"
                     />
                     {errors.password && (
@@ -232,25 +221,25 @@ export default function NewEmployeePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="position" className="text-gray-300">
+                      <Label htmlFor="position" className="text-white">
                         Cargo
                       </Label>
                       <Input
                         id="position"
                         {...register("position")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         placeholder="Gerente de Seguridad"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="department" className="text-gray-300">
+                      <Label htmlFor="department" className="text-white">
                         Departamento
                       </Label>
                       <Input
                         id="department"
                         {...register("department")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         placeholder="Seguridad"
                       />
                     </div>
@@ -267,41 +256,45 @@ export default function NewEmployeePage() {
                     <Input
                       id="address"
                       {...register("address")}
-                      className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       placeholder="Calle Principal #123"
                     />
                   </div>
                 </div>
 
                 {/* Botones */}
-                <div className="flex gap-4 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => router.back()}
-                    className="flex-1 border-white/10 text-gray-300 hover:bg-white/5"
-                    disabled={isSubmitting}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="flex-1 bg-[#07D9D9] hover:bg-[#0596A6] text-[#010440] font-semibold"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-[#010440] border-t-transparent rounded-full animate-spin mr-2" />
-                        Guardando...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2" />
-                        Guardar Empleado
-                      </>
-                    )}
-                  </Button>
-                </div>
+                <Card className="bg-white/5 border-white/10 mt-6">
+                  <CardContent className="p-2">
+                    <div className="flex gap-3 justify-end">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => router.back()}
+                        className="border-white/10 text-slate-400 hover:text-white hover:bg-white/5"
+                        disabled={isSubmitting}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        type="submit"
+                        className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
+                            Guardando...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4 mr-2" />
+                            Guardar Empleado
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </form>
             </CardContent>
           </Card>
@@ -310,8 +303,3 @@ export default function NewEmployeePage() {
     </div>
   );
 }
-
-
-
-
-

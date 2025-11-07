@@ -37,7 +37,7 @@ export default function Footer() {
           message: j?.error || "No se pudo completar la suscripción",
         });
       }
-    } catch (err) {
+    } catch {
       setFeedback({
         type: "error",
         message: "Error de red. Inténtalo de nuevo",
@@ -61,14 +61,15 @@ export default function Footer() {
             className="md:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 relative p-6 md:p-8"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-12 w-12 bg-gradient-to-br from-[#07D9D9] to-[#0596A6] rounded-xl flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 bg-linear-to-br from-[#07D9D9] to-[#0596A6] rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xl">N</span>
               </div>
               <div className="text-2xl font-bold text-white">Novack</div>
             </div>
 
             <p className="text-white/80 mb-6 leading-relaxed max-w-md">
-              Transforma tus operaciones con nuestra plataforma de gestión. Únete a miles de empresas que confían en Novack.
+              Transforma tus operaciones con nuestra plataforma de gestión.
+              Únete a miles de empresas que confían en Novack.
             </p>
 
             {/* Social Links */}

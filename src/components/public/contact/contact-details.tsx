@@ -1,5 +1,5 @@
 "use client";
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin } from "lucide-react";
 
 const ContactDetails = () => {
   const details = [
@@ -34,7 +34,7 @@ const ContactDetails = () => {
       <div className="space-y-6">
         {details.map((item) => (
           <div key={item.title} className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center shrink">
               {item.icon}
             </div>
             <div>

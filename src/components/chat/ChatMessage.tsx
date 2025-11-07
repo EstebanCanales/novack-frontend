@@ -1,8 +1,9 @@
 "use client";
 import { memo } from "react";
+import type { Message } from "@/lib/services/websocket.service";
 
 interface ChatMessageProps {
-  message: any;
+  message: Message;
   isOwn: boolean;
   formatTime: (date: string) => string;
   senderName?: string;
@@ -19,7 +20,9 @@ const ChatMessage = memo(function ChatMessage({
   return (
     <div className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[70%] ${isOwn ? "items-end" : "items-start"} flex flex-col gap-1`}
+        className={`max-w-[70%] ${
+          isOwn ? "items-end" : "items-start"
+        } flex flex-col gap-1`}
       >
         {!isOwn && (
           <span className="text-xs text-gray-400 px-3">
@@ -41,7 +44,9 @@ const ChatMessage = memo(function ChatMessage({
             {message.content}
           </p>
           <span
-            className={`text-xs mt-1 block ${isOwn ? "text-[#010440]/60" : "text-gray-400"}`}
+            className={`text-xs mt-1 block ${
+              isOwn ? "text-[#010440]/60" : "text-gray-400"
+            }`}
           >
             {formatTime(message.createdAt)}
           </span>

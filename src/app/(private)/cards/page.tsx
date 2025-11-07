@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -57,30 +57,7 @@ export default function CardsPage() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      loadCards();
-    }
-  }, [isAuthenticated, user]);
-
-  useEffect(() => {
-    // Filtrar tarjetas por búsqueda
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      const filtered = cards.filter(
-        (card) =>
-          card.card_uuid.toLowerCase().includes(query) ||
-          card.status.toLowerCase().includes(query) ||
-          card.employee?.first_name.toLowerCase().includes(query) ||
-          card.employee?.last_name.toLowerCase().includes(query)
-      );
-      setFilteredCards(filtered);
-    } else {
-      setFilteredCards(cards);
-    }
-  }, [searchQuery, cards]);
-
-  const loadCards = async () => {
+  const loadCards = useCallback(async () => {
     try {
       setLoading(true);
       // Si el usuario tiene supplier_id, obtener solo sus tarjetas
@@ -95,7 +72,30 @@ export default function CardsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.supplier?.id]);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      loadCards();
+    }
+  }, [isAuthenticated, user, loadCards]);
+
+  useEffect(() => {
+    // Filtrar tarjetas por búsqueda
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      const filtered = cards.filter(
+        (card) =>
+          card.card_uuid.toLowerCase().includes(query) ||
+          (card.status?.toLowerCase().includes(query) ?? false) ||
+          card.employee?.first_name.toLowerCase().includes(query) ||
+          card.employee?.last_name.toLowerCase().includes(query)
+      );
+      setFilteredCards(filtered);
+    } else {
+      setFilteredCards(cards);
+    }
+  }, [searchQuery, cards]);
 
   const handleAddCard = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,10 +123,15 @@ export default function CardsPage() {
       setNewCardUuid("");
       setBatteryPercentage(100);
       await loadCards();
-    } catch (error: any) {
+    } catch (error) {
+      type ErrorWithResponse = {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const e = error as ErrorWithResponse;
       console.error("Error al agregar tarjeta:", error);
       toast.error(
-        error.response?.data?.message || "Error al agregar la tarjeta"
+        e.response?.data?.message || e.message || "Error al agregar la tarjeta"
       );
     }
   };
@@ -211,7 +216,7 @@ export default function CardsPage() {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#07D9D9] to-[#0596A6] bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-linear-to-r from-[#07D9D9] to-[#0596A6] bg-clip-text text-transparent">
                 Gestión de Tarjetas
               </h1>
               <p className="text-gray-400 mt-1">
@@ -221,7 +226,7 @@ export default function CardsPage() {
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-[#07D9D9] to-[#0596A6] hover:opacity-90 text-[#010440] font-semibold">
+                <Button className="bg-linear-to-r from-[#07D9D9] to-[#0596A6] hover:opacity-90 text-[#010440] font-semibold">
                   <Plus className="w-4 h-4 mr-2" />
                   Agregar Tarjeta
                 </Button>
@@ -240,10 +245,14 @@ export default function CardsPage() {
 
                   <div className="space-y-4 py-4">
                     <div>
-                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      <label
+                        htmlFor="card-uuid"
+                        className="text-sm font-medium text-gray-300 mb-2 block"
+                      >
                         UUID de la Tarjeta *
                       </label>
                       <Input
+                        id="card-uuid"
                         placeholder="Ej: 04:3E:F2:8A:9C:40:81"
                         value={newCardUuid}
                         onChange={(e) => setNewCardUuid(e.target.value)}
@@ -253,10 +262,14 @@ export default function CardsPage() {
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-300 mb-2 block">
+                      <label
+                        htmlFor="battery-percentage"
+                        className="text-sm font-medium text-gray-300 mb-2 block"
+                      >
                         Batería Inicial (%)
                       </label>
                       <Input
+                        id="battery-percentage"
                         type="number"
                         min="0"
                         max="100"
@@ -351,7 +364,7 @@ export default function CardsPage() {
                               : "Sin asignar"}
                           </CardDescription>
                         </div>
-                        {getStatusBadge(card.status)}
+                        {getStatusBadge(card.status || "inactive")}
                       </div>
                     </CardHeader>
 

@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Users, UserPlus, Loader2, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Users, Loader2, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
@@ -14,7 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 interface Contact {
   id: string;
-  uuid: string;
+  uuid?: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -32,7 +30,10 @@ interface ContactListProps {
   onClose?: () => void;
 }
 
-export default function ContactList({ onRoomCreated, onClose }: ContactListProps) {
+export default function ContactList({
+  onRoomCreated,
+  onClose,
+}: ContactListProps) {
   const { user } = useAuth();
   const { createPrivateRoom, joinRoom, rooms } = useWebSocket();
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -51,11 +52,21 @@ export default function ContactList({ onRoomCreated, onClose }: ContactListProps
       try {
         const fetchedContacts = await employeeService.searchContacts("");
         const filtered = fetchedContacts.filter(
-          (contact) => contact.id !== user.id
+          (contact) => contact.id !== user.id,
         );
         setContacts(filtered);
-      } catch (error: any) {
-        console.error("❌ Error fetching contacts:", error);
+      } catch (error) {
+        type ErrorWithMessage = {
+          response?: { data?: { message?: unknown } };
+          message?: unknown;
+        };
+        const e = error as ErrorWithMessage;
+        const raw =
+          e?.response?.data?.message ??
+          e?.message ??
+          "Error al buscar contactos";
+        const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
+        console.error("❌ Error fetching contacts:", message);
         setContacts([]);
       } finally {
         setIsLoading(false);
@@ -98,7 +109,11 @@ export default function ContactList({ onRoomCreated, onClose }: ContactListProps
     const position = contact.position?.toLowerCase() || "";
     const query = searchQuery.toLowerCase();
 
-    return fullName.includes(query) || email.includes(query) || position.includes(query);
+    return (
+      fullName.includes(query) ||
+      email.includes(query) ||
+      position.includes(query)
+    );
   });
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -147,15 +162,29 @@ export default function ContactList({ onRoomCreated, onClose }: ContactListProps
           </div>
         ) : (
           <div className="space-y-1">
-            {filteredContacts.map((contact, index) => {
+            {filteredContacts.map((contact) => {
               const isCreating = creatingRoomFor === contact.id;
+
+              const handleClick = () => {
+                if (!isCreating) {
+                  handleCreateOrJoinRoom(contact);
+                }
+              };
+
+              const handleKeyDown = (e: React.KeyboardEvent) => {
+                if ((e.key === "Enter" || e.key === " ") && !isCreating) {
+                  e.preventDefault();
+                  handleCreateOrJoinRoom(contact);
+                }
+              };
 
               return (
                 <div
                   key={contact.id}
-                  onClick={() =>
-                    !isCreating && handleCreateOrJoinRoom(contact)
-                  }
+                  onClick={handleClick}
+                  onKeyDown={handleKeyDown}
+                  role="button"
+                  tabIndex={0}
                   className={`group relative flex items-center gap-3 p-2 rounded-lg transition-colors cursor-pointer ${
                     isCreating
                       ? "bg-[#07D9D9]/10 border border-[#07D9D9]/30"

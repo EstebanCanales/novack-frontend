@@ -57,8 +57,14 @@ class AppointmentService {
     return response.data;
   }
 
+  async getArchived(supplierId?: string): Promise<Appointment[]> {
+    const params = supplierId ? { supplierId } : {};
+    const response = await api.get<Appointment[]>("/appointments/archived", { params });
+    return response.data;
+  }
+
   async getUpcoming(limit: number = 10, supplierId?: string): Promise<Appointment[]> {
-    const params: any = { limit };
+    const params: { limit: number; supplierId?: string } = { limit };
     if (supplierId) params.supplierId = supplierId;
     const response = await api.get<Appointment[]>("/appointments/upcoming", { params });
     return response.data;
@@ -69,7 +75,11 @@ class AppointmentService {
     endDate: Date,
     supplierId?: string
   ): Promise<Appointment[]> {
-    const params: any = {
+    const params: {
+      startDate: string;
+      endDate: string;
+      supplierId?: string;
+    } = {
       startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
     };
@@ -110,6 +120,12 @@ class AppointmentService {
 
   async delete(id: string): Promise<void> {
     await api.delete(`/appointments/${id}`);
+  }
+
+  async archiveOldAppointments(supplierId?: string): Promise<{ archived: number }> {
+    const params = supplierId ? { supplierId } : {};
+    const response = await api.post<{ archived: number }>("/appointments/archive-old", null, { params });
+    return response.data;
   }
 }
 

@@ -11,10 +11,10 @@ type Category = (typeof categories)[number];
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: Category }> | { category?: Category };
+  searchParams: Promise<{ category?: Category }>;
 }) {
   const allPosts = getSortedPostsData();
-  const sp = (await (searchParams as any)) ?? {};
+  const sp = await searchParams;
   const activeCategory: Category =
     sp?.category && categories.includes(sp.category as Category)
       ? (sp.category as Category)
@@ -92,9 +92,7 @@ export default async function BlogPage({
                         : "text-white/70 bg-white/5 hover:bg-white/10 hover:text-white"
                     }`}
                   >
-                    {cat === "All"
-                      ? "Todos"
-                      : cat}
+                    {cat === "All" ? "Todos" : cat}
                   </Link>
                 );
               })}
@@ -115,7 +113,7 @@ export default async function BlogPage({
                         >
                           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col h-full overflow-hidden hover:border-[#07D9D9]/50 transition-all duration-300">
                             <div
-                              className={`relative h-64 md:h-80 lg:h-96 rounded-lg bg-gradient-to-br ${featured.gradient} mb-6 overflow-hidden flex-shrink-0`}
+                              className={`relative h-64 md:h-80 lg:h-96 rounded-lg bg-linear-to-br{featured.gradient} mb-6 overflow-hidden shrink`}
                             >
                               <div className="absolute inset-0 bg-black/20 transition-opacity duration-300 group-hover:opacity-0"></div>
                             </div>
@@ -148,14 +146,14 @@ export default async function BlogPage({
                         >
                           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col h-full overflow-hidden hover:border-[#07D9D9]/50 transition-all duration-300">
                             <div
-                              className={`relative h-56 md:h-64 rounded-lg bg-gradient-to-br ${post.gradient} mb-5 overflow-hidden flex-shrink-0`}
+                              className={`relative h-56 md:h-64 rounded-lg bg-linear-to-br ${post.gradient} mb-5 overflow-hidden shrink-0`}
                             >
                               <div className="absolute inset-0 bg-black/20 transition-opacity duration-300 group-hover:opacity-0"></div>
                             </div>
                             <p className="text-sm font-medium text-[#07D9D9] mb-2">
                               {post.category}
                             </p>
-                            <h3 className="text-2xl font-bold text-white mb-3 flex-grow">
+                            <h3 className="text-2xl font-bold text-white mb-3 grow">
                               {post.title}
                             </h3>
                             <p className="text-white/70 text-base leading-relaxed mb-5 line-clamp-3">

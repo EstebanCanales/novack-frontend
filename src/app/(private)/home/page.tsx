@@ -3,7 +3,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import GlobalMap, { MapCard } from "@/components/private/map/globalMap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,19 +16,25 @@ import { Home, Bell, Calendar, Clock, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { SkeletonDashboard } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { dashboardService, UpcomingAppointment } from "@/lib/services/dashboard.service";
+import {
+  dashboardService,
+  UpcomingAppointment,
+} from "@/lib/services/dashboard.service";
 import { cardService } from "@/lib/services/card.service";
-
 
 export default function HomePage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [notifications, setNotifications] = useState<UpcomingAppointment[]>([]);
-  const [filteredNotifications, setFilteredNotifications] = useState<UpcomingAppointment[]>([]);
+  const [filteredNotifications, setFilteredNotifications] = useState<
+    UpcomingAppointment[]
+  >([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
   const [cards, setCards] = useState<MapCard[]>([]);
   const [loadingCards, setLoadingCards] = useState(true);
-  const [timeFilter, setTimeFilter] = useState<'all' | '1h' | '24h' | '7d'>('all');
+  const [timeFilter, setTimeFilter] = useState<"all" | "1h" | "24h" | "7d">(
+    "all"
+  );
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -36,18 +42,15 @@ export default function HomePage() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  useEffect(() => {
-    if (user) {
-      loadNotifications();
-      loadCards();
-    }
-  }, [user]);
-
-  const loadNotifications = async () => {
+  const loadNotifications = useCallback(async () => {
+    if (!user?.supplier?.id) return;
     try {
       setLoadingNotifications(true);
-      const supplierId = user?.supplier?.id;
-      const upcoming = await dashboardService.getUpcomingAppointments(50, supplierId);
+      const supplierId = user.supplier.id;
+      const upcoming = await dashboardService.getUpcomingAppointments(
+        50,
+        supplierId
+      );
       setNotifications(upcoming);
       setFilteredNotifications(upcoming);
     } catch (error) {
@@ -55,51 +58,18 @@ export default function HomePage() {
     } finally {
       setLoadingNotifications(false);
     }
-  };
+  }, [user?.supplier?.id]);
 
-  // Filtrar notificaciones por tiempo
-  useEffect(() => {
-    if (!notifications.length) return;
-
-    const now = new Date();
-    let filtered = notifications;
-
-    switch (timeFilter) {
-      case '1h':
-        filtered = notifications.filter(notif => {
-          const diff = new Date(notif.scheduledTime).getTime() - now.getTime();
-          return diff <= 60 * 60 * 1000; // 1 hora
-        });
-        break;
-      case '24h':
-        filtered = notifications.filter(notif => {
-          const diff = new Date(notif.scheduledTime).getTime() - now.getTime();
-          return diff <= 24 * 60 * 60 * 1000; // 24 horas
-        });
-        break;
-      case '7d':
-        filtered = notifications.filter(notif => {
-          const diff = new Date(notif.scheduledTime).getTime() - now.getTime();
-          return diff <= 7 * 24 * 60 * 60 * 1000; // 7 días
-        });
-        break;
-      default:
-        filtered = notifications;
+  const loadCards = useCallback(async () => {
+    if (!user?.supplier?.id) {
+      console.warn("No supplier ID found for user");
+      setCards([]);
+      return;
     }
 
-    setFilteredNotifications(filtered);
-  }, [timeFilter, notifications]);
-
-  const loadCards = async () => {
     try {
       setLoadingCards(true);
-      const supplierId = user?.supplier?.id;
-
-      if (!supplierId) {
-        console.warn("No supplier ID found for user");
-        setCards([]);
-        return;
-      }
+      const supplierId = user.supplier.id;
 
       // Obtener solo tarjetas del supplier del usuario
       const supplierCards = await cardService.getBySupplier(supplierId);
@@ -109,8 +79,14 @@ export default function HomePage() {
         .filter((card) => card.latitude != null && card.longitude != null)
         .map((card) => {
           // Asegurar que las coordenadas son números
-          const lat = typeof card.latitude === 'string' ? parseFloat(card.latitude) : card.latitude;
-          const lng = typeof card.longitude === 'string' ? parseFloat(card.longitude) : card.longitude;
+          const lat =
+            typeof card.latitude === "string"
+              ? parseFloat(card.latitude)
+              : card.latitude;
+          const lng =
+            typeof card.longitude === "string"
+              ? parseFloat(card.longitude)
+              : card.longitude;
 
           return {
             id: card.id,
@@ -129,7 +105,47 @@ export default function HomePage() {
     } finally {
       setLoadingCards(false);
     }
-  };
+  }, [user?.supplier?.id]);
+
+  useEffect(() => {
+    if (user) {
+      loadNotifications();
+      loadCards();
+    }
+  }, [user, loadNotifications, loadCards]);
+
+  // Filtrar notificaciones por tiempo
+  useEffect(() => {
+    if (!notifications.length) return;
+
+    const now = new Date();
+    let filtered = notifications;
+
+    switch (timeFilter) {
+      case "1h":
+        filtered = notifications.filter((notif) => {
+          const diff = new Date(notif.scheduledTime).getTime() - now.getTime();
+          return diff <= 60 * 60 * 1000; // 1 hora
+        });
+        break;
+      case "24h":
+        filtered = notifications.filter((notif) => {
+          const diff = new Date(notif.scheduledTime).getTime() - now.getTime();
+          return diff <= 24 * 60 * 60 * 1000; // 24 horas
+        });
+        break;
+      case "7d":
+        filtered = notifications.filter((notif) => {
+          const diff = new Date(notif.scheduledTime).getTime() - now.getTime();
+          return diff <= 7 * 24 * 60 * 60 * 1000; // 7 días
+        });
+        break;
+      default:
+        filtered = notifications;
+    }
+
+    setFilteredNotifications(filtered);
+  }, [timeFilter, notifications]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -195,7 +211,10 @@ export default function HomePage() {
             <MapPin className="w-5 h-5 text-[#07D9D9]" />
             Mapa de Ubicaciones
             {!loadingCards && cards.length > 0 && (
-              <Badge variant="secondary" className="ml-auto bg-[#07D9D9]/10 text-[#07D9D9] border-[#07D9D9]/20">
+              <Badge
+                variant="secondary"
+                className="ml-auto bg-[#07D9D9]/10 text-[#07D9D9] border-[#07D9D9]/20"
+              >
                 {cards.length} tarjeta{cards.length !== 1 ? "s" : ""}
               </Badge>
             )}
@@ -235,41 +254,41 @@ export default function HomePage() {
           {/* Filtros */}
           <div className="flex gap-2 mb-3 flex-wrap">
             <button
-              onClick={() => setTimeFilter('all')}
+              onClick={() => setTimeFilter("all")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                timeFilter === 'all'
-                  ? 'bg-[#07D9D9] text-slate-900'
-                  : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                timeFilter === "all"
+                  ? "bg-[#07D9D9] text-slate-900"
+                  : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
               Todas
             </button>
             <button
-              onClick={() => setTimeFilter('1h')}
+              onClick={() => setTimeFilter("1h")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                timeFilter === '1h'
-                  ? 'bg-[#07D9D9] text-slate-900'
-                  : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                timeFilter === "1h"
+                  ? "bg-[#07D9D9] text-slate-900"
+                  : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
               1 hora
             </button>
             <button
-              onClick={() => setTimeFilter('24h')}
+              onClick={() => setTimeFilter("24h")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                timeFilter === '24h'
-                  ? 'bg-[#07D9D9] text-slate-900'
-                  : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                timeFilter === "24h"
+                  ? "bg-[#07D9D9] text-slate-900"
+                  : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
               24 horas
             </button>
             <button
-              onClick={() => setTimeFilter('7d')}
+              onClick={() => setTimeFilter("7d")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
-                timeFilter === '7d'
-                  ? 'bg-[#07D9D9] text-slate-900'
-                  : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                timeFilter === "7d"
+                  ? "bg-[#07D9D9] text-slate-900"
+                  : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
               7 días
@@ -298,7 +317,7 @@ export default function HomePage() {
                   onClick={() => router.push("/appointment")}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="h-10 w-10 rounded-full bg-[#07D9D9]/10 flex items-center justify-center flex-shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-[#07D9D9]/10 flex items-center justify-center shrink">
                       <Calendar className="w-5 h-5 text-[#07D9D9]" />
                     </div>
                     <div className="flex-1 min-w-0">

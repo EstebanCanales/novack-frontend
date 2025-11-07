@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Globe } from "@/components/ui/globe";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,16 +9,27 @@ import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
-// import { Globe } from "@/components/ui/globe";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowLeft, Lock, Mail, Shield } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
+
+interface User {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  is_creator: boolean;
+  supplier?: {
+    id: string;
+    supplier_name: string;
+  };
+}
 
 interface LoginResponse {
   access_token?: string;
   refresh_token?: string;
   expires_in?: number;
-  employee?: any;
+  employee?: User;
   requires2FA?: boolean;
   phoneNumber?: string;
 }
@@ -48,9 +60,10 @@ export default function LoginForm() {
       const data: LoginResponse = response.data;
 
       if (data.requires2FA) {
-        setUserId(data.employee?.id || "");
+        const employeeId = data.employee?.id;
+        setUserId(typeof employeeId === "string" ? employeeId : "");
         setShowOtp(true);
-        return;
+        return undefined;
       }
 
       if (data.access_token && data.employee) {
@@ -60,11 +73,18 @@ export default function LoginForm() {
       }
 
       setError("Error al obtener token de autenticación.");
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message ||
-        "Error al iniciar sesión. Verifica tus credenciales.";
-      setError(Array.isArray(message) ? message.join(", ") : message);
+    } catch (err) {
+      type ErrorWithMessage = {
+        response?: { data?: { message?: unknown } };
+        message?: unknown;
+      };
+      const e = err as ErrorWithMessage;
+      const raw =
+        e?.response?.data?.message ??
+        e?.message ??
+        "Error al registrarse. Verifica tus datos.";
+      const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -90,10 +110,18 @@ export default function LoginForm() {
       }
 
       setError("Error al verificar código OTP.");
-    } catch (err: any) {
-      const message =
-        err?.response?.data?.message || "Error al verificar código OTP.";
-      setError(Array.isArray(message) ? message.join(", ") : message);
+    } catch (err) {
+      type ErrorWithMessage = {
+        response?: { data?: { message?: unknown } };
+        message?: unknown;
+      };
+      const e = err as ErrorWithMessage;
+      const raw =
+        e?.response?.data?.message ||
+        e?.message ||
+        "Error al verificar código OTP.";
+      const message = Array.isArray(raw) ? raw.join(", ") : String(raw);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -318,49 +346,9 @@ export default function LoginForm() {
       </div>
 
       {/* Right Side - Simple Background */}
-      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-cyan-900/20">
-        {/* Animated Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
-            className="w-[600px] h-[600px] relative"
-          >
-            {/* Simple animated circles */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="w-96 h-96 border border-[#07D9D9]/20 rounded-full"
-              />
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                className="w-80 h-80 border border-[#07D9D9]/30 rounded-full absolute"
-              />
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                className="w-64 h-64 border border-[#07D9D9]/40 rounded-full absolute"
-              />
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Content Overlay */}
-        <div className="absolute bottom-12 left-12 right-12 z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
-            className="text-white space-y-2"
-          >
-            <h3 className="text-2xl font-bold">Seguridad Empresarial Global</h3>
-            <p className="text-gray-300 text-sm">
-              Tecnología de vanguardia para la protección de tu organización
-            </p>
-          </motion.div>
+      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-linear-to-brrom-purple-900/20 via-blue-900/20 to-cyan-900/20">
+        <div className="relative h-full w-full pt-20">
+          <Globe />
         </div>
 
         {/* Status Indicator */}

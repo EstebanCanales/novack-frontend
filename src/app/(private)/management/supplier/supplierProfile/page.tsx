@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { supplierService, type Supplier } from "@/lib/services";
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  Home,
   User,
   Mail,
   Phone,
@@ -20,12 +21,21 @@ import {
   Upload,
   Calendar,
   Award,
+  ArrowLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const supplierSchema = z.object({
   company_name: z
@@ -48,7 +58,7 @@ const supplierSchema = z.object({
 type SupplierFormData = z.infer<typeof supplierSchema>;
 
 export default function SupplierProfilePage() {
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, updateUser } = useAuth();
   const router = useRouter();
 
   const [supplier, setSupplier] = useState<Supplier | null>(null);
@@ -73,18 +83,12 @@ export default function SupplierProfilePage() {
     }
   }, [isAuthenticated, authLoading, router]);
 
-  useEffect(() => {
-    if (isAuthenticated && user?.supplier_id) {
-      loadSupplier();
-    }
-  }, [isAuthenticated, user]);
-
-  const loadSupplier = async () => {
-    if (!user?.supplier_id) return;
+  const loadSupplier = useCallback(async () => {
+    if (!user?.supplier?.id) return;
 
     try {
       setIsLoading(true);
-      const data = await supplierService.getById(user.supplier_id);
+      const data = await supplierService.getById(user.supplier.id);
       setSupplier(data);
       reset({
         company_name: data.company_name,
@@ -102,7 +106,13 @@ export default function SupplierProfilePage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user?.supplier?.id, reset]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.supplier?.id) {
+      loadSupplier();
+    }
+  }, [isAuthenticated, user, loadSupplier]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -117,20 +127,23 @@ export default function SupplierProfilePage() {
   };
 
   const onSubmit = async (data: SupplierFormData) => {
-    if (!user?.supplier_id) return;
+    if (!user?.supplier?.id) return;
 
     try {
       setIsSubmitting(true);
 
-      // Actualizar datos del proveedor
-      await supplierService.update(user.supplier_id, data);
+      await supplierService.update(user.supplier.id, data);
 
-      // Si hay una imagen, subirla
       if (profileImage) {
-        await supplierService.uploadProfileImage(
-          user.supplier_id,
+        const response = await supplierService.uploadProfileImage(
+          user.supplier.id,
           profileImage
         );
+
+        // Update user context with new profile image
+        if (response.url) {
+          updateUser({ profile_image_url: response.url });
+        }
       }
 
       showSuccess(
@@ -138,6 +151,8 @@ export default function SupplierProfilePage() {
         "La información ha sido actualizada exitosamente"
       );
       setIsEditing(false);
+      setProfileImage(null);
+      setImagePreview(null);
       await loadSupplier();
     } catch (error) {
       handleApiError(error, "Error al actualizar perfil");
@@ -148,9 +163,9 @@ export default function SupplierProfilePage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-black">
+      <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#07D9D9] border-t-transparent rounded-full animate-spin" />
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
           <p className="text-white text-lg">Cargando perfil...</p>
         </div>
       </div>
@@ -162,27 +177,55 @@ export default function SupplierProfilePage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-black overflow-auto">
-      <div className="flex-1 p-6">
+    <div className="flex flex-col h-full p-3 pl-2 overflow-hidden">
+      <div className="flex-1 overflow-auto space-y-3">
+        {/* Breadcrumb */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/home">
+                  <Home className="h-4 w-4" />
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Gestión</BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Proveedores</BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Perfil del Proveedor</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </motion.div>
+
         {/* Header */}
         <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#07D9D9] to-[#0596A6] bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold text-white">
                 Perfil del Proveedor
               </h1>
-              <p className="text-gray-400 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 Gestiona la información de tu empresa
               </p>
             </div>
             {!isEditing && (
               <Button
                 onClick={() => setIsEditing(true)}
-                className="bg-[#07D9D9] hover:bg-[#0596A6] text-[#010440] font-semibold"
+                className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black font-semibold"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Editar Perfil
@@ -193,31 +236,30 @@ export default function SupplierProfilePage() {
 
         {/* Profile Image & Company Info */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
         >
-          <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
-            <CardContent className="p-6">
+          <Card className="bg-white/5 border-white/10">
+            <CardContent className="p-4">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <Avatar className="h-24 w-24 border-2 border-[#07D9D9]/30">
                   <AvatarImage src={imagePreview || supplier.logo_url || ""} />
-                  <AvatarFallback className="bg-[#07D9D9] text-[#010440] text-2xl font-bold">
-                    {supplier.company_name[0]}
+                  <AvatarFallback className="bg-[#07D9D9] text-black text-2xl font-bold">
+                    {(supplier.company_name || supplier.supplier_name)[0]}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-2xl font-bold text-white">
-                      {supplier.company_name}
+                      {supplier.company_name || supplier.supplier_name}
                     </h2>
                     <Badge className="bg-[#07D9D9]/20 text-[#07D9D9] border-[#07D9D9]/30">
-                      {supplier.subscription_tier || "Free"}
+                      Free
                     </Badge>
                   </div>
-                  <div className="space-y-1 text-gray-300">
+                  <div className="space-y-1 text-white">
                     <div className="flex items-center gap-2">
                       <User className="w-4 h-4 text-[#07D9D9]" />
                       <span>{supplier.contact_name}</span>
@@ -258,7 +300,7 @@ export default function SupplierProfilePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-white/5 rounded-lg border border-white/10">
                     <Calendar className="w-6 h-6 text-[#07D9D9] mx-auto mb-2" />
-                    <p className="text-xs text-gray-400">Miembro desde</p>
+                    <p className="text-xs text-slate-400">Miembro desde</p>
                     <p className="text-sm font-semibold text-white">
                       {new Date(supplier.created_at).toLocaleDateString(
                         "es-ES",
@@ -268,10 +310,8 @@ export default function SupplierProfilePage() {
                   </div>
                   <div className="text-center p-4 bg-white/5 rounded-lg border border-white/10">
                     <Award className="w-6 h-6 text-[#07D9D9] mx-auto mb-2" />
-                    <p className="text-xs text-gray-400">Plan</p>
-                    <p className="text-sm font-semibold text-white">
-                      {supplier.subscription_tier || "Free"}
-                    </p>
+                    <p className="text-xs text-slate-400">Plan</p>
+                    <p className="text-sm font-semibold text-white">Free</p>
                   </div>
                 </div>
               </div>
@@ -282,11 +322,11 @@ export default function SupplierProfilePage() {
         {/* Edit Form */}
         {isEditing && (
           <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
           >
-            <Card className="bg-white/5 backdrop-blur-sm border border-white/10">
+            <Card className="bg-white/5 border-white/10">
               <CardHeader>
                 <CardTitle className="text-white">
                   Información de la Empresa
@@ -302,13 +342,13 @@ export default function SupplierProfilePage() {
                     </h3>
 
                     <div className="space-y-2">
-                      <Label htmlFor="company_name" className="text-gray-300">
+                      <Label htmlFor="company_name" className="text-white">
                         Nombre de la Empresa *
                       </Label>
                       <Input
                         id="company_name"
                         {...register("company_name")}
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       />
                       {errors.company_name && (
                         <p className="text-red-400 text-sm">
@@ -327,13 +367,13 @@ export default function SupplierProfilePage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="contact_name" className="text-gray-300">
+                        <Label htmlFor="contact_name" className="text-white">
                           Nombre de Contacto *
                         </Label>
                         <Input
                           id="contact_name"
                           {...register("contact_name")}
-                          className="bg-white/5 border-white/10 text-white"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
                         {errors.contact_name && (
                           <p className="text-red-400 text-sm">
@@ -345,14 +385,14 @@ export default function SupplierProfilePage() {
                       <div className="space-y-2">
                         <Label
                           htmlFor="contact_phone"
-                          className="text-gray-300"
+                          className="text-white"
                         >
                           Teléfono *
                         </Label>
                         <Input
                           id="contact_phone"
                           {...register("contact_phone")}
-                          className="bg-white/5 border-white/10 text-white"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
                         {errors.contact_phone && (
                           <p className="text-red-400 text-sm">
@@ -363,14 +403,14 @@ export default function SupplierProfilePage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="contact_email" className="text-gray-300">
+                      <Label htmlFor="contact_email" className="text-white">
                         Email de Contacto *
                       </Label>
                       <Input
                         id="contact_email"
                         type="email"
                         {...register("contact_email")}
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       />
                       {errors.contact_email && (
                         <p className="text-red-400 text-sm">
@@ -388,97 +428,101 @@ export default function SupplierProfilePage() {
                     </h3>
 
                     <div className="space-y-2">
-                      <Label htmlFor="address" className="text-gray-300">
+                      <Label htmlFor="address" className="text-white">
                         Dirección
                       </Label>
                       <Input
                         id="address"
                         {...register("address")}
-                        className="bg-white/5 border-white/10 text-white"
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="city" className="text-gray-300">
+                        <Label htmlFor="city" className="text-white">
                           Ciudad
                         </Label>
                         <Input
                           id="city"
                           {...register("city")}
-                          className="bg-white/5 border-white/10 text-white"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="state" className="text-gray-300">
+                        <Label htmlFor="state" className="text-white">
                           Estado/Provincia
                         </Label>
                         <Input
                           id="state"
                           {...register("state")}
-                          className="bg-white/5 border-white/10 text-white"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="postal_code" className="text-gray-300">
+                        <Label htmlFor="postal_code" className="text-white">
                           Código Postal
                         </Label>
                         <Input
                           id="postal_code"
                           {...register("postal_code")}
-                          className="bg-white/5 border-white/10 text-white"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="country" className="text-gray-300">
+                        <Label htmlFor="country" className="text-white">
                           País
                         </Label>
                         <Input
                           id="country"
                           {...register("country")}
-                          className="bg-white/5 border-white/10 text-white"
+                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Botones */}
-                  <div className="flex gap-4 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setIsEditing(false);
-                        reset();
-                      }}
-                      className="flex-1 border-white/10 text-gray-300 hover:bg-white/5"
-                      disabled={isSubmitting}
-                    >
-                      Cancelar
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="flex-1 bg-[#07D9D9] hover:bg-[#0596A6] text-[#010440] font-semibold"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-[#010440] border-t-transparent rounded-full animate-spin mr-2" />
-                          Guardando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="w-4 h-4 mr-2" />
-                          Guardar Cambios
-                        </>
-                      )}
-                    </Button>
-                  </div>
+                  <Card className="bg-white/5 border-white/10">
+                    <CardContent className="p-2">
+                      <div className="flex gap-3 justify-end">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setIsEditing(false);
+                            reset();
+                          }}
+                          className="border-white/10 text-slate-400 hover:text-white hover:bg-white/5"
+                          disabled={isSubmitting}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          type="submit"
+                          className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black font-semibold"
+                          disabled={isSubmitting}
+                        >
+                          {isSubmitting ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin mr-2" />
+                              Guardando...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="w-4 h-4 mr-2" />
+                              Guardar Cambios
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </form>
               </CardContent>
             </Card>

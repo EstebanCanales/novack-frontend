@@ -1,15 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { CheckCircle, User, Building, Phone, Mail, MapPin } from "lucide-react";
 import type { RegistrationData } from "@/types/registration";
 
 interface SuccessStepProps {
   data: RegistrationData;
-  onFinish: () => void;
 }
 
-export function SuccessStep({ data, onFinish }: SuccessStepProps) {
+export function SuccessStep({ data }: SuccessStepProps) {
   return (
     <div className="h-full flex flex-col">
       <div className="text-center mb-8">
@@ -19,9 +17,7 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
         <h2 className="text-2xl font-bold text-white mb-2">
           ¡Registro Completado!
         </h2>
-        <p className="text-white/70">
-          Tu cuenta ha sido creada exitosamente
-        </p>
+        <p className="text-white/70">Tu cuenta ha sido creada exitosamente</p>
       </div>
 
       <div className="flex-1 space-y-4">
@@ -29,7 +25,9 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
         <div className="bg-white/5 border border-white/10 rounded-xl p-4">
           <div className="flex items-center gap-3 mb-3">
             <User className="w-5 h-5 text-white/80" />
-            <h3 className="font-semibold text-white">Información del Empleado</h3>
+            <h3 className="font-semibold text-white">
+              Información del Empleado
+            </h3>
           </div>
           <div className="space-y-2 text-sm">
             <p className="text-white/80">
@@ -62,7 +60,9 @@ export function SuccessStep({ data, onFinish }: SuccessStepProps) {
           <div className="bg-white/5 border border-white/10 rounded-xl p-4">
             <div className="flex items-center gap-3 mb-3">
               <Building className="w-5 h-5 text-white/80" />
-              <h3 className="font-semibold text-white">Información del Proveedor</h3>
+              <h3 className="font-semibold text-white">
+                Información del Proveedor
+              </h3>
             </div>
             <div className="space-y-2 text-sm">
               <p className="text-white/80">
