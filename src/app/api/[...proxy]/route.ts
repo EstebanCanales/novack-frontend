@@ -4,36 +4,41 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_API_U
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { proxy: string[] } }
+  context: { params: Promise<{ proxy: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.proxy);
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { proxy: string[] } }
+  context: { params: Promise<{ proxy: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.proxy);
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { proxy: string[] } }
+  context: { params: Promise<{ proxy: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.proxy);
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { proxy: string[] } }
+  context: { params: Promise<{ proxy: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.proxy);
 }
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { proxy: string[] } }
+  context: { params: Promise<{ proxy: string[] }> }
 ) {
+  const params = await context.params;
   return proxyRequest(request, params.proxy);
 }
 
@@ -50,7 +55,7 @@ async function proxyRequest(request: NextRequest, proxyPath: string[]) {
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       try {
         body = await request.text();
-      } catch (e) {
+      } catch {
         // Si no hay body, no pasa nada
       }
     }
@@ -112,7 +117,7 @@ async function proxyRequest(request: NextRequest, proxyPath: string[]) {
 }
 
 // Manejar OPTIONS para CORS preflight
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
