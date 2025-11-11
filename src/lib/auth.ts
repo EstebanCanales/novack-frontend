@@ -34,8 +34,20 @@ export const authOptions: NextAuthOptions = {
             payload.sms_otp_code = credentials.smsOtpCode;
           }
 
+          // Obtener la URL del backend de forma robusta
+          const getBackendUrl = () => {
+            const url = process.env.NEXT_PUBLIC_API_URL;
+            if (url && !url.includes('localhost')) return url;
+            if (typeof window !== 'undefined') {
+              if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:4000';
+              }
+            }
+            return url || 'https://novack-backend.railway.app';
+          };
+
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+            `${getBackendUrl()}/auth/login`,
             {
               method: "POST",
               headers: {
@@ -77,8 +89,20 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google" && user) {
         try {
           // Buscar o crear usuario en nuestro backend
+          // Obtener la URL del backend de forma robusta
+          const getBackendUrl = () => {
+            const url = process.env.NEXT_PUBLIC_API_URL;
+            if (url && !url.includes('localhost')) return url;
+            if (typeof window !== 'undefined') {
+              if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:4000';
+              }
+            }
+            return url || 'https://novack-backend.railway.app';
+          };
+
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+            `${getBackendUrl()}/auth/google`,
             {
               method: "POST",
               headers: {
