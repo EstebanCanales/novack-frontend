@@ -169,8 +169,8 @@ export default function DashboardPage() {
                     </p>
                   )}
                 </div>
-                <div className="h-12 w-12 rounded-full bg-[#07D9D9]/10 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-[#07D9D9]" />
+                <div className="h-12 w-12 rounded-full bg-[#0386D9]/10 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-[#0386D9]" />
                 </div>
               </div>
             </CardContent>
@@ -248,14 +248,14 @@ export default function DashboardPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-white flex items-center gap-2">
-                    <CalendarDays className="w-5 h-5 text-[#07D9D9]" />
+                    <CalendarDays className="w-5 h-5 text-[#0386D9]" />
                     Próximas Citas
                   </CardTitle>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => router.push("/appointment")}
-                    className="text-[#07D9D9] hover:text-[#0596A6] hover:bg-white/5"
+                    className="text-[#0386D9] hover:text-[#0270BE] hover:bg-white/5"
                   >
                     Ver todas
                   </Button>
@@ -343,7 +343,7 @@ export default function DashboardPage() {
             <Card className="bg-white/5 border-white/10">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-[#07D9D9]" />
+                  <Activity className="w-5 h-5 text-[#0386D9]" />
                   Actividad Reciente
                 </CardTitle>
               </CardHeader>
@@ -407,7 +407,7 @@ export default function DashboardPage() {
               <CardContent className="space-y-2">
                 <Button
                   onClick={() => router.push("/visitor")}
-                  className="w-full bg-[#07D9D9] hover:bg-[#0596A6] text-[#010440] justify-start"
+                  className="w-full bg-[#0386D9] hover:bg-[#0270BE] text-[#010440] justify-start"
                 >
                   <UserPlus className="w-4 h-4 mr-2" />
                   Registrar Visitante
@@ -443,7 +443,7 @@ export default function DashboardPage() {
             <Card className="bg-white/5 border-white/10">
               <CardHeader>
                 <CardTitle className="text-white text-lg flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-[#07D9D9]" />
+                  <Shield className="w-5 h-5 text-[#0386D9]" />
                   Estado del Sistema
                 </CardTitle>
               </CardHeader>
@@ -458,7 +458,7 @@ export default function DashboardPage() {
                   <>
                     <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                       <div className="flex items-center gap-2">
-                        <CreditCard className="w-4 h-4 text-[#07D9D9]" />
+                        <CreditCard className="w-4 h-4 text-[#0386D9]" />
                         <span className="text-sm text-gray-400">
                           Tarjetas Disponibles
                         </span>
@@ -470,7 +470,7 @@ export default function DashboardPage() {
 
                     <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                       <div className="flex items-center gap-2">
-                        <MessagesSquare className="w-4 h-4 text-[#07D9D9]" />
+                        <MessagesSquare className="w-4 h-4 text-[#0386D9]" />
                         <span className="text-sm text-gray-400">
                           Salas de Chat Activas
                         </span>
@@ -482,7 +482,7 @@ export default function DashboardPage() {
 
                     <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#07D9D9]" />
+                        <CheckCircle2 className="w-4 h-4 text-[#0386D9]" />
                         <span className="text-sm text-gray-400">
                           Visitas Completadas Hoy
                         </span>

@@ -42,7 +42,7 @@ export function SupplierInfoStep({
       <div className="h-full flex flex-col">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Información del Proveedor
+            Información de la Institución
           </h2>
           <p className="text-white/70">Crea el perfil de tu empresa</p>
         </div>
@@ -55,12 +55,12 @@ export function SupplierInfoStep({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-3xl mx-auto w-full">
               <div className="space-y-2 min-w-0">
                 <Label htmlFor="supplier_name" className="text-white/80">
-                  Nombre del proveedor *
+                  Nombre de la Institución *
                 </Label>
                 <Input
                   id="supplier_name"
                   {...register("supplier_name", {
-                    required: "El nombre del proveedor es requerido",
+                    required: "El nombre de la Institución es requerido",
                     minLength: { value: 3, message: "Mínimo 3 caracteres" },
                     maxLength: {
                       value: 100,
@@ -226,20 +226,20 @@ export function SupplierInfoStep({
   return (
     <div className="h-full flex flex-col">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">ID del Proveedor</h2>
-        <p className="text-white/70">Ingresa el ID del proveedor existente</p>
+        <h2 className="text-2xl font-bold text-white mb-2">ID de la Institución *</h2>
+        <p className="text-white/70">Ingresa el ID de la Institución existente</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col">
         <div className="flex-1 space-y-6">
           <div className="space-y-2">
             <Label htmlFor="supplier_id" className="text-white/80">
-              ID del Proveedor *
+              ID de la Institución
             </Label>
             <Input
               id="supplier_id"
               {...register("supplier_id", {
-                required: "El ID del proveedor es requerido",
+                required: "El ID de la Institución es requerido",
                 pattern: {
                   value:
                     /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
@@ -247,7 +247,7 @@ export function SupplierInfoStep({
                 },
                 setValueAs: (v) => (typeof v === "string" ? v.trim() : v),
               })}
-              placeholder="Ingresa el ID del proveedor existente"
+              placeholder="Ingresa el ID de la Institución existente"
               className="rounded-xl bg-white/10 border-white/20 text-white placeholder-white/50"
             />
             {(errors as FieldErrors<{ supplier_id: string }>).supplier_id && (
@@ -262,9 +262,9 @@ export function SupplierInfoStep({
 
           <div className="p-4 bg-amber-500/10 rounded-xl border border-amber-400/20">
             <p className="text-sm text-amber-200">
-              <strong>Nota:</strong> Si no tienes el ID del proveedor, contacta
-              a tu administrador o marca &quot;Soy el creador del
-              proveedor&quot; en el paso anterior.
+              <strong>Nota:</strong> Si no tienes el ID de la Institución, contacta
+              a tu administrador o marca &quot;Soy el creador de la
+              Institución&quot; en el paso anterior.
             </p>
           </div>
         </div>

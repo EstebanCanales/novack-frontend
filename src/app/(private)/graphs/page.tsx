@@ -114,7 +114,7 @@ export default function GraphsPage() {
     DEFAULT_LAYOUT as unknown as SlotItemMap
   );
   const containerRef = useRef<HTMLDivElement>(null);
-  const swapyRef = useRef<any>(null);
+  const swapyRef = useRef<ReturnType<typeof createSwapy> | null>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -219,7 +219,7 @@ export default function GraphsPage() {
               slotItems: newSlotItems,
             })
             .catch(() => {});
-        } catch (err) {
+        } catch {
           // Silently ignore swap errors
         }
       });
@@ -229,11 +229,11 @@ export default function GraphsPage() {
       return () => {
         try {
           swapy.destroy();
-        } catch (err) {
+        } catch {
           // Ignore cleanup errors
         }
       };
-    } catch (err) {
+    } catch {
       // Ignore initialization errors
     }
   }, []);
@@ -320,14 +320,14 @@ export default function GraphsPage() {
 
     return (
       <Card
-        className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#07D9D9]/40 transition-all duration-500 shadow-lg hover:shadow-[#07D9D9]/20 hover:bg-white/[0.07]"
+        className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-[#0386D9]/40 transition-all duration-500 shadow-lg hover:shadow-[#0386D9]/20 hover:bg-white/[0.07]"
         data-swapy-item={itemId}
       >
         <CardHeader className="pb-3 space-y-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg bg-[#07D9D9]/10 border border-[#07D9D9]/20">
-                <Icon className="w-4 h-4 text-[#07D9D9]" />
+              <div className="p-2 rounded-lg bg-[#0386D9]/10 border border-[#0386D9]/20">
+                <Icon className="w-4 h-4 text-[#0386D9]" />
               </div>
               <div>
                 <CardTitle className="text-base font-semibold text-white">
@@ -338,7 +338,7 @@ export default function GraphsPage() {
                 </CardDescription>
               </div>
             </div>
-            <GripVertical className="w-5 h-5 text-gray-500 cursor-grab active:cursor-grabbing hover:text-[#07D9D9] transition-colors" />
+            <GripVertical className="w-5 h-5 text-gray-500 cursor-grab active:cursor-grabbing hover:text-[#0386D9] transition-colors" />
           </div>
         </CardHeader>
         <CardContent className="pb-4">
@@ -361,7 +361,7 @@ export default function GraphsPage() {
             <BreadcrumbItem>
               <BreadcrumbLink
                 href="/home"
-                className="text-white hover:text-[#07D9D9]"
+                className="text-white hover:text-[#0386D9]"
               >
                 <Home className="h-4 w-4" />
               </BreadcrumbLink>
@@ -412,7 +412,7 @@ export default function GraphsPage() {
 function LoadingSpinner() {
   return (
     <div className="h-full flex items-center justify-center">
-      <div className="animate-spin rounded-full h-10 w-10 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+      <div className="animate-spin rounded-full h-10 w-10 border-4 border-slate-700 border-t-[#0386D9]"></div>
     </div>
   );
 }

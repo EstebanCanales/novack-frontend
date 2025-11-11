@@ -24,7 +24,7 @@ const features = [
       "Sincronización en tiempo real",
       "Despliegue instantáneo",
     ],
-    gradient: "from-[#07D9D9] to-[#0596A6]",
+    gradient: "from-[#0386D9] to-[#0596A6]",
     stats: [
       { value: "5 min", label: "Tiempo de Configuración" },
       { value: "99.9%", label: "Disponibilidad" },
@@ -76,9 +76,9 @@ export function WhyChooseSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="inline-flex items-center gap-2 bg-linear-to-rrom-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
+            className="inline-flex items-center gap-2 bg-linear-to-r from-[#0386D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10 mb-6"
           >
-            <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-[#0386D9] rounded-full animate-pulse"></div>
             <span className="text-white/80 text-sm font-medium">
               Por qué las empresas eligen Novack
             </span>
@@ -88,7 +88,7 @@ export function WhyChooseSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            ¿Por qué elegir <span className="text-[#07D9D9]">Novack</span>?
+            ¿Por qué elegir <span className="text-[#0386D9]">Novack</span>?
           </motion.h2>
 
           <motion.p
@@ -124,7 +124,7 @@ export function WhyChooseSection() {
         >
           <motion.div
             variants={fadeInUp}
-            className="bg-linear-to-r from-[#07D9D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+            className="bg-linear-to-r from-[#0386D9]/10 to-[#763DF2]/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
           >
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold text-white mb-4">
@@ -138,7 +138,7 @@ export function WhyChooseSection() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#07D9D9] mb-2">
+                <div className="text-3xl font-bold text-[#0386D9] mb-2">
                   Fortune 500
                 </div>
                 <div className="text-white/80 text-sm">
@@ -146,13 +146,13 @@ export function WhyChooseSection() {
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#07D9D9] mb-2">
+                <div className="text-3xl font-bold text-[#0386D9] mb-2">
                   Healthcare
                 </div>
                 <div className="text-white/80 text-sm">Cumplimiento HIPAA</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-[#07D9D9] mb-2">
+                <div className="text-3xl font-bold text-[#0386D9] mb-2">
                   Financial
                 </div>
                 <div className="text-white/80 text-sm">

@@ -146,7 +146,7 @@ export function ArticleLayout({
       <div className="mx-auto px-4 sm:px-6 max-w-7xl">
         <header className="pt-10 md:pt-14 pb-8 md:pb-10">
           <div className="mb-3">
-            <span className="inline-flex items-center gap-2 text-sm font-medium text-[#07D9D9] bg-[#07D9D9]/10 px-3 py-1 rounded-full border border-[#07D9D9]/30">
+            <span className="inline-flex items-center gap-2 text-sm font-medium text-[#0386D9] bg-[#0386D9]/10 px-3 py-1 rounded-full border border-[#0386D9]/30">
               {category}
             </span>
           </div>

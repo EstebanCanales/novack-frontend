@@ -68,13 +68,13 @@ export const Navbar = () => {
             <div className="hidden md:flex items-center gap-3 shrink">
               <Link
                 href="/login"
-                className="text-sm border-2 border-[#07D9D9] rounded-xl hover:bg-[#07D9D9] px-4 py-2 hover:text-[#010440] bg-transparent text-[#07D9D9] hover:shadow-lg transition-all duration-300 whitespace-nowrap font-medium"
+                className="text-sm border-2 border-[#0386D9] rounded-xl hover:bg-[#0386D9] px-4 py-2 hover:text-[#010440] bg-transparent text-[#0386D9] hover:shadow-lg transition-all duration-300 whitespace-nowrap font-medium"
               >
                 Iniciar Sesión
               </Link>
               <Link
                 href="/register"
-                className="text-sm border-2 border-[#07D9D9] rounded-xl hover:bg-[#07D9D9] px-4 py-2 hover:text-[#010440] bg-transparent text-[#07D9D9] hover:shadow-lg transition-all duration-300 whitespace-nowrap font-medium"
+                className="text-sm border-2 border-[#0386D9] rounded-xl hover:bg-[#0386D9] px-4 py-2 hover:text-[#010440] bg-transparent text-[#0386D9] hover:shadow-lg transition-all duration-300 whitespace-nowrap font-medium"
               >
                 Registrarse
               </Link>
@@ -117,7 +117,7 @@ export const Navbar = () => {
           <NavbarMobileLink href="/pricing" title="Precios" />
           <NavbarMobileLink href="/features" title="Características" />
           <NavbarMobileLink href="/blog" title="Blog" />
-          <button className="text-lg mt-4 bg-[#07D9D9] px-3 py-3 rounded-xl text-[#010440] hover:bg-[#0596A6] hover:shadow-md transition-all duration-300">
+          <button className="text-lg mt-4 bg-[#0386D9] px-3 py-3 rounded-xl text-[#010440] hover:bg-[#0270BE] hover:shadow-md transition-all duration-300">
             Elegir un plan
           </button>
         </div>

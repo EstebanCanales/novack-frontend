@@ -19,6 +19,14 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Search,
   UserPlus,
   Edit,
@@ -28,6 +36,7 @@ import {
   Building,
   Home,
   Users,
+  AlertTriangle,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -38,6 +47,12 @@ export default function EmployeeManagementPage() {
   const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -89,20 +104,28 @@ export default function EmployeeManagementPage() {
     }
   }, [searchTerm, employees]);
 
-  const handleDeleteEmployee = async (id: string, employeeName: string) => {
-    if (!confirm(`¿Estás seguro de que deseas eliminar a ${employeeName}?`)) {
-      return;
-    }
+  const openDeleteDialog = (id: string, employeeName: string) => {
+    setEmployeeToDelete({ id, name: employeeName });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteEmployee = async () => {
+    if (!employeeToDelete) return;
 
     try {
-      await employeeService.delete(id);
+      setIsDeleting(true);
+      await employeeService.delete(employeeToDelete.id);
       showSuccess(
         "Empleado eliminado",
         "El empleado ha sido eliminado exitosamente"
       );
+      setDeleteDialogOpen(false);
+      setEmployeeToDelete(null);
       loadEmployees();
     } catch (error) {
       handleApiError(error, "Error al eliminar empleado");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -110,7 +133,7 @@ export default function EmployeeManagementPage() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-[#07D9D9] border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-[#0386D9] border-t-transparent rounded-full animate-spin" />
           <p className="text-white text-lg">Cargando empleados...</p>
         </div>
       </div>
@@ -161,7 +184,7 @@ export default function EmployeeManagementPage() {
           <div className="p-4 border-b border-white/10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Users className="h-6 w-6 text-[#07D9D9]" />
+                <Users className="h-6 w-6 text-[#0386D9]" />
                 <div>
                   <h2 className="text-xl font-bold text-white">Gestión de Empleados</h2>
                   <p className="text-sm text-slate-400">
@@ -171,7 +194,7 @@ export default function EmployeeManagementPage() {
               </div>
               <Button
                 onClick={() => router.push("/management/employee/new")}
-                className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
               >
                 <UserPlus className="h-4 w-4 mr-2" />
                 Nuevo Empleado
@@ -205,7 +228,7 @@ export default function EmployeeManagementPage() {
                     <p className="text-slate-400 mb-6">Crea tu primer empleado para comenzar</p>
                     <Button
                       onClick={() => router.push("/management/employee/new")}
-                      className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                      className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
                     >
                       <UserPlus className="h-4 w-4 mr-2" />
                       Crear Empleado
@@ -222,12 +245,12 @@ export default function EmployeeManagementPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#07D9D9]/20 transition-all duration-300">
+                    <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#0386D9]/20 transition-all duration-300">
                       <CardContent className="p-6">
                         {/* Header del empleado */}
                         <div className="flex items-start gap-3 mb-4">
-                          <Avatar className="h-12 w-12 border border-[#07D9D9]/30">
-                            <AvatarFallback className="bg-[#07D9D9] text-black font-semibold">
+                          <Avatar className="h-12 w-12 border border-[#0386D9]/30">
+                            <AvatarFallback className="bg-[#0386D9] text-black font-semibold">
                               {employee.first_name[0]}
                               {employee.last_name[0]}
                             </AvatarFallback>
@@ -239,25 +262,32 @@ export default function EmployeeManagementPage() {
                             <p className="text-sm text-slate-400 truncate">
                               {employee.position || "Sin cargo"}
                             </p>
-                            {employee.is_creator && (
-                              <Badge className="mt-1 bg-purple-500/20 text-purple-400 border-purple-500/30">
-                                Creador
-                              </Badge>
-                            )}
+                            <div className="flex gap-2 mt-1 flex-wrap">
+                              {employee.is_creator && (
+                                <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                                  Creador
+                                </Badge>
+                              )}
+                              {employee.role && (
+                                <Badge className="bg-[#0386D9]/20 text-[#0386D9] border-[#0386D9]/30">
+                                  {employee.role.name}
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
 
                         {/* Información de contacto */}
                         <div className="space-y-2 mb-4">
                           <div className="flex items-center gap-2 text-sm">
-                            <Mail className="w-4 h-4 text-[#07D9D9]" />
+                            <Mail className="w-4 h-4 text-[#0386D9]" />
                             <span className="text-slate-300 truncate">
                               {employee.email}
                             </span>
                           </div>
                           {employee.phone && (
                             <div className="flex items-center gap-2 text-sm">
-                              <Phone className="w-4 h-4 text-[#07D9D9]" />
+                              <Phone className="w-4 h-4 text-[#0386D9]" />
                               <span className="text-slate-300">
                                 {employee.phone}
                               </span>
@@ -265,7 +295,7 @@ export default function EmployeeManagementPage() {
                           )}
                           {employee.department && (
                             <div className="flex items-center gap-2 text-sm">
-                              <Building className="w-4 h-4 text-[#07D9D9]" />
+                              <Building className="w-4 h-4 text-[#0386D9]" />
                               <span className="text-slate-300">
                                 {employee.department}
                               </span>
@@ -278,7 +308,7 @@ export default function EmployeeManagementPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="flex-1 border-[#07D9D9] text-[#07D9D9] hover:bg-[#07D9D9] hover:text-black"
+                            className="flex-1 border-[#0386D9] text-[#0386D9] hover:bg-[#0386D9] hover:text-black"
                             onClick={() =>
                               router.push(`/management/employee/${employee.id}`)
                             }
@@ -292,7 +322,7 @@ export default function EmployeeManagementPage() {
                               size="sm"
                               className="border-red-500/30 text-red-400 hover:bg-red-500/20"
                               onClick={() =>
-                                handleDeleteEmployee(
+                                openDeleteDialog(
                                   employee.id,
                                   `${employee.first_name} ${employee.last_name}`
                                 )
@@ -311,6 +341,63 @@ export default function EmployeeManagementPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="bg-black/95 backdrop-blur-xl border border-red-500/30 text-white max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 bg-red-500/20 rounded-full">
+                <AlertTriangle className="h-6 w-6 text-red-500" />
+              </div>
+              <DialogTitle className="text-xl text-white">
+                Eliminar Empleado
+              </DialogTitle>
+            </div>
+            <DialogDescription className="text-slate-300 text-base pt-2">
+              ¿Estás seguro de que deseas eliminar a{" "}
+              <span className="font-semibold text-white">
+                {employeeToDelete?.name}
+              </span>
+              ?
+              <br />
+              <br />
+              Esta acción no se puede deshacer y se eliminarán todos los datos
+              asociados al empleado.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setEmployeeToDelete(null);
+              }}
+              disabled={isDeleting}
+              className="border-white/10 hover:bg-white/5 text-white"
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleDeleteEmployee}
+              disabled={isDeleting}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              {isDeleting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Eliminando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

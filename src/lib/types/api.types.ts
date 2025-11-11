@@ -10,6 +10,28 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
+export interface Permission {
+  id: string;
+  name: string;
+  resource: string;
+  action: string;
+  description?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description?: string;
+  is_system_role: boolean;
+  priority: number;
+  supplier_id?: string;
+  permissions: Permission[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Employee {
   id: string;
   first_name: string;
@@ -25,6 +47,8 @@ export interface Employee {
   updated_at: string;
   supplier_id: string;
   supplier?: Supplier;
+  role_id?: string;
+  role?: Role;
 }
 
 export interface Supplier {

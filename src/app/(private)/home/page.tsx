@@ -208,12 +208,12 @@ export default function HomePage() {
           className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl flex-1 p-3 overflow-hidden flex flex-col"
         >
           <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-[#07D9D9]" />
+            <MapPin className="w-5 h-5 text-[#0386D9]" />
             Mapa de Ubicaciones
             {!loadingCards && cards.length > 0 && (
               <Badge
                 variant="secondary"
-                className="ml-auto bg-[#07D9D9]/10 text-[#07D9D9] border-[#07D9D9]/20"
+                className="ml-auto bg-[#0386D9]/10 text-[#0386D9] border-[#0386D9]/20"
               >
                 {cards.length} tarjeta{cards.length !== 1 ? "s" : ""}
               </Badge>
@@ -223,7 +223,7 @@ export default function HomePage() {
             {loadingCards ? (
               <div className="w-full h-full bg-slate-900/50 backdrop-blur-sm rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9] mx-auto mb-3"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9] mx-auto mb-3"></div>
                   <p className="text-sm text-slate-300">Cargando tarjetas...</p>
                 </div>
               </div>
@@ -241,7 +241,7 @@ export default function HomePage() {
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Bell className="w-5 h-5 text-[#07D9D9]" />
+              <Bell className="w-5 h-5 text-[#0386D9]" />
               <h3 className="text-lg font-bold text-white">Notificaciones</h3>
               {filteredNotifications.length > 0 && (
                 <Badge variant="destructive">
@@ -257,7 +257,7 @@ export default function HomePage() {
               onClick={() => setTimeFilter("all")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
                 timeFilter === "all"
-                  ? "bg-[#07D9D9] text-slate-900"
+                  ? "bg-[#0386D9] text-slate-900"
                   : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
@@ -267,7 +267,7 @@ export default function HomePage() {
               onClick={() => setTimeFilter("1h")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
                 timeFilter === "1h"
-                  ? "bg-[#07D9D9] text-slate-900"
+                  ? "bg-[#0386D9] text-slate-900"
                   : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
@@ -277,7 +277,7 @@ export default function HomePage() {
               onClick={() => setTimeFilter("24h")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
                 timeFilter === "24h"
-                  ? "bg-[#07D9D9] text-slate-900"
+                  ? "bg-[#0386D9] text-slate-900"
                   : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
@@ -287,7 +287,7 @@ export default function HomePage() {
               onClick={() => setTimeFilter("7d")}
               className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
                 timeFilter === "7d"
-                  ? "bg-[#07D9D9] text-slate-900"
+                  ? "bg-[#0386D9] text-slate-900"
                   : "bg-white/5 text-slate-400 hover:bg-white/10"
               }`}
             >
@@ -317,8 +317,8 @@ export default function HomePage() {
                   onClick={() => router.push("/appointment")}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="h-10 w-10 rounded-full bg-[#07D9D9]/10 flex items-center justify-center shrink">
-                      <Calendar className="w-5 h-5 text-[#07D9D9]" />
+                    <div className="h-10 w-10 rounded-full bg-[#0386D9]/10 flex items-center justify-center shrink">
+                      <Calendar className="w-5 h-5 text-[#0386D9]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">

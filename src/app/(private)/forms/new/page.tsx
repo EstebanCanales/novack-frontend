@@ -54,14 +54,15 @@ const fieldSchema = z.object({
   help_text: z.string().optional(),
   is_required: z.boolean().default(false),
   order: z.number().default(0),
-  options: z.any().optional(),
-  validation_rules: z.any().optional(),
+  options: z.array(z.string()).optional(),
+  validation_rules: z.record(z.unknown()).optional(),
 });
 
 const formSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   description: z.string().optional(),
   slug: z.string().optional(),
+  banner: z.string().optional(),
   is_public: z.boolean().default(true),
   requires_approval: z.boolean().default(true),
   notification_emails: z.string().optional(),
@@ -90,12 +91,13 @@ export default function NewFormPage() {
   const [loading, setLoading] = useState(false);
 
   const form = useForm<FormValues>({
-    // @ts-expect-error - zodResolver type inference issue with default values
-    resolver: zodResolver(formSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
       description: "",
       slug: "",
+      banner: "",
       is_public: true,
       requires_approval: true,
       notification_emails: "",
@@ -138,6 +140,7 @@ export default function NewFormPage() {
         name: values.name,
         description: values.description,
         slug: values.slug,
+        banner: values.banner,
         is_public: values.is_public,
         requires_approval: values.requires_approval,
         notification_emails: emails,
@@ -217,9 +220,8 @@ export default function NewFormPage() {
           </div>
         </motion.div>
 
-        <Form {...form}>
-          {/* @ts-expect-error - Type inference issue between zodResolver and react-hook-form */}
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {/* Form Settings */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -237,7 +239,8 @@ export default function NewFormPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
@@ -255,7 +258,8 @@ export default function NewFormPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="description"
                     render={({ field }) => (
                       <FormItem>
@@ -273,7 +277,8 @@ export default function NewFormPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="slug"
                     render={({ field }) => (
                       <FormItem>
@@ -296,7 +301,32 @@ export default function NewFormPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
+                    name="banner"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">
+                          Banner (opcional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="URL de la imagen del banner"
+                            className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                          />
+                        </FormControl>
+                        <FormDescription className="text-gray-400">
+                          Imagen que se mostrará en la cabecera del formulario público
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="notification_emails"
                     render={({ field }) => (
                       <FormItem>
@@ -320,7 +350,8 @@ export default function NewFormPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
-                      control={form.control}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                       name="is_public"
                       render={({ field }) => (
                         <FormItem>
@@ -345,7 +376,8 @@ export default function NewFormPage() {
                     />
 
                     <FormField
-                      control={form.control}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                       name="requires_approval"
                       render={({ field }) => (
                         <FormItem>
@@ -393,7 +425,7 @@ export default function NewFormPage() {
                     <Button
                       type="button"
                       onClick={addField}
-                      className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                      className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Agregar Campo
@@ -405,7 +437,7 @@ export default function NewFormPage() {
                     <div className="text-center py-12 border-2 border-dashed border-white/10 rounded-lg">
                       <FileText className="h-16 w-16 text-gray-600 mx-auto mb-4" />
                       <h3 className="text-lg font-semibold text-white mb-2">No hay campos agregados</h3>
-                      <p className="text-gray-400">Usa el botón "Agregar Campo" para comenzar</p>
+                      <p className="text-gray-400">Usa el botón &quot;Agregar Campo&quot; para comenzar</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -425,7 +457,8 @@ export default function NewFormPage() {
 
                                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                                   <FormField
-                                    control={form.control}
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                     name={`fields.${index}.field_type`}
                                     render={({ field }) => (
                                       <FormItem>
@@ -461,7 +494,8 @@ export default function NewFormPage() {
                                   />
 
                                   <FormField
-                                    control={form.control}
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                     name={`fields.${index}.label`}
                                     render={({ field }) => (
                                       <FormItem>
@@ -481,7 +515,8 @@ export default function NewFormPage() {
                                   />
 
                                   <FormField
-                                    control={form.control}
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                     name={`fields.${index}.placeholder`}
                                     render={({ field }) => (
                                       <FormItem>
@@ -501,7 +536,8 @@ export default function NewFormPage() {
                                   />
 
                                   <FormField
-                                    control={form.control}
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                     name={`fields.${index}.help_text`}
                                     render={({ field }) => (
                                       <FormItem>
@@ -521,7 +557,8 @@ export default function NewFormPage() {
                                   />
 
                                   <FormField
-                                    control={form.control}
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                     name={`fields.${index}.is_required`}
                                     render={({ field }) => (
                                       <FormItem className="flex items-center space-x-2 space-y-0 pt-8">
@@ -582,7 +619,7 @@ export default function NewFormPage() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                      className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
                     >
                       {loading ? "Creando..." : "Crear Formulario"}
                     </Button>

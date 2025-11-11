@@ -6,19 +6,19 @@ import { Settings, UserPlus, Zap } from "lucide-react";
 const HowItWorksSection = () => {
   const steps = [
     {
-      icon: <Settings className="h-8 w-8 text-[#07D9D9]" />,
+      icon: <Settings className="h-8 w-8 text-[#0386D9]" />,
       title: "Configura tu Espacio",
       description:
         "Personaliza la plataforma con tu marca, configura tus ajustes de seguridad principales y define los servicios que ofreces en minutos.",
     },
     {
-      icon: <UserPlus className="h-8 w-8 text-[#07D9D9]" />,
+      icon: <UserPlus className="h-8 w-8 text-[#0386D9]" />,
       title: "Invita y Onboard",
       description:
         "Añade a los miembros de tu equipo con roles y permisos específicos. Importa sin problemas tus clientes existentes o déjalos registrarse a través de tu portal.",
     },
     {
-      icon: <Zap className="h-8 w-8 text-[#07D9D9]" />,
+      icon: <Zap className="h-8 w-8 text-[#0386D9]" />,
       title: "Automatiza y Crece",
       description:
         "Activa recordatorios, facturación y seguimientos automatizados. Deja que la plataforma maneje las tareas repetitivas para que puedas enfocarte en el crecimiento.",
@@ -67,7 +67,7 @@ const HowItWorksSection = () => {
                 className="text-center flex flex-col items-center"
               >
                 <div className="relative z-10 w-24 h-24 flex items-center justify-center bg-black rounded-full mb-6">
-                  <div className="w-full h-full bg-linear-to-rrom-[#07D9D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full border-2 border-white/10 flex items-center justify-center">
+                  <div className="w-full h-full bg-linear-to-r from-[#0386D9]/20 to-[#763DF2]/20 backdrop-blur-sm rounded-full border-2 border-white/10 flex items-center justify-center">
                     {step.icon}
                   </div>
                 </div>

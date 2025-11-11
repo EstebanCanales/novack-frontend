@@ -54,14 +54,15 @@ const fieldSchema = z.object({
   help_text: z.string().optional(),
   is_required: z.boolean().default(false),
   order: z.number().default(0),
-  options: z.any().optional(),
-  validation_rules: z.any().optional(),
+  options: z.array(z.string()).optional(),
+  validation_rules: z.record(z.unknown()).optional(),
 });
 
 const formSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   description: z.string().optional(),
   slug: z.string().optional(),
+  banner: z.string().optional(),
   is_public: z.boolean().default(true),
   requires_approval: z.boolean().default(true),
   notification_emails: z.string().optional(),
@@ -94,12 +95,13 @@ export default function EditFormPage() {
   const [initialLoading, setInitialLoading] = useState(true);
 
   const form = useForm<FormValues>({
-    // @ts-expect-error - zodResolver type inference issue with default values
-    resolver: zodResolver(formSchema),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: "",
       description: "",
       slug: "",
+      banner: "",
       is_public: true,
       requires_approval: true,
       notification_emails: "",
@@ -128,6 +130,7 @@ export default function EditFormPage() {
         name: data.name,
         description: data.description || "",
         slug: data.slug,
+        banner: data.banner || "",
         is_public: data.is_public,
         requires_approval: data.requires_approval,
         notification_emails: data.notification_emails?.join(", ") || "",
@@ -184,6 +187,7 @@ export default function EditFormPage() {
         name: values.name,
         description: values.description,
         slug: values.slug,
+        banner: values.banner,
         is_public: values.is_public,
         requires_approval: values.requires_approval,
         notification_emails: emails,
@@ -216,7 +220,7 @@ export default function EditFormPage() {
     return (
       <div className="flex flex-col h-full p-3 pl-2 overflow-hidden">
         <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
         </div>
       </div>
     );
@@ -259,7 +263,7 @@ export default function EditFormPage() {
         {/* Header */}
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <FileText className="h-6 w-6 text-[#07D9D9]" />
+            <FileText className="h-6 w-6 text-[#0386D9]" />
             <div>
               <h2 className="text-xl font-bold text-white">Editar Formulario</h2>
               <p className="text-sm text-slate-400">
@@ -272,7 +276,6 @@ export default function EditFormPage() {
         {/* Form */}
         <div className="flex-1 overflow-auto p-4">
           <Form {...form}>
-            {/* @ts-expect-error - Type inference issue between zodResolver and react-hook-form */}
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
               {/* Form Settings */}
               <Card className="bg-white/5 border-white/10">
@@ -286,7 +289,8 @@ export default function EditFormPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="name"
                     render={({ field }) => (
                       <FormItem>
@@ -304,7 +308,8 @@ export default function EditFormPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="description"
                     render={({ field }) => (
                       <FormItem>
@@ -322,7 +327,8 @@ export default function EditFormPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="slug"
                     render={({ field }) => (
                       <FormItem>
@@ -345,7 +351,32 @@ export default function EditFormPage() {
                   />
 
                   <FormField
-                    control={form.control}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
+                    name="banner"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-white">
+                          Banner (opcional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="URL de la imagen del banner"
+                            className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+                          />
+                        </FormControl>
+                        <FormDescription className="text-slate-400">
+                          Imagen que se mostrará en la cabecera del formulario público
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                     name="notification_emails"
                     render={({ field }) => (
                       <FormItem>
@@ -369,7 +400,8 @@ export default function EditFormPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
-                      control={form.control}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                       name="is_public"
                       render={({ field }) => (
                         <FormItem className="flex items-center justify-between rounded-lg border border-white/10 p-4 bg-white/5">
@@ -392,7 +424,8 @@ export default function EditFormPage() {
                     />
 
                     <FormField
-                      control={form.control}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                       name="requires_approval"
                       render={({ field }) => (
                         <FormItem className="flex items-center justify-between rounded-lg border border-white/10 p-4 bg-white/5">
@@ -433,7 +466,7 @@ export default function EditFormPage() {
                       type="button"
                       onClick={addField}
                       variant="outline"
-                      className="border-[#07D9D9] text-[#07D9D9] hover:bg-[#07D9D9] hover:text-black"
+                      className="border-[#0386D9] text-[#0386D9] hover:bg-[#0386D9] hover:text-black"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Agregar Campo
@@ -448,7 +481,7 @@ export default function EditFormPage() {
                         type="button"
                         onClick={addField}
                         variant="outline"
-                        className="border-[#07D9D9] text-[#07D9D9] hover:bg-[#07D9D9] hover:text-black"
+                        className="border-[#0386D9] text-[#0386D9] hover:bg-[#0386D9] hover:text-black"
                       >
                         <Plus className="h-4 w-4 mr-2" />
                         Agregar primer campo
@@ -469,7 +502,8 @@ export default function EditFormPage() {
 
                               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
-                                  control={form.control}
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                   name={`fields.${index}.field_type`}
                                   render={({ field }) => (
                                     <FormItem>
@@ -505,7 +539,8 @@ export default function EditFormPage() {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                   name={`fields.${index}.label`}
                                   render={({ field }) => (
                                     <FormItem>
@@ -525,7 +560,8 @@ export default function EditFormPage() {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                   name={`fields.${index}.placeholder`}
                                   render={({ field }) => (
                                     <FormItem>
@@ -545,7 +581,8 @@ export default function EditFormPage() {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                   name={`fields.${index}.help_text`}
                                   render={({ field }) => (
                                     <FormItem>
@@ -565,7 +602,8 @@ export default function EditFormPage() {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    control={form.control as any}
                                   name={`fields.${index}.is_required`}
                                   render={({ field }) => (
                                     <FormItem className="flex items-center space-x-2 space-y-0">
@@ -617,7 +655,7 @@ export default function EditFormPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                  className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
                 >
                   {loading ? "Actualizando..." : "Actualizar Formulario"}
                 </Button>

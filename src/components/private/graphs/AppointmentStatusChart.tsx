@@ -44,24 +44,41 @@ export function AppointmentStatusChart({ data }: AppointmentStatusChartProps) {
     return config;
   }, {} as Record<string, { label: string; color: string }>);
 
+  // Verificar si hay datos
+  const hasData = chartData.some((item) => item.value > 0);
+
   return (
     <ChartContainer config={chartConfig} className="h-[300px] w-full">
       <PieChart>
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
-        <Pie
-          data={chartData}
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={({ name, percentage }) => `${name}: ${percentage}%`}
-          outerRadius={90}
-          dataKey="value"
-        >
-          {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.fill} />
-          ))}
-        </Pie>
+        {hasData ? (
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={({ name, percentage }) => `${name}: ${percentage}%`}
+            outerRadius={90}
+            dataKey="value"
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} stroke="rgba(0,0,0,0.1)" strokeWidth={2} />
+            ))}
+          </Pie>
+        ) : (
+          <Pie
+            data={[{ name: "Sin datos", value: 1, fill: "#374151" }]}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={() => "Sin datos disponibles"}
+            outerRadius={90}
+            dataKey="value"
+          >
+            <Cell fill="#374151" />
+          </Pie>
+        )}
       </PieChart>
     </ChartContainer>
   );

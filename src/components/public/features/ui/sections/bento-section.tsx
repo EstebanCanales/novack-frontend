@@ -45,7 +45,7 @@ const BentoSection = () => {
           {/* 1. Scheduling */}
           <BentoCard variants={fadeInUp} className="md:col-span-2">
             <IconWrapper>
-              <Calendar className="h-6 w-6 text-[#07D9D9]" />
+              <Calendar className="h-6 w-6 text-[#0386D9]" />
             </IconWrapper>
             <h3 className="text-xl font-bold text-white mb-3">
               Agendamiento Seguro
@@ -59,7 +59,7 @@ const BentoSection = () => {
           {/* 2. Client Management */}
           <BentoCard variants={fadeInUp} className="md:col-span-2">
             <IconWrapper>
-              <Users className="h-6 w-6 text-[#07D9D9]" />
+              <Users className="h-6 w-6 text-[#0386D9]" />
             </IconWrapper>
             <h3 className="text-xl font-bold text-white mb-3">
               Gestión de Clientes
@@ -74,10 +74,10 @@ const BentoSection = () => {
           {/* 3. Secure Data Vault */}
           <BentoCard
             variants={fadeInUp}
-            className="md:col-span-2 md:row-span-2 bg-linear-to-r! from-[#07D9D9]/10 to-[#763DF2]/10"
+            className="md:col-span-2 md:row-span-2 bg-linear-to-r from-[#0386D9]/10 to-[#763DF2]/10"
           >
             <IconWrapper>
-              <Database className="h-6 w-6 text-[#07D9D9]" />
+              <Database className="h-6 w-6 text-[#0386D9]" />
             </IconWrapper>
             <h3 className="text-2xl font-bold text-white mb-3">
               Bóveda de Datos Segura
@@ -92,7 +92,7 @@ const BentoSection = () => {
           {/* 4. Analytics */}
           <BentoCard variants={fadeInUp} className="">
             <IconWrapper>
-              <BarChart3 className="h-6 w-6 text-[#07D9D9]" />
+              <BarChart3 className="h-6 w-6 text-[#0386D9]" />
             </IconWrapper>
             <h3 className="text-xl font-bold text-white mb-3">Analíticas</h3>
             <p className="text-white/80 leading-relaxed grow">
@@ -104,7 +104,7 @@ const BentoSection = () => {
           {/* 5. Compliance */}
           <BentoCard variants={fadeInUp} className="">
             <IconWrapper>
-              <ShieldCheck className="h-6 w-6 text-[#07D9D9]" />
+              <ShieldCheck className="h-6 w-6 text-[#0386D9]" />
             </IconWrapper>
             <h3 className="text-xl font-bold text-white mb-3">Cumplimiento</h3>
             <p className="text-white/80 leading-relaxed grow">
@@ -116,7 +116,7 @@ const BentoSection = () => {
           {/* 6. Role-Based Access */}
           <BentoCard variants={fadeInUp} className="md:col-span-2">
             <IconWrapper>
-              <Lock className="h-6 w-6 text-[#07D9D9]" />
+              <Lock className="h-6 w-6 text-[#0386D9]" />
             </IconWrapper>
             <h3 className="text-xl font-bold text-white mb-3">
               Control de Acceso Basado en Roles

@@ -32,10 +32,12 @@ export const useWebSocket = () => {
       if (Array.isArray(userRooms)) {
         setRooms(userRooms);
       } else {
+        console.warn("getUserRooms no retornó un array, usando array vacío");
         setRooms([]);
       }
     } catch (error) {
       console.error("Error al cargar salas:", error);
+      // No mostrar error al usuario, solo establecer salas vacías
       setRooms([]);
     } finally {
       setIsLoading(false);

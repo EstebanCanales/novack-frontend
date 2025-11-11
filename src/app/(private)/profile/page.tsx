@@ -160,7 +160,7 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
           <p className="text-white text-lg">Cargando perfil...</p>
         </div>
       </div>
@@ -210,7 +210,7 @@ export default function ProfilePage() {
             {!isEditing && (
               <Button
                 onClick={() => setIsEditing(true)}
-                className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black font-semibold"
+                className="bg-[#0386D9] hover:bg-[#0270BE] text-black font-semibold"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Editar Perfil
@@ -228,11 +228,11 @@ export default function ProfilePage() {
           <Card className="bg-white/5 border-white/10">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                <Avatar className="h-24 w-24 border-2 border-[#07D9D9]/30">
+                <Avatar className="h-24 w-24 border-2 border-[#0386D9]/30">
                   <AvatarImage
                     src={imagePreview || employee.profile_image_url || ""}
                   />
-                  <AvatarFallback className="bg-[#07D9D9] text-black text-2xl font-bold">
+                  <AvatarFallback className="bg-[#0386D9] text-black text-2xl font-bold">
                     {employee.first_name[0]}
                     {employee.last_name[0]}
                   </AvatarFallback>
@@ -251,24 +251,24 @@ export default function ProfilePage() {
                   </div>
                   <div className="space-y-1 text-white">
                     <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-[#07D9D9]" />
+                      <Mail className="w-4 h-4 text-[#0386D9]" />
                       <span>{employee.email}</span>
                     </div>
                     {employee.phone && (
                       <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-[#07D9D9]" />
+                        <Phone className="w-4 h-4 text-[#0386D9]" />
                         <span>{employee.phone}</span>
                       </div>
                     )}
                     {employee.position && (
                       <div className="flex items-center gap-2">
-                        <Briefcase className="w-4 h-4 text-[#07D9D9]" />
+                        <Briefcase className="w-4 h-4 text-[#0386D9]" />
                         <span>{employee.position}</span>
                       </div>
                     )}
                     {employee.department && (
                       <div className="flex items-center gap-2">
-                        <Building className="w-4 h-4 text-[#07D9D9]" />
+                        <Building className="w-4 h-4 text-[#0386D9]" />
                         <span>{employee.department}</span>
                       </div>
                     )}
@@ -278,7 +278,7 @@ export default function ProfilePage() {
                     <div className="mt-4">
                       <Label
                         htmlFor="profileImage"
-                        className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#07D9D9]/10 hover:bg-[#07D9D9]/20 text-[#07D9D9] rounded-lg border border-[#07D9D9]/30 transition-all"
+                        className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#0386D9]/10 hover:bg-[#0386D9]/20 text-[#0386D9] rounded-lg border border-[#0386D9]/30 transition-all"
                       >
                         <Upload className="w-4 h-4" />
                         Cambiar Foto de Perfil
@@ -315,7 +315,7 @@ export default function ProfilePage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {/* Información Personal */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                       <User className="w-5 h-5" />
                       Datos Personales
                     </h3>
@@ -357,7 +357,7 @@ export default function ProfilePage() {
 
                   {/* Información de Contacto */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                       <Mail className="w-5 h-5" />
                       Contacto
                     </h3>
@@ -400,7 +400,7 @@ export default function ProfilePage() {
 
                   {/* Información Laboral */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                       <Briefcase className="w-5 h-5" />
                       Información Laboral
                     </h3>
@@ -462,7 +462,7 @@ export default function ProfilePage() {
                         </Button>
                         <Button
                           type="submit"
-                          className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black font-semibold"
+                          className="bg-[#0386D9] hover:bg-[#0270BE] text-black font-semibold"
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (

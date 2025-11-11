@@ -129,7 +129,7 @@ export default function ContactList({
           placeholder="Buscar..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="h-9 pl-9 text-sm bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#07D9D9]"
+          className="h-9 pl-9 text-sm bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#0386D9]"
         />
       </div>
 
@@ -187,19 +187,19 @@ export default function ContactList({
                   tabIndex={0}
                   className={`group relative flex items-center gap-3 p-2 rounded-lg transition-colors cursor-pointer ${
                     isCreating
-                      ? "bg-[#07D9D9]/10 border border-[#07D9D9]/30"
+                      ? "bg-[#0386D9]/10 border border-[#0386D9]/30"
                       : "hover:bg-white/5"
                   }`}
                 >
                   {/* Avatar */}
-                  <Avatar className="h-9 w-9 border border-[#07D9D9]/30">
+                  <Avatar className="h-9 w-9 border border-[#0386D9]/30">
                     {contact.profile_image_url ? (
                       <AvatarImage
                         src={contact.profile_image_url}
                         alt={`${contact.first_name} ${contact.last_name}`}
                       />
                     ) : (
-                      <AvatarFallback className="bg-[#07D9D9] text-[#010440] font-bold text-xs">
+                      <AvatarFallback className="bg-[#0386D9] text-[#010440] font-bold text-xs">
                         {getInitials(contact.first_name, contact.last_name)}
                       </AvatarFallback>
                     )}
@@ -217,7 +217,7 @@ export default function ContactList({
 
                   {/* Action Button */}
                   {isCreating && (
-                    <Loader2 className="w-4 h-4 text-[#07D9D9] animate-spin" />
+                    <Loader2 className="w-4 h-4 text-[#0386D9] animate-spin" />
                   )}
                 </div>
               );

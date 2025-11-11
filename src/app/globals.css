@@ -11,12 +11,12 @@ body {
 :root {
   --sidebar: rgba(255, 255, 255, 0.05);
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #07d9d9;
+  --sidebar-primary: #0386d9;
   --sidebar-primary-foreground: #010440;
   --sidebar-accent: rgba(255, 255, 255, 0.05);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #07d9d9;
+  --sidebar-ring: #0386d9;
   --sidebar-width: 240px;
   --sidebar-width-icon: 60px;
 }
@@ -24,12 +24,12 @@ body {
 .dark {
   --sidebar: rgba(255, 255, 255, 0.05);
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #07d9d9;
+  --sidebar-primary: #0386d9;
   --sidebar-primary-foreground: #010440;
   --sidebar-accent: rgba(255, 255, 255, 0.05);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #07d9d9;
+  --sidebar-ring: #0386d9;
   --sidebar-width: 240px;
   --sidebar-width-icon: 60px;
 }

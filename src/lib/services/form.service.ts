@@ -1,4 +1,4 @@
-import api from '@/lib/api';
+import { api } from '@/lib/api';
 import type {
   FormTemplate,
   FormSubmission,
@@ -121,7 +121,7 @@ export const formSubmissionService = {
   async createAppointment(
     id: string,
     data: CreateAppointmentFromSubmissionDto
-  ): Promise<any> {
+  ): Promise<unknown> {
     const response = await api.post(`/form-submissions/${id}/create-appointment`, data);
     return response.data;
   },

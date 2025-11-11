@@ -13,19 +13,19 @@ export default function MiniFooter() {
           <div className="flex gap-4 text-xs sm:text-sm text-white/70">
             <Link
               href="/privacy"
-              className="hover:text-[#07D9D9] transition-colors"
+              className="hover:text-[#0386D9] transition-colors"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="hover:text-[#07D9D9] transition-colors"
+              className="hover:text-[#0386D9] transition-colors"
             >
               Terms
             </Link>
             <Link
               href="/cookies"
-              className="hover:text-[#07D9D9] transition-colors"
+              className="hover:text-[#0386D9] transition-colors"
             >
               Cookies
             </Link>

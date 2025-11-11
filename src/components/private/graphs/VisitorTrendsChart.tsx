@@ -17,7 +17,7 @@ interface VisitorTrendsChartProps {
 const chartConfig = {
   checkIns: {
     label: "Check-ins",
-    color: "#07D9D9",
+    color: "#0386D9",
   },
   checkOuts: {
     label: "Check-outs",
@@ -39,19 +39,31 @@ export function VisitorTrendsChart({ data }: VisitorTrendsChartProps) {
     }),
   }));
 
+  // Verificar si todos los valores son 0
+  const hasData = formattedData.some(
+    (item) => item.checkIns > 0 || item.checkOuts > 0 || item.activeVisitors > 0
+  );
+
   return (
     <ChartContainer config={chartConfig} className="h-[300px] w-full">
       <LineChart
         data={formattedData}
-        margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
       >
         <CartesianGrid strokeDasharray="3 3" className="stroke-white/10" />
         <XAxis
           dataKey="date"
-          tick={{ fill: "#9CA3AF" }}
-          axisLine={{ stroke: "#374151" }}
+          tick={{ fill: "#E5E7EB", fontSize: 12 }}
+          axisLine={{ stroke: "#4B5563" }}
+          tickLine={{ stroke: "#4B5563" }}
         />
-        <YAxis tick={{ fill: "#9CA3AF" }} axisLine={{ stroke: "#374151" }} />
+        <YAxis
+          tick={{ fill: "#E5E7EB", fontSize: 12 }}
+          axisLine={{ stroke: "#4B5563" }}
+          tickLine={{ stroke: "#4B5563" }}
+          domain={hasData ? [0, 'auto'] : [0, 10]}
+          allowDataOverflow={false}
+        />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
         <Line

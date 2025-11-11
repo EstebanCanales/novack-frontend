@@ -136,21 +136,23 @@ export default function LoginForm() {
 
         <div className="relative z-10 w-full max-w-md">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-start mb-12"
-          >
-            <Image
-              src="/Imagotipo.svg"
-              alt="Novack Security Platform"
-              width={180}
-              height={60}
-              className="h-12 w-auto"
-            />
-          </motion.div>
 
+          <Link href="/">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="flex justify-start mb-12"
+            >
+              <Image
+                src="/Imagotipo.svg"
+                alt="Novack Security Platform"
+                width={180}
+                height={60}
+                className="h-12 w-auto"
+              />
+            </motion.div>
+          </Link>
           {/* Login Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -180,14 +182,14 @@ export default function LoginForm() {
                       Email
                     </Label>
                     <div className="relative group">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-500 group-focus-within:text-[#07D9D9] transition-colors" />
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-500 group-focus-within:text-[#0386D9] transition-colors" />
                       <Input
                         type="email"
                         id="email"
                         placeholder="tu@empresa.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#07D9D9] focus:ring-1 focus:ring-[#07D9D9] h-11 rounded-lg transition-all"
+                        className="pl-10 bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#0386D9] focus:ring-1 focus:ring-[#0386D9] h-11 rounded-lg transition-all"
                         required
                       />
                     </div>
@@ -203,20 +205,20 @@ export default function LoginForm() {
                       </Label>
                       <button
                         type="button"
-                        className="text-xs text-[#07D9D9] hover:text-[#0596A6] transition-colors"
+                        className="text-xs text-[#0386D9] hover:text-[#0270BE] transition-colors"
                       >
                         ¿Olvidaste tu contraseña?
                       </button>
                     </div>
                     <div className="relative group">
-                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-500 group-focus-within:text-[#07D9D9] transition-colors" />
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-gray-500 group-focus-within:text-[#0386D9] transition-colors" />
                       <Input
                         type="password"
                         id="password"
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="pl-10 bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#07D9D9] focus:ring-1 focus:ring-[#07D9D9] h-11 rounded-lg transition-all"
+                        className="pl-10 bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#0386D9] focus:ring-1 focus:ring-[#0386D9] h-11 rounded-lg transition-all"
                         required
                       />
                     </div>
@@ -236,7 +238,7 @@ export default function LoginForm() {
                     placeholder="123456"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#07D9D9] focus:ring-1 focus:ring-[#07D9D9] h-11 rounded-lg transition-all"
+                    className="bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-[#0386D9] focus:ring-1 focus:ring-[#0386D9] h-11 rounded-lg transition-all"
                     required
                   />
                 </div>
@@ -250,7 +252,7 @@ export default function LoginForm() {
 
               <Button
                 type="submit"
-                className="w-full h-11 bg-[#07D9D9] hover:bg-[#0596A6] text-black font-semibold rounded-lg transition-all duration-200"
+                className="w-full h-11 bg-[#0386D9] hover:bg-[#0270BE] text-black font-semibold rounded-lg transition-all duration-200"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -286,7 +288,7 @@ export default function LoginForm() {
                     onClick={() =>
                       alert("Google Auth temporalmente deshabilitado")
                     }
-                    className="w-full h-11 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-[#07D9D9]/30 transition-all duration-200 opacity-50"
+                    className="w-full h-11 bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-[#0386D9]/30 transition-all duration-200 opacity-50"
                     disabled={true}
                   >
                     <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -316,7 +318,7 @@ export default function LoginForm() {
                       ¿No tienes una cuenta?{" "}
                       <Link
                         href="/register"
-                        className="text-[#07D9D9] hover:text-[#0596A6] font-medium transition-colors"
+                        className="text-[#0386D9] hover:text-[#0270BE] font-medium transition-colors"
                       >
                         Regístrate
                       </Link>
@@ -334,7 +336,7 @@ export default function LoginForm() {
                       setOtp("");
                       setError("");
                     }}
-                    className="text-sm text-gray-400 hover:text-[#07D9D9] transition-colors"
+                    className="text-sm text-gray-400 hover:text-[#0386D9] transition-colors"
                   >
                     ← Volver al login
                   </button>
@@ -345,20 +347,26 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Right Side - Simple Background */}
-      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-linear-to-brrom-purple-900/20 via-blue-900/20 to-cyan-900/20">
-        <div className="relative h-full w-full pt-20">
-          <Globe />
+      {/* Right Side - Globe Background */}
+      <div className="hidden lg:flex w-1/2 relative overflow-hidden">
+        {/* Globe - Positioned below and to the right */}
+        <div className="absolute top-1/3 -right-1/4 w-[180%] h-[180%]">
+          <Globe className="scale-[1.8]" />
         </div>
+
+        {/* Gradient Overlay to fade globe into black */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/10 to-black/40 pointer-events-none" />
 
         {/* Status Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.4 }}
-          className="absolute top-8 right-8 flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2"
+          className="absolute top-8 right-8 flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 z-10"
         >
-          <div className="size-2 rounded-full bg-[#07D9D9] animate-pulse" />
+          <div className="size-2 rounded-full bg-[#0386D9] animate-pulse" />
           <span className="text-white text-xs font-medium">Sistema Activo</span>
         </motion.div>
       </div>

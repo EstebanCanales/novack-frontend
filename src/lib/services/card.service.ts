@@ -120,7 +120,7 @@ class CardService {
    * Actualizar una tarjeta
    */
   async update(id: string, data: UpdateCardDto): Promise<Card> {
-    const response = await api.patch<Card>(`/cards/${id}`, data);
+    const response = await api.put<Card>(`/cards/${id}`, data);
     return response.data;
   }
 
@@ -192,9 +192,27 @@ class CardService {
     damaged: number;
     averageBattery: number;
   }> {
-    const params = supplierId ? { supplierId } : {};
-    const response = await api.get("/cards/stats", { params });
-    return response.data;
+    // Calcular stats desde las tarjetas para evitar conflictos con /cards/:id
+    const cards = supplierId 
+      ? await this.getBySupplier(supplierId)
+      : await this.getAll();
+    
+    const total = cards.length;
+    const active = cards.filter(c => c.status === "active").length;
+    const inactive = cards.filter(c => c.status === "inactive").length;
+    const lost = cards.filter(c => c.status === "lost").length;
+    const damaged = cards.filter(c => c.status === "damaged").length;
+    const batterySum = cards.reduce((sum, c) => sum + (c.battery_percentage || 0), 0);
+    const averageBattery = total > 0 ? Math.round(batterySum / total) : 0;
+    
+    return {
+      total,
+      active,
+      inactive,
+      lost,
+      damaged,
+      averageBattery,
+    };
   }
 
   /**

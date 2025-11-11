@@ -20,6 +20,10 @@ export interface Appointment {
     email: string;
     phone: string;
     profile_image_url?: string;
+    card?: {
+      id: string;
+      card_number: string;
+    };
   };
   host_employee?: {
     id: string;

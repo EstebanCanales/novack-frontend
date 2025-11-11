@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import {
   Sidebar,
   SidebarContent,
@@ -27,14 +28,10 @@ import {
   Calendar,
   MessageCircle,
   ChartArea,
-  Badge as BadgeIcon,
-  BadgeDollarSign,
   Users,
-  ClipboardList,
   CreditCard,
   ChevronRight,
   Settings,
-  UserCog,
   User,
   LogOut,
   Shield,
@@ -54,7 +51,7 @@ import {
 
 const mainItems = [
   {
-    title: "Dashboard",
+    title: "Panel Principal",
     url: "/home",
     icon: Home,
   },
@@ -72,6 +69,11 @@ const mainItems = [
     title: "Chat",
     url: "/chat",
     icon: MessageCircle,
+  },
+  {
+    title: "Gráficas",
+    url: "/graphs",
+    icon: ChartArea,
   },
 ];
 
@@ -92,8 +94,13 @@ const collapsibleItems = [
         icon: CreditCard,
       },
       {
-        title: "Proveedores",
-        url: "/management/supplier",
+        title: "Permisos",
+        url: "/management/supplier/permissionAdmin",
+        icon: Shield,
+      },
+      {
+        title: "Perfil Proveedor",
+        url: "/management/supplier/supplierProfile",
         icon: Building2,
       },
     ],
@@ -109,19 +116,11 @@ const collapsibleItems = [
         icon: FileText,
       },
       {
-        title: "Submissions",
+        title: "Respuestas",
         url: "/submissions",
         icon: Inbox,
       },
     ],
-  },
-];
-
-const standaloneItems = [
-  {
-    title: "Gráficas",
-    url: "/graphs",
-    icon: ChartArea,
   },
 ];
 
@@ -157,12 +156,20 @@ export function AppSidebar() {
     <Sidebar className="bg-transparent border-none">
       <SidebarHeader className="bg-transparent px-3 py-2" data-sidebar="header">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-linear-to-brrom-[#07D9D9] to-[#0596A6] shadow-lg shrink">
-            <img src="/logo.svg" alt="Novack" className="size-10" />
+          <div className="flex size-10 items-center justify-center rounded-lg shadow-lg shrink">
+            <Image
+              src="/logo.svg"
+              alt="Novack"
+              width={40}
+              height={40}
+              className="size-10"
+            />
           </div>
           <div>
             <div className="text-sm font-bold text-white">Novack</div>
-            <div className="text-xs text-[#07D9D9]">Security Platform</div>
+            <div className="text-xs text-[#0386D9]">
+              Plataforma de Seguridad
+            </div>
           </div>
         </div>
       </SidebarHeader>
@@ -186,12 +193,12 @@ export function AppSidebar() {
                         href={item.url}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                           active
-                            ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30 shadow-lg shadow-[#07D9D9]/5"
+                            ? "bg-[#0386D9]/10 text-[#0386D9] border border-[#0386D9]/30 shadow-lg shadow-[#0386D9]/5"
                             : "text-slate-400 hover:text-white hover:bg-white/5"
                         }`}
                       >
                         <item.icon
-                          className={`size-4 ${active ? "text-[#07D9D9]" : ""}`}
+                          className={`size-4 ${active ? "text-[#0386D9]" : ""}`}
                         />
                         <span className="truncate font-medium">
                           {item.title}
@@ -245,13 +252,13 @@ export function AppSidebar() {
                                   href={subItem.url}
                                   className={`flex items-center gap-3 pl-11 pr-3 py-2 rounded-lg transition-all duration-200 ${
                                     active
-                                      ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
+                                      ? "bg-[#0386D9]/10 text-[#0386D9] border border-[#0386D9]/30"
                                       : "text-slate-400 hover:text-white hover:bg-white/5"
                                   }`}
                                 >
                                   <subItem.icon
                                     className={`size-4 ${
-                                      active ? "text-[#07D9D9]" : ""
+                                      active ? "text-[#0386D9]" : ""
                                     }`}
                                   />
                                   <span className="truncate text-sm">
@@ -267,31 +274,6 @@ export function AppSidebar() {
                   </SidebarMenuItem>
                 </Collapsible>
               ))}
-
-              {standaloneItems.map((item) => {
-                const active = isActive(item.url);
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link
-                        href={item.url}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
-                          active
-                            ? "bg-[#07D9D9]/10 text-[#07D9D9] border border-[#07D9D9]/30"
-                            : "text-slate-400 hover:text-white hover:bg-white/5"
-                        }`}
-                      >
-                        <item.icon
-                          className={`size-4 ${active ? "text-[#07D9D9]" : ""}`}
-                        />
-                        <span className="truncate font-medium">
-                          {item.title}
-                        </span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -304,9 +286,12 @@ export function AppSidebar() {
               variant="ghost"
               className="w-full justify-start gap-3 px-3 py-3 h-auto hover:bg-white/5 rounded-lg"
             >
-              <Avatar className="h-9 w-9 border-2 border-[#07D9D9]/30 shrink">
-                <AvatarImage src={user?.profile_image_url || ""} alt={`${user?.first_name} ${user?.last_name}`} />
-                <AvatarFallback className="bg-[#07D9D9] text-black font-bold text-sm">
+              <Avatar className="h-9 w-9 border-2 border-[#0386D9]/30 shrink">
+                <AvatarImage
+                  src={user?.profile_image_url || ""}
+                  alt={`${user?.first_name} ${user?.last_name}`}
+                />
+                <AvatarFallback className="bg-[#0386D9] text-black font-bold text-sm">
                   {user?.first_name?.[0]}
                   {user?.last_name?.[0]}
                 </AvatarFallback>
@@ -329,14 +314,14 @@ export function AppSidebar() {
               onClick={() => router.push("/profile")}
               className="cursor-pointer text-white hover:bg-white/10"
             >
-              <User className="mr-2 h-4 w-4 text-[#07D9D9]" />
+              <User className="mr-2 h-4 w-4 text-[#0386D9]" />
               <span>Mi Perfil</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => router.push("/settings")}
               className="cursor-pointer text-white hover:bg-white/10"
             >
-              <Settings className="mr-2 h-4 w-4 text-[#07D9D9]" />
+              <Settings className="mr-2 h-4 w-4 text-[#0386D9]" />
               <span>Configuración</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/10" />

@@ -27,7 +27,7 @@ export function ConnectionIndicator({
     }
     if (isConnected) {
       return {
-        color: "bg-[#07D9D9]",
+        color: "bg-[#0386D9]",
         icon: Wifi,
         text: "Conectado",
         pulse: false,
@@ -65,7 +65,7 @@ export function ConnectionIndicator({
               repeat: Infinity,
               ease: "easeOut",
             }}
-            className="absolute inset-0 rounded-full bg-[#07D9D9]"
+            className="absolute inset-0 rounded-full bg-[#0386D9]"
           />
         )}
       </div>
@@ -100,13 +100,13 @@ export function ConnectionToast({
         exit={{ opacity: 0, y: -50 }}
         className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg backdrop-blur-xl ${
           isConnected
-            ? "bg-[#07D9D9]/10 border-[#07D9D9]/20"
+            ? "bg-[#0386D9]/10 border-[#0386D9]/20"
             : "bg-red-500/10 border-red-500/20"
         }`}
       >
         <div
           className={`size-2 rounded-full ${
-            isConnected ? "bg-[#07D9D9]" : "bg-red-500"
+            isConnected ? "bg-[#0386D9]" : "bg-red-500"
           } animate-pulse`}
         />
         <div className="flex-1">

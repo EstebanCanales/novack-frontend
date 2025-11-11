@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { api } from "../api";
 
 export enum PreferenceType {
@@ -11,7 +12,7 @@ export enum PreferenceType {
 export interface UserPreference {
   id: string;
   preference_type: PreferenceType;
-  preference_value: Record<string, any>;
+  preference_value: Record<string, unknown>;
   employee_id: string;
   created_at: string;
   updated_at: string;
@@ -23,7 +24,7 @@ export interface GraphLayout {
 }
 
 class UserPreferenceService {
-  async create(preferenceType: PreferenceType, preferenceValue: Record<string, any>): Promise<UserPreference> {
+  async create(preferenceType: PreferenceType, preferenceValue: Record<string, unknown>): Promise<UserPreference> {
     const response = await api.post<UserPreference>("/user-preferences", {
       preference_type: preferenceType,
       preference_value: preferenceValue,
@@ -40,15 +41,15 @@ class UserPreferenceService {
     try {
       const response = await api.get<UserPreference>(`/user-preferences/${type}`);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
+    } catch (error: unknown) {
+      if (error instanceof AxiosError && error.response?.status === 404) {
         return null;
       }
       throw error;
     }
   }
 
-  async update(type: PreferenceType, preferenceValue: Record<string, any>): Promise<UserPreference> {
+  async update(type: PreferenceType, preferenceValue: Record<string, unknown>): Promise<UserPreference> {
     const response = await api.put<UserPreference>(`/user-preferences/${type}`, {
       preference_value: preferenceValue,
     });
@@ -61,7 +62,7 @@ class UserPreferenceService {
 
   // Método específico para el layout de gráficas
   async saveGraphsLayout(layout: GraphLayout): Promise<UserPreference> {
-    return this.create(PreferenceType.GRAPHS_LAYOUT, layout);
+    return this.create(PreferenceType.GRAPHS_LAYOUT, layout as unknown as Record<string, unknown>);
   }
 
   async getGraphsLayout(): Promise<GraphLayout | null> {

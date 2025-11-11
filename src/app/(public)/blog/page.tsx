@@ -88,7 +88,7 @@ export default async function BlogPage({
                     href={href}
                     className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
                       isActive
-                        ? "bg-[#07D9D9] text-[#010440]"
+                        ? "bg-[#0386D9] text-[#010440]"
                         : "text-white/70 bg-white/5 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -111,13 +111,13 @@ export default async function BlogPage({
                           key={featured.slug}
                           className="block group md:col-span-2 lg:col-span-3"
                         >
-                          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col h-full overflow-hidden hover:border-[#07D9D9]/50 transition-all duration-300">
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col h-full overflow-hidden hover:border-[#0386D9]/50 transition-all duration-300">
                             <div
-                              className={`relative h-64 md:h-80 lg:h-96 rounded-lg bg-linear-to-br{featured.gradient} mb-6 overflow-hidden shrink`}
+                              className={`relative h-64 md:h-80 lg:h-96 rounded-lg bg-linear-to-br ${featured.gradient} mb-6 overflow-hidden shrink`}
                             >
                               <div className="absolute inset-0 bg-black/20 transition-opacity duration-300 group-hover:opacity-0"></div>
                             </div>
-                            <p className="text-sm font-medium text-[#07D9D9] mb-3">
+                            <p className="text-sm font-medium text-[#0386D9] mb-3">
                               {featured.category}
                             </p>
                             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -144,13 +144,13 @@ export default async function BlogPage({
                             post.rowSpan ?? ""
                           }`}
                         >
-                          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col h-full overflow-hidden hover:border-[#07D9D9]/50 transition-all duration-300">
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col h-full overflow-hidden hover:border-[#0386D9]/50 transition-all duration-300">
                             <div
                               className={`relative h-56 md:h-64 rounded-lg bg-linear-to-br ${post.gradient} mb-5 overflow-hidden shrink-0`}
                             >
                               <div className="absolute inset-0 bg-black/20 transition-opacity duration-300 group-hover:opacity-0"></div>
                             </div>
-                            <p className="text-sm font-medium text-[#07D9D9] mb-2">
+                            <p className="text-sm font-medium text-[#0386D9] mb-2">
                               {post.category}
                             </p>
                             <h3 className="text-2xl font-bold text-white mb-3 grow">

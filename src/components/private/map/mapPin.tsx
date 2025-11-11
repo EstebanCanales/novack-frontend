@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import { MapPin } from 'lucide-react';
 
-export const createMapPinElement = (userName: string, primaryColor: string = '#07d9d9'): HTMLElement => {
+export const createMapPinElement = (userName: string, primaryColor: string = '#0386d9'): HTMLElement => {
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.cursor = 'pointer';

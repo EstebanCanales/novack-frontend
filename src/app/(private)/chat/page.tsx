@@ -43,6 +43,45 @@ export default function ChatPage() {
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const sanitizePrivateRoomName = useCallback(
+    (roomName?: string | null): string | null => {
+      if (!roomName) return null;
+
+      const normalize = (value: string) =>
+        value
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase();
+
+      const cleaned = roomName.replace(/^chat privado:\s*/i, "").trim();
+      if (!cleaned) return null;
+
+      const userFullName = `${user?.first_name || ""} ${
+        user?.last_name || ""
+      }`.trim();
+      const parts = cleaned
+        .split("-")
+        .map((part) => part.trim())
+        .filter(Boolean);
+
+      if (userFullName) {
+        const normalizedUser = normalize(userFullName);
+        const isUserMatch = (part: string) => {
+          const normalizedPart = normalize(part);
+          return (
+            normalizedPart.includes(normalizedUser) ||
+            normalizedUser.includes(normalizedPart)
+          );
+        };
+        const other = parts.find((part) => !isUserMatch(part));
+        if (other) return other;
+      }
+
+      return parts[0] || cleaned;
+    },
+    [user?.first_name, user?.last_name]
+  );
+
   // Obtener el nombre del otro participante en chat privado (memoizado)
   const getOtherParticipantName = useCallback(
     (room: ChatRoom): string | null => {
@@ -57,9 +96,12 @@ export default function ChatPage() {
           return name || otherParticipant.email || null;
         }
       }
-      return null;
+      if (room.roomType === "private") {
+        return sanitizePrivateRoomName(room.name);
+      }
+      return room.name || null;
     },
-    [user?.id]
+    [user?.id, sanitizePrivateRoomName]
   );
 
   const getInitials = useCallback((name: string) => {
@@ -162,8 +204,8 @@ export default function ChatPage() {
               onClick={() => setShowContacts(!showContacts)}
               className={`h-7 w-7 p-0 ${
                 showContacts
-                  ? "bg-[#07D9D9]/10 text-[#07D9D9]"
-                  : "text-gray-400 hover:text-[#07D9D9]"
+                  ? "bg-[#0386D9]/10 text-[#0386D9]"
+                  : "text-gray-400 hover:text-[#0386D9]"
               }`}
             >
               <UserPlus className="w-4 h-4" />
@@ -175,7 +217,7 @@ export default function ChatPage() {
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden">
               <div className="p-3 border-b border-white/10">
                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                  <Users className="w-4 h-4 text-[#07D9D9]" />
+                  <Users className="w-4 h-4 text-[#0386D9]" />
                   Contactos
                 </h3>
               </div>
@@ -195,7 +237,7 @@ export default function ChatPage() {
               placeholder="Buscar..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-9 pl-9 text-sm bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#07D9D9]"
+              className="h-9 pl-9 text-sm bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#0386D9]"
             />
           </div>
 
@@ -245,26 +287,26 @@ export default function ChatPage() {
             <>
               {/* Chat Header */}
               <div className="h-14 bg-white/5 border-b border-white/10 flex items-center px-4 gap-3">
-                <Avatar className="h-9 w-9 border-2 border-[#07D9D9]/30">
-                  <AvatarFallback className="bg-[#07D9D9] text-[#010440] text-xs font-bold">
+                <Avatar className="h-9 w-9 border-2 border-[#0386D9]/30">
+                  <AvatarFallback className="bg-[#0386D9] text-[#010440] text-xs font-bold">
                     {currentRoom.roomType === "group" ? (
                       <Users className="w-4 h-4" />
                     ) : currentRoom.roomType === "supplier" ? (
                       <Bot className="w-4 h-4" />
+                    ) : currentRoom.roomType === "private" ? (
+                      <MessageCircle className="w-4 h-4" />
                     ) : (
-                      getInitials(
-                        getOtherParticipantName(currentRoom) ||
-                          currentRoom.name ||
-                          "U"
-                      )
+                      getInitials(currentRoom.name || "U")
                     )}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-white">
-                    {getOtherParticipantName(currentRoom) ||
-                      currentRoom.name ||
-                      "Chat"}
+                    {currentRoom.roomType === "private"
+                      ? getOtherParticipantName(currentRoom) || "Chat privado"
+                      : getOtherParticipantName(currentRoom) ||
+                        currentRoom.name ||
+                        "Chat"}
                   </h3>
                   <p className="text-xs text-gray-400">
                     {currentRoom.roomType === "supplier"
@@ -295,7 +337,7 @@ export default function ChatPage() {
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
                     disabled={!isConnected || isSending}
-                    className="h-9 text-sm bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#07D9D9]"
+                    className="h-9 text-sm bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#0386D9]"
                     placeholder={
                       !isConnected
                         ? "Conectando..."
@@ -307,7 +349,7 @@ export default function ChatPage() {
                   <Button
                     type="submit"
                     disabled={!isConnected || !messageInput.trim() || isSending}
-                    className="h-9 px-3 bg-[#07D9D9] hover:bg-[#0596A6] text-[#010440]"
+                    className="h-9 px-3 bg-[#0386D9] hover:bg-[#0270BE] text-[#010440]"
                   >
                     {isSending ? (
                       <Loader2 className="w-4 h-4 animate-spin" />

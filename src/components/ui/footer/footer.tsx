@@ -61,7 +61,7 @@ export default function Footer() {
             className="md:col-span-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 relative p-6 md:p-8"
           >
             <div className="flex items-center gap-3 mb-6">
-              <div className="h-12 w-12 bg-linear-to-br from-[#07D9D9] to-[#0596A6] rounded-xl flex items-center justify-center shadow-lg">
+              <div className="h-12 w-12 bg-linear-to-br from-[#0386D9] to-[#0596A6] rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xl">N</span>
               </div>
               <div className="text-2xl font-bold text-white">Novack</div>
@@ -76,7 +76,7 @@ export default function Footer() {
             <div className="flex gap-4">
               <Link
                 href="/"
-                className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-[#07D9D9]/20 transition-all duration-200 hover:scale-105"
+                className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-[#0386D9]/20 transition-all duration-200 hover:scale-105"
               >
                 <svg
                   className="w-6 h-6"
@@ -88,7 +88,7 @@ export default function Footer() {
               </Link>
               <Link
                 href="/"
-                className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-[#07D9D9]/20 transition-all duration-200 hover:scale-105"
+                className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-[#0386D9]/20 transition-all duration-200 hover:scale-105"
               >
                 <svg
                   className="w-6 h-6"
@@ -100,7 +100,7 @@ export default function Footer() {
               </Link>
               <Link
                 href="/"
-                className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-[#07D9D9]/20 transition-all duration-200 hover:scale-105"
+                className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-[#0386D9]/20 transition-all duration-200 hover:scale-105"
               >
                 <svg
                   className="w-6 h-6"
@@ -133,12 +133,12 @@ export default function Footer() {
                 type="email"
                 placeholder="Ingresa tu correo"
                 required
-                className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-[#07D9D9] transition-colors"
+                className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-[#0386D9] transition-colors"
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-[#07D9D9] hover:bg-[#0596A6] disabled:opacity-60 disabled:cursor-not-allowed text-[#010440] font-semibold px-4 py-2 rounded-lg transition-colors min-w-10 flex items-center justify-center"
+                className="bg-[#0386D9] hover:bg-[#0270BE] disabled:opacity-60 disabled:cursor-not-allowed text-[#010440] font-semibold px-4 py-2 rounded-lg transition-colors min-w-10 flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <span className="inline-block h-4 w-4 animate-spin border-2 border-[#010440]/70 border-t-transparent rounded-full" />
@@ -189,27 +189,27 @@ export default function Footer() {
               <li>
                 <Link
                   href="/features"
-                  className="text-white/70 hover:text-[#07D9D9] transition-colors flex items-center gap-2 group"
+                  className="text-white/70 hover:text-[#0386D9] transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#07D9D9] rounded-full group-hover:scale-150 transition-transform"></span>
+                  <span className="w-1 h-1 bg-[#0386D9] rounded-full group-hover:scale-150 transition-transform"></span>
                   Características
                 </Link>
               </li>
               <li>
                 <Link
                   href="/blog"
-                  className="text-white/70 hover:text-[#07D9D9] transition-colors flex items-center gap-2 group"
+                  className="text-white/70 hover:text-[#0386D9] transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#07D9D9] rounded-full group-hover:scale-150 transition-transform"></span>
+                  <span className="w-1 h-1 bg-[#0386D9] rounded-full group-hover:scale-150 transition-transform"></span>
                   Blog
                 </Link>
               </li>
               <li>
                 <Link
                   href="/contact"
-                  className="text-white/70 hover:text-[#07D9D9] transition-colors flex items-center gap-2 group"
+                  className="text-white/70 hover:text-[#0386D9] transition-colors flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#07D9D9] rounded-full group-hover:scale-150 transition-transform"></span>
+                  <span className="w-1 h-1 bg-[#0386D9] rounded-full group-hover:scale-150 transition-transform"></span>
                   Contacto
                 </Link>
               </li>
@@ -231,19 +231,19 @@ export default function Footer() {
               <div className="flex gap-6 text-sm">
                 <Link
                   href="/privacy"
-                  className="text-white/60 hover:text-[#07D9D9] transition-colors"
+                  className="text-white/60 hover:text-[#0386D9] transition-colors"
                 >
                   Política de Privacidad
                 </Link>
                 <Link
                   href="/terms"
-                  className="text-white/60 hover:text-[#07D9D9] transition-colors"
+                  className="text-white/60 hover:text-[#0386D9] transition-colors"
                 >
                   Términos de Servicio
                 </Link>
                 <Link
                   href="/cookies"
-                  className="text-white/60 hover:text-[#07D9D9] transition-colors"
+                  className="text-white/60 hover:text-[#0386D9] transition-colors"
                 >
                   Política de Cookies
                 </Link>

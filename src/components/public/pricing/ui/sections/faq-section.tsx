@@ -46,7 +46,7 @@ export function FaqSection() {
             variants={fadeInUp}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
           >
-            Preguntas <span className="text-[#07D9D9]">Frecuentes</span>
+            Preguntas <span className="text-[#0386D9]">Frecuentes</span>
           </motion.h2>
         </motion.div>
 

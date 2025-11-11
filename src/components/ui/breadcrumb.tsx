@@ -49,7 +49,7 @@ const BreadcrumbLink = React.forwardRef<
   <Link
     ref={ref}
     className={cn(
-      "transition-colors hover:text-[#07D9D9] text-gray-400",
+      "transition-colors hover:text-[#0386D9] text-gray-400",
       className
     )}
     {...props}

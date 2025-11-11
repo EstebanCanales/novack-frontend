@@ -53,7 +53,7 @@ const Map = ({ cards }: { cards: MapCard[] }) => {
 
     const map = new google.maps.Map(mapRef.current, {
       center,
-      zoom: validCards.length === 1 ? 16 : 12,
+      zoom: validCards.length === 1 ? 18 : 15,
       mapId: "novack_map_id", // Required for Advanced Markers
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       // Los estilos se configuran desde Google Maps Cloud Console cuando se usa mapId
@@ -80,7 +80,7 @@ const Map = ({ cards }: { cards: MapCard[] }) => {
         : "Sin asignar";
 
       // Usar el mismo pin de mapUser con el color según si está activa o no
-      const pinColor = isActive ? "#07D9D9" : "#64748b";
+      const pinColor = isActive ? "#0386D9" : "#64748b";
       const pinElement = createMapPinElement(card.card_number, pinColor);
 
       const marker = new google.maps.marker.AdvancedMarkerElement({
@@ -109,7 +109,7 @@ const Map = ({ cards }: { cards: MapCard[] }) => {
                 margin-right: 8px;
                 box-shadow: 0 0 8px ${isActive ? "rgba(16, 185, 129, 0.5)" : "rgba(100, 116, 139, 0.5)"};
               "></div>
-              <strong style="color: #07D9D9; font-size: 14px;">
+              <strong style="color: #0386D9; font-size: 14px;">
                 ${card.card_number}
               </strong>
             </div>
@@ -157,9 +157,9 @@ const Map = ({ cards }: { cards: MapCard[] }) => {
       <div ref={mapRef} className="w-full h-full rounded-lg" />
 
       {/* Contador de tarjetas */}
-      <div className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-[#07D9D9]/30">
+      <div className="absolute top-3 left-3 bg-slate-900/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-[#0386D9]/30">
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-[#07D9D9] rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-[#0386D9] rounded-full animate-pulse"></div>
           <span className="text-xs font-semibold text-white">
             {cards.filter((c) => c.is_active).length} / {cards.length} Tarjetas Activas
           </span>
@@ -173,7 +173,7 @@ const LoadingMap = () => (
   <div className="w-full h-full bg-slate-900/50 backdrop-blur-sm rounded-lg flex items-center justify-center">
     <div className="text-center">
       <div className="relative mb-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9] mx-auto"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9] mx-auto"></div>
       </div>
       <p className="text-sm text-slate-300 font-medium">Cargando mapa...</p>
       <p className="text-xs text-slate-500 mt-1">Cargando ubicaciones de tarjetas</p>

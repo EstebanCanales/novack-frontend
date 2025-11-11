@@ -30,8 +30,8 @@ export interface FormField {
   help_text?: string;
   is_required: boolean;
   order: number;
-  validation_rules?: Record<string, any>;
-  options?: any;
+  validation_rules?: Record<string, unknown>;
+  options?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -41,11 +41,12 @@ export interface FormTemplate {
   name: string;
   description?: string;
   slug: string;
+  banner?: string;
   is_public: boolean;
   is_active: boolean;
   requires_approval: boolean;
   notification_emails?: string[];
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
   supplier_id: string;
   created_by: string;
   created_at: string;
@@ -67,7 +68,7 @@ export interface FormAnswer {
   form_submission_id: string;
   form_field_id: string;
   value?: string;
-  value_json?: any;
+  value_json?: unknown;
   created_at: string;
   form_field?: FormField;
 }
@@ -82,7 +83,7 @@ export interface FormSubmission {
   visitor_company?: string;
   status: SubmissionStatus;
   admin_notes?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   approved_by?: string;
   approved_at?: string;
   submitted_at: string;
@@ -114,24 +115,25 @@ export interface CreateFormFieldDto {
   help_text?: string;
   is_required: boolean;
   order: number;
-  validation_rules?: Record<string, any>;
-  options?: any;
+  validation_rules?: Record<string, unknown>;
+  options?: string[];
 }
 
 export interface CreateFormTemplateDto {
   name: string;
   description?: string;
   slug?: string;
+  banner?: string;
   is_public?: boolean;
   requires_approval?: boolean;
   notification_emails?: string[];
-  settings?: Record<string, any>;
+  settings?: Record<string, unknown>;
   fields: CreateFormFieldDto[];
 }
 
 export interface FormAnswerDto {
   field_id: string;
-  value: any;
+  value: string | number | boolean | null | undefined;
 }
 
 export interface SubmitFormDto {
@@ -140,7 +142,7 @@ export interface SubmitFormDto {
   visitor_phone?: string;
   visitor_company?: string;
   answers: FormAnswerDto[];
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface UpdateSubmissionStatusDto {

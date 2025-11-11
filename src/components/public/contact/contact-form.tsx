@@ -131,7 +131,7 @@ const ContactForm = () => {
           />
           <Button
             type="submit"
-            className="w-full bg-linear-to-rm-[#07D9D9] to-[#0596A6] text-[#010440] hover:shadow-lg hover:shadow-[#07D9D9]/30"
+            className="w-full bg-linear-to-r from-[#0386D9] to-[#0596A6] text-[#010440] hover:shadow-lg hover:shadow-[#0386D9]/30"
           >
             Enviar Mensaje
           </Button>

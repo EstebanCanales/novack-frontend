@@ -107,7 +107,7 @@ export default function NewEmployeePage() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Información Personal */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                     <User className="w-5 h-5" />
                     Información Personal
                   </h3>
@@ -151,7 +151,7 @@ export default function NewEmployeePage() {
 
                 {/* Contacto */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                     <Mail className="w-5 h-5" />
                     Información de Contacto
                   </h3>
@@ -214,7 +214,7 @@ export default function NewEmployeePage() {
 
                 {/* Información Laboral */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                     <Briefcase className="w-5 h-5" />
                     Información Laboral
                   </h3>
@@ -277,7 +277,7 @@ export default function NewEmployeePage() {
                       </Button>
                       <Button
                         type="submit"
-                        className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                        className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? (

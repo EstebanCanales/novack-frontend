@@ -273,7 +273,7 @@ export default function SubmissionsPage() {
         {/* Header */}
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <FileCheck className="h-6 w-6 text-[#07D9D9]" />
+            <FileCheck className="h-6 w-6 text-[#0386D9]" />
             <div>
               <h2 className="text-xl font-bold text-white">Submissions</h2>
               <p className="text-sm text-slate-400">
@@ -363,7 +363,7 @@ export default function SubmissionsPage() {
         <CardContent>
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
             </div>
           ) : submissions.length === 0 ? (
             <div className="text-center py-12">
@@ -398,7 +398,7 @@ export default function SubmissionsPage() {
                       {submission.visitor_email}
                     </TableCell>
                     <TableCell>
-                      <code className="text-sm text-[#07D9D9] bg-white/5 px-2 py-1 rounded">
+                      <code className="text-sm text-[#0386D9] bg-white/5 px-2 py-1 rounded">
                         {submission.form_template?.name || 'N/A'}
                       </code>
                     </TableCell>
@@ -413,7 +413,7 @@ export default function SubmissionsPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleViewDetails(submission)}
-                        className="text-[#07D9D9] hover:text-[#06b8b8] hover:bg-white/10"
+                        className="text-[#0386D9] hover:text-[#0270BE] hover:bg-white/10"
                       >
                         <Eye className="h-4 w-4 mr-2" />
                         Ver detalles
@@ -535,7 +535,7 @@ export default function SubmissionsPage() {
                 <div className="pt-4 border-t border-white/10">
                   <Button
                     onClick={() => handleOpenAppointmentModal(selectedSubmission)}
-                    className="w-full bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                    className="w-full bg-[#0386D9] hover:bg-[#0270BE] text-black"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Crear Cita
@@ -660,7 +660,7 @@ export default function SubmissionsPage() {
               type="button"
               onClick={handleCreateAppointment}
               disabled={actionLoading || !appointmentData.scheduled_time}
-              className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+              className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
             >
               {actionLoading ? (
                 <>

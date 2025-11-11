@@ -254,30 +254,50 @@ class WebSocketService {
    */
   getUserRooms(): Promise<ChatRoom[]> {
     if (!this.socket || !this.socket.connected) {
-      return Promise.reject(new Error("WebSocket no está conectado"));
+      console.warn("⚠️ getUserRooms: WebSocket no está conectado");
+      return Promise.resolve([]);
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+      let hasResponded = false;
+
       const timeout = setTimeout(() => {
-        reject(new Error("Timeout al obtener salas del usuario"));
+        if (!hasResponded) {
+          hasResponded = true;
+          console.warn("⏱️ Timeout al obtener salas - retornando array vacío");
+          resolve([]);
+        }
       }, 5000);
 
       this.socket!.emit("getRooms", (response: ServerResponse<ServerRoom[]>) => {
+        if (hasResponded) {
+          console.warn("⚠️ Respuesta de getRooms recibida después del timeout, ignorando");
+          return;
+        }
+
+        hasResponded = true;
         clearTimeout(timeout);
         console.log("🔍 getRooms response:", response);
 
         if (!response) {
-          reject(new Error("No se recibió respuesta del servidor"));
+          console.warn("⚠️ No se recibió respuesta de getRooms - retornando array vacío");
+          resolve([]);
           return;
         }
 
         if (response.success === false || response.error) {
-          reject(new Error(response.message || response.error || "Error desconocido"));
+          console.warn("⚠️ Error en getRooms:", response.message || response.error);
+          resolve([]);
         } else {
-          // Mapear salas del backend al formato frontend
-          const rooms = (response.data || []).map(mapServerRoom);
-          console.log("🔍 getRooms rooms mapeadas:", rooms);
-          resolve(rooms);
+          try {
+            // Mapear salas del backend al formato frontend
+            const rooms = (response.data || []).map(mapServerRoom);
+            console.log("🔍 getRooms rooms mapeadas:", rooms);
+            resolve(rooms);
+          } catch (error) {
+            console.error("❌ Error al mapear salas:", error);
+            resolve([]);
+          }
         }
       });
     });

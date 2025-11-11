@@ -1,6 +1,11 @@
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layouts/AppSidebar";
+import type { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Visitantes",
+};
 
 export default async function VisitorLayout({
   children,

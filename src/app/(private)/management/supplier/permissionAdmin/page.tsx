@@ -40,7 +40,7 @@ export default function PermissionAdminPage() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
           <div className="text-white text-lg">Cargando...</div>
         </div>
       </div>
@@ -150,15 +150,7 @@ export default function PermissionAdminPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Gestión</BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Proveedores</BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Administración de Permisos</BreadcrumbPage>
+              <BreadcrumbPage>Permisos</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -172,8 +164,8 @@ export default function PermissionAdminPage() {
           transition={{ delay: 0.1 }}
         >
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-3 rounded-xl bg-[#07D9D9]/20 border border-[#07D9D9]/30">
-              <Shield className="h-6 w-6 text-[#07D9D9]" />
+            <div className="p-3 rounded-xl bg-[#0386D9]/20 border border-[#0386D9]/30">
+              <Shield className="h-6 w-6 text-[#0386D9]" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white">
@@ -198,7 +190,7 @@ export default function PermissionAdminPage() {
               placeholder="Buscar usuarios..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#07D9D9]"
+              className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#0386D9]"
             />
           </div>
         </motion.div>
@@ -217,13 +209,13 @@ export default function PermissionAdminPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + index * 0.05 }}
             >
-              <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#07D9D9]/20 transition-all duration-300">
+              <Card className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:border-[#0386D9]/20 transition-all duration-300">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     {/* User Info */}
                     <div className="flex items-start gap-4 flex-1">
-                      <Avatar className="h-12 w-12 border border-[#07D9D9]/30">
-                        <AvatarFallback className="bg-[#07D9D9] text-black font-semibold">
+                      <Avatar className="h-12 w-12 border border-[#0386D9]/30">
+                        <AvatarFallback className="bg-[#0386D9] text-black font-semibold">
                           {user.avatar}
                         </AvatarFallback>
                       </Avatar>
@@ -304,7 +296,7 @@ export default function PermissionAdminPage() {
                             key={permission.id}
                             className={`flex items-center justify-between p-3 rounded-lg border transition-all duration-200 cursor-pointer ${
                               hasPermission
-                                ? "bg-[#07D9D9]/10 border-[#07D9D9]"
+                                ? "bg-[#0386D9]/10 border-[#0386D9]"
                                 : "bg-white/5 border-white/10 hover:bg-white/10"
                             }`}
                             onClick={handleClick}
@@ -315,14 +307,14 @@ export default function PermissionAdminPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-2 mb-1">
                                 {hasPermission ? (
-                                  <Check className="w-4 h-4 text-[#07D9D9]" />
+                                  <Check className="w-4 h-4 text-[#0386D9]" />
                                 ) : (
                                   <X className="w-4 h-4 text-slate-400" />
                                 )}
                                 <span
                                   className={`text-sm font-medium ${
                                     hasPermission
-                                      ? "text-[#07D9D9]"
+                                      ? "text-[#0386D9]"
                                       : "text-white"
                                   }`}
                                 >
@@ -337,7 +329,7 @@ export default function PermissionAdminPage() {
                               variant={hasPermission ? "default" : "outline"}
                               className={
                                 hasPermission
-                                  ? "bg-[#07D9D9] text-black"
+                                  ? "bg-[#0386D9] text-black"
                                   : "border-white/10 text-slate-400"
                               }
                             >

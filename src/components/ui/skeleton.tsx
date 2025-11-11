@@ -54,7 +54,7 @@ function SkeletonAvatar({ className }: { className?: string }) {
   return (
     <Skeleton
       className={cn(
-        "size-10 rounded-full border-2 border-[#07D9D9]/30",
+        "size-10 rounded-full border-2 border-[#0386D9]/30",
         className
       )}
     />

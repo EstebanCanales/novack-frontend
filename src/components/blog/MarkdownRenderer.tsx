@@ -37,9 +37,9 @@ export function MarkdownRenderer({
         "prose-headings:text-white prose-h1:text-3xl prose-h1:md:text-4xl prose-h1:font-extrabold " +
         "prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:font-bold " +
         "prose-h3:text-xl prose-h3:font-semibold " +
-        "prose-a:text-[#07D9D9] hover:prose-a:text-[#0596A6] prose-a:no-underline hover:prose-a:underline underline-offset-4 " +
-        "prose-strong:text-white prose-em:text-white/90 prose-ul:marker:text-[#07D9D9] prose-ol:marker:text-white/60 " +
-        "prose-blockquote:border-l-4 prose-blockquote:border-[#07D9D9] prose-blockquote:text-white/80 prose-blockquote:pl-4 " +
+        "prose-a:text-[#0386D9] hover:prose-a:text-[#0270BE] prose-a:no-underline hover:prose-a:underline underline-offset-4 " +
+        "prose-strong:text-white prose-em:text-white/90 prose-ul:marker:text-[#0386D9] prose-ol:marker:text-white/60 " +
+        "prose-blockquote:border-l-4 prose-blockquote:border-[#0386D9] prose-blockquote:text-white/80 prose-blockquote:pl-4 " +
         "prose-img:rounded-xl prose-hr:border-white/10 " +
         className
       }
@@ -89,7 +89,7 @@ export function MarkdownRenderer({
             },
             ul: {
               props: {
-                className: "list-disc pl-6 space-y-2 marker:text-[#07D9D9]",
+                className: "list-disc pl-6 space-y-2 marker:text-[#0386D9]",
               },
             },
             ol: {
@@ -122,7 +122,7 @@ export function MarkdownRenderer({
                 if (isBlock) return <code {...props}>{children}</code>;
                 return (
                   <code
-                    className="bg-white/10 text-[#07D9D9] px-1.5 py-0.5 rounded-md border border-white/10"
+                    className="bg-white/10 text-[#0386D9] px-1.5 py-0.5 rounded-md border border-white/10"
                     {...props}
                   >
                     {children}

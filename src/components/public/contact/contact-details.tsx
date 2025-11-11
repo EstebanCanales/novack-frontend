@@ -4,19 +4,19 @@ import { Mail, Phone, MapPin } from "lucide-react";
 const ContactDetails = () => {
   const details = [
     {
-      icon: <Mail className="h-6 w-6 text-[#07D9D9]" />,
+      icon: <Mail className="h-6 w-6 text-[#0386D9]" />,
       title: "Email",
       value: "hello@novack.com",
       description: "Para consultas generales y soporte.",
     },
     {
-      icon: <Phone className="h-6 w-6 text-[#07D9D9]" />,
+      icon: <Phone className="h-6 w-6 text-[#0386D9]" />,
       title: "Teléfono",
       value: "+1 (555) 123-4567",
       description: "Lun-Vie, 9am - 5pm EST.",
     },
     {
-      icon: <MapPin className="h-6 w-6 text-[#07D9D9]" />,
+      icon: <MapPin className="h-6 w-6 text-[#0386D9]" />,
       title: "Oficina",
       value: "123 Innovation Drive, Tech City, 12345",
       description: "Visitas solo con cita previa.",
@@ -39,7 +39,7 @@ const ContactDetails = () => {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-              <p className="text-[#07D9D9] font-medium">{item.value}</p>
+              <p className="text-[#0386D9] font-medium">{item.value}</p>
               <p className="text-white/60 text-sm">{item.description}</p>
             </div>
           </div>

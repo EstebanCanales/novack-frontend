@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   GoogleMap,
   LoadScript,
@@ -144,7 +144,7 @@ export default function LocationsMap() {
       }
 
       const colors: Record<string, string> = {
-        supplier: "#07D9D9",
+        supplier: "#0386D9",
         office: "#4CAF50",
         visitor: "#FF9800",
       };
@@ -223,7 +223,7 @@ export default function LocationsMap() {
               onCloseClick={handleInfoWindowClose}
             >
               <div className="p-2 bg-[#1a1a2e] text-white rounded-lg">
-                <h3 className="font-bold text-base mb-1 text-[#07D9D9]">
+                <h3 className="font-bold text-base mb-1 text-[#0386D9]">
                   {selectedLocation.name}
                 </h3>
                 <p className="text-sm text-gray-300 mb-2">

@@ -34,7 +34,7 @@ const ChatMessage = memo(function ChatMessage({
         <div
           className={`px-3 py-2 rounded-xl ${
             isOwn
-              ? "bg-[#07D9D9] text-[#010440] rounded-br-sm"
+              ? "bg-[#0386D9] text-[#010440] rounded-br-sm"
               : isBot
               ? "bg-purple-500/20 text-white border border-purple-500/30 rounded-bl-sm"
               : "bg-white/10 text-white rounded-bl-sm"

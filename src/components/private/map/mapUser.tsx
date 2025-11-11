@@ -24,7 +24,7 @@ const MapUser = ({
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const markerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(
-    null,
+    null
   );
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const MapUser = ({
       // Los estilos se configuran desde Google Maps Cloud Console cuando se usa mapId
     });
 
-    const pinElement = createMapPinElement(userName, "#07D9D9");
+    const pinElement = createMapPinElement(userName, "#0386D9");
 
     const marker = new google.maps.marker.AdvancedMarkerElement({
       position: { lat, lng },
@@ -70,32 +70,9 @@ const MapUser = ({
     };
   }, [lat, lng, userName]);
 
-  return <div ref={mapRef} className={className || "w-full h-full rounded-lg"} />;
-};
-
-const render = (status: Status): React.ReactElement => {
-  switch (status) {
-    case Status.LOADING:
-      return (
-        <div className="flex items-center justify-center w-full h-full">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
-        </div>
-      );
-    case Status.FAILURE:
-      return (
-        <div className="flex items-center justify-center w-full h-full">
-          <p className="text-red-500">Error al cargar el mapa</p>
-        </div>
-      );
-    case Status.SUCCESS:
-      return <div />;
-    default:
-      return (
-        <div className="flex items-center justify-center w-full h-full">
-          <p className="text-red-500">Error al cargar el mapa</p>
-        </div>
-      );
-  }
+  return (
+    <div ref={mapRef} className={className || "w-full h-full rounded-lg"} />
+  );
 };
 
 export default function MapUserWrapper(props: MapUserProps) {
@@ -104,10 +81,37 @@ export default function MapUserWrapper(props: MapUserProps) {
   if (!apiKey) {
     return (
       <div className="flex items-center justify-center w-full h-full">
-        <p className="text-red-500">API Key de Google Maps no configurada</p>
+        <p className="text-red-500 text-xs">
+          API Key de Google Maps no configurada
+        </p>
       </div>
     );
   }
+
+  const render = (status: Status): React.ReactElement => {
+    switch (status) {
+      case Status.LOADING:
+        return (
+          <div className="flex items-center justify-center w-full h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-700 border-t-[#0386D9]"></div>
+          </div>
+        );
+      case Status.FAILURE:
+        return (
+          <div className="flex items-center justify-center w-full h-full">
+            <p className="text-red-500 text-xs">Error al cargar el mapa</p>
+          </div>
+        );
+      case Status.SUCCESS:
+        return <MapUser {...props} />;
+      default:
+        return (
+          <div className="flex items-center justify-center w-full h-full">
+            <p className="text-red-500 text-xs">Estado desconocido</p>
+          </div>
+        );
+    }
+  };
 
   return (
     <Wrapper apiKey={apiKey} render={render} libraries={["marker"]}>

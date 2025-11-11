@@ -30,7 +30,7 @@ export function withAuth<P extends object>(Component: ComponentType<P>) {
       return (
         <div className="flex items-center justify-center min-h-screen bg-black">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-[#07D9D9] border-t-transparent rounded-full animate-spin" />
+            <div className="w-12 h-12 border-4 border-[#0386D9] border-t-transparent rounded-full animate-spin" />
             <p className="text-white text-lg">Verificando autenticación...</p>
           </div>
         </div>

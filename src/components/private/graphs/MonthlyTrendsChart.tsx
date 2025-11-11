@@ -17,7 +17,7 @@ interface MonthlyTrendsChartProps {
 const chartConfig = {
   visitors: {
     label: "Visitantes",
-    color: "#07D9D9",
+    color: "#0386D9",
   },
   appointments: {
     label: "Citas",
@@ -30,16 +30,28 @@ const chartConfig = {
 };
 
 export function MonthlyTrendsChart({ data }: MonthlyTrendsChartProps) {
+  // Verificar si todos los valores son 0
+  const hasData = data.some(
+    (item) => item.visitors > 0 || item.appointments > 0 || item.completedAppointments > 0
+  );
+
   return (
     <ChartContainer config={chartConfig} className="h-[300px] w-full">
-      <LineChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+      <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
         <CartesianGrid strokeDasharray="3 3" className="stroke-white/10" />
         <XAxis
           dataKey="month"
-          tick={{ fill: "#9CA3AF" }}
-          axisLine={{ stroke: "#374151" }}
+          tick={{ fill: "#E5E7EB", fontSize: 12 }}
+          axisLine={{ stroke: "#4B5563" }}
+          tickLine={{ stroke: "#4B5563" }}
         />
-        <YAxis tick={{ fill: "#9CA3AF" }} axisLine={{ stroke: "#374151" }} />
+        <YAxis
+          tick={{ fill: "#E5E7EB", fontSize: 12 }}
+          axisLine={{ stroke: "#4B5563" }}
+          tickLine={{ stroke: "#4B5563" }}
+          domain={hasData ? [0, 'auto'] : [0, 10]}
+          allowDataOverflow={false}
+        />
         <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend content={<ChartLegendContent />} />
         <Line

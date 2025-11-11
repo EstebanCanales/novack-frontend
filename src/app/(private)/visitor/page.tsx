@@ -79,7 +79,7 @@ export default function VisitorHistoryPage() {
             const completedAppointments = v.appointments.filter(
               (apt) =>
                 apt.check_out_time &&
-                (apt.status === "completado" || apt.archived === true)
+                apt.status === "checked_out"
             );
 
             if (completedAppointments.length > 0) {
@@ -96,7 +96,7 @@ export default function VisitorHistoryPage() {
           // Set appointment to the latest completed one for backward compatibility
           return {
             ...v,
-            appointment: latestCompletedAppointment,
+            appointment: latestCompletedAppointment || undefined,
           };
         })
         .filter((v) => v.appointment !== null); // Only keep visitors with completed appointments
@@ -184,10 +184,10 @@ export default function VisitorHistoryPage() {
   const exportToCSV = () => {
     const headers = ["Nombre", "Email", "Teléfono", "ID", "Check-in", "Check-out", "Duración", "Propósito"];
     const rows = filteredVisitors.map((v) => [
-      `${v.first_name} ${v.last_name}`,
+      v.name,
       v.email,
       v.phone,
-      v.id_number,
+      (v as { identification_number?: string }).identification_number || "",
       formatDateTime(v.appointment!.check_in_time).date + " " + formatDateTime(v.appointment!.check_in_time).time,
       formatDateTime(v.appointment!.check_out_time!).date + " " + formatDateTime(v.appointment!.check_out_time!).time,
       getVisitDuration(v.appointment!.check_in_time, v.appointment!.check_out_time!),
@@ -216,7 +216,7 @@ export default function VisitorHistoryPage() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
-          <div className="size-12 border-4 border-[#07D9D9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="size-12 border-4 border-[#0386D9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Cargando...</p>
         </div>
       </div>
@@ -257,7 +257,7 @@ export default function VisitorHistoryPage() {
           <div className="p-4 border-b border-white/10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <Users className="h-6 w-6 text-[#07D9D9]" />
+                <Users className="h-6 w-6 text-[#0386D9]" />
                 <div>
                   <h2 className="text-xl font-bold text-white">Historial de Visitantes</h2>
                   <p className="text-sm text-slate-400">
@@ -267,7 +267,7 @@ export default function VisitorHistoryPage() {
               </div>
               <Button
                 onClick={exportToCSV}
-                className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
                 disabled={filteredVisitors.length === 0}
               >
                 <Download className="h-4 w-4 mr-2" />
@@ -291,7 +291,7 @@ export default function VisitorHistoryPage() {
           <div className="flex-1 overflow-auto p-4">
             {loading ? (
               <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
               </div>
             ) : filteredVisitors.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
@@ -339,7 +339,7 @@ export default function VisitorHistoryPage() {
                           <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10 shrink-0">
                               <AvatarImage src={visitor.profile_image_url} />
-                              <AvatarFallback className="bg-[#07D9D9] text-black font-semibold">
+                              <AvatarFallback className="bg-[#0386D9] text-black font-semibold">
                                 {visitor.name?.split(" ")[0]?.[0]?.toUpperCase() || "V"}
                                 {visitor.name?.split(" ")[1]?.[0]?.toUpperCase() || ""}
                               </AvatarFallback>
@@ -357,11 +357,11 @@ export default function VisitorHistoryPage() {
                         <TableCell>
                           <div className="space-y-1">
                             <div className="flex items-center gap-2 text-sm text-slate-300">
-                              <Mail className="h-3 w-3 text-[#07D9D9]" />
+                              <Mail className="h-3 w-3 text-[#0386D9]" />
                               {visitor.email || "N/A"}
                             </div>
                             <div className="flex items-center gap-2 text-sm text-slate-300">
-                              <Phone className="h-3 w-3 text-[#07D9D9]" />
+                              <Phone className="h-3 w-3 text-[#0386D9]" />
                               {visitor.phone || "N/A"}
                             </div>
                           </div>
@@ -390,7 +390,7 @@ export default function VisitorHistoryPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge className="bg-[#07D9D9]/20 text-[#07D9D9] border-[#07D9D9]/30">
+                          <Badge className="bg-[#0386D9]/20 text-[#0386D9] border-[#0386D9]/30">
                             <Clock className="h-3 w-3 mr-1" />
                             {duration}
                           </Badge>
@@ -420,8 +420,8 @@ export default function VisitorHistoryPage() {
         <DialogContent className="bg-black/95 backdrop-blur-xl border border-white/10 text-white !max-w-[92vw] w-[92vw] max-h-[75vh] overflow-y-auto p-6">
           <DialogHeader className="border-b border-white/10 pb-4 mb-4">
             <DialogTitle className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="p-2 bg-[#07D9D9]/10 rounded-lg border border-[#07D9D9]/30">
-                <User className="h-5 w-5 text-[#07D9D9]" />
+              <div className="p-2 bg-[#0386D9]/10 rounded-lg border border-[#0386D9]/30">
+                <User className="h-5 w-5 text-[#0386D9]" />
               </div>
               Información Completa del Visitante
             </DialogTitle>
@@ -435,9 +435,9 @@ export default function VisitorHistoryPage() {
                 className="relative overflow-hidden"
               >
                 <div className="relative flex items-center gap-4 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl">
-                  <Avatar className="h-20 w-20 shrink-0 border-2 border-[#07D9D9]/40">
+                  <Avatar className="h-20 w-20 shrink-0 border-2 border-[#0386D9]/40">
                     <AvatarImage src={selectedVisitor.profile_image_url} className="object-cover" />
-                    <AvatarFallback className="bg-gradient-to-br from-[#07D9D9] to-[#05a7a7] text-black text-2xl font-bold">
+                    <AvatarFallback className="bg-gradient-to-br from-[#0386D9] to-[#05a7a7] text-black text-2xl font-bold">
                       {selectedVisitor.name?.split(" ")[0]?.[0]?.toUpperCase() || "V"}
                       {selectedVisitor.name?.split(" ")[1]?.[0]?.toUpperCase() || ""}
                     </AvatarFallback>
@@ -460,7 +460,7 @@ export default function VisitorHistoryPage() {
                           {selectedVisitor.state || "N/A"}
                         </Badge>
                         {selectedVisitor.appointment && (
-                          <Badge className="bg-[#07D9D9]/20 text-[#07D9D9] border-[#07D9D9]/30 text-xs px-2 py-1">
+                          <Badge className="bg-[#0386D9]/20 text-[#0386D9] border-[#0386D9]/30 text-xs px-2 py-1">
                             <Clock className="h-3 w-3 mr-1" />
                             {getVisitDuration(
                               selectedVisitor.appointment.check_in_time,
@@ -473,7 +473,7 @@ export default function VisitorHistoryPage() {
 
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2 p-2 bg-black/30 rounded-lg">
-                        <MapPin className="h-4 w-4 text-[#07D9D9]" />
+                        <MapPin className="h-4 w-4 text-[#0386D9]" />
                         <div>
                           <p className="text-xs text-slate-400">Ubicación</p>
                           <p className="text-sm font-medium text-white">
@@ -482,7 +482,7 @@ export default function VisitorHistoryPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 p-2 bg-black/30 rounded-lg">
-                        <Calendar className="h-4 w-4 text-[#07D9D9]" />
+                        <Calendar className="h-4 w-4 text-[#0386D9]" />
                         <div>
                           <p className="text-xs text-slate-400">Registrado</p>
                           <p className="text-sm font-medium text-white">
@@ -511,7 +511,7 @@ export default function VisitorHistoryPage() {
                   <div className="grid grid-cols-1 gap-2">
                   <div className="p-3 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg">
                     <div className="flex items-center gap-2 mb-1">
-                      <Mail className="h-4 w-4 text-[#07D9D9]" />
+                      <Mail className="h-4 w-4 text-[#0386D9]" />
                       <p className="text-xs text-slate-400 font-semibold">Email</p>
                     </div>
                     <p className="text-white text-sm font-medium break-all">{selectedVisitor.email || "N/A"}</p>
@@ -519,7 +519,7 @@ export default function VisitorHistoryPage() {
 
                   <div className="p-3 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg">
                     <div className="flex items-center gap-2 mb-1">
-                      <Phone className="h-4 w-4 text-[#07D9D9]" />
+                      <Phone className="h-4 w-4 text-[#0386D9]" />
                       <p className="text-xs text-slate-400 font-semibold">Teléfono</p>
                     </div>
                     <p className="text-white text-sm font-medium">{selectedVisitor.phone || "N/A"}</p>
@@ -527,7 +527,7 @@ export default function VisitorHistoryPage() {
 
                   <div className="p-3 bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-lg">
                     <div className="flex items-center gap-2 mb-1">
-                      <User className="h-4 w-4 text-[#07D9D9]" />
+                      <User className="h-4 w-4 text-[#0386D9]" />
                       <p className="text-xs text-slate-400 font-semibold">ID del Sistema</p>
                     </div>
                     <p className="text-white text-xs font-mono break-all">{selectedVisitor.id}</p>
@@ -613,28 +613,28 @@ export default function VisitorHistoryPage() {
                   </div>
 
                   {/* Additional Details */}
-                  {selectedVisitor.appointment.description && (
+                  {(selectedVisitor.appointment as { description?: string }).description && (
                     <div className="p-3 bg-gradient-to-br from-blue-500/5 to-transparent border border-blue-500/20 rounded-lg">
                       <div className="flex items-center gap-2 mb-1">
                         <Search className="h-3 w-3 text-blue-400" />
                         <p className="text-xs text-blue-400 font-semibold">Descripción</p>
                       </div>
-                      <p className="text-white text-sm leading-relaxed">{selectedVisitor.appointment.description}</p>
+                      <p className="text-white text-sm leading-relaxed">{(selectedVisitor.appointment as { description?: string }).description}</p>
                     </div>
                   )}
 
                   {selectedVisitor.appointment.host_employee && (
-                    <div className="p-3 bg-gradient-to-br from-[#07D9D9]/5 to-transparent border border-[#07D9D9]/20 rounded-lg">
+                    <div className="p-3 bg-gradient-to-br from-[#0386D9]/5 to-transparent border border-[#0386D9]/20 rounded-lg">
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-[#07D9D9]" />
+                        <User className="h-4 w-4 text-[#0386D9]" />
                         <div className="flex-1">
                           <p className="text-xs text-slate-400 font-semibold">Anfitrión</p>
                           <p className="text-white text-sm font-bold">
-                            {selectedVisitor.appointment.host_employee.first_name}{" "}
-                            {selectedVisitor.appointment.host_employee.last_name}
+                            {selectedVisitor.appointment.host_employee?.first_name || ""}{" "}
+                            {selectedVisitor.appointment.host_employee?.last_name || ""}
                           </p>
-                          <p className="text-[#07D9D9] text-xs">
-                            {selectedVisitor.appointment.host_employee.email}
+                          <p className="text-[#0386D9] text-xs">
+                            {selectedVisitor.appointment.host_employee?.email || ""}
                           </p>
                         </div>
                       </div>

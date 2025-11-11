@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -16,14 +17,12 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -55,6 +54,7 @@ export default function PublicFormPage() {
 
   useEffect(() => {
     loadForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   const loadForm = async () => {
@@ -63,8 +63,9 @@ export default function PublicFormPage() {
       const data = await formTemplateService.findBySlug(slug);
       setTemplate(data);
       buildFormSchema(data);
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Formulario no encontrado");
+    } catch (error: unknown) {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      setError(apiError?.response?.data?.message || "Formulario no encontrado");
     } finally {
       setLoading(false);
     }
@@ -98,7 +99,7 @@ export default function PublicFormPage() {
       }
 
       if (field.is_required) {
-        schemaShape[field.id] = fieldSchema.min(
+        schemaShape[field.id] = (fieldSchema as z.ZodString).min(
           1,
           `${field.label} es requerido`
         );
@@ -110,7 +111,7 @@ export default function PublicFormPage() {
     setFormSchema(z.object(schemaShape));
   };
 
-  const [formSchema, setFormSchema] = useState<z.ZodObject<any>>(
+  const [formSchema, setFormSchema] = useState<z.ZodObject<Record<string, z.ZodTypeAny>>>(
     z.object({
       visitor_name: z.string(),
       visitor_email: z.string(),
@@ -127,30 +128,44 @@ export default function PublicFormPage() {
     },
   });
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: Record<string, unknown>) => {
     if (!template) return;
 
     try {
       setSubmitting(true);
 
-      const answers = template.fields.map((field) => ({
-        field_id: field.id,
-        value: values[field.id] || "",
-      }));
+      const answers = template.fields.map((field) => {
+        const fieldValue = values[field.id];
+        let convertedValue: string | number | boolean | null | undefined;
+        
+        if (fieldValue === null || fieldValue === undefined) {
+          convertedValue = undefined;
+        } else if (typeof fieldValue === "string" || typeof fieldValue === "number" || typeof fieldValue === "boolean") {
+          convertedValue = fieldValue;
+        } else {
+          convertedValue = String(fieldValue);
+        }
+        
+        return {
+          field_id: field.id,
+          value: convertedValue,
+        };
+      });
 
       const submitData: SubmitFormDto = {
-        visitor_name: values.visitor_name,
-        visitor_email: values.visitor_email,
-        visitor_phone: values.visitor_phone,
-        visitor_company: values.visitor_company,
+        visitor_name: String(values.visitor_name || ""),
+        visitor_email: String(values.visitor_email || ""),
+        visitor_phone: values.visitor_phone ? String(values.visitor_phone) : undefined,
+        visitor_company: values.visitor_company ? String(values.visitor_company) : undefined,
         answers,
       };
 
       await formSubmissionService.submit(slug, submitData);
       setSubmitted(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error submitting form:", error);
-      alert(error.response?.data?.message || "Error al enviar formulario");
+      const apiError = error as { response?: { data?: { message?: string } } };
+      alert(apiError?.response?.data?.message || "Error al enviar formulario");
     } finally {
       setSubmitting(false);
     }
@@ -397,7 +412,7 @@ export default function PublicFormPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-[#07D9D9] mx-auto mb-4" />
+          <Loader2 className="h-12 w-12 animate-spin text-[#0386D9] mx-auto mb-4" />
           <p className="text-slate-400">Cargando formulario...</p>
         </div>
       </div>
@@ -415,7 +430,7 @@ export default function PublicFormPage() {
             <p className="text-slate-400 mb-4">{error}</p>
             <Button
               onClick={() => router.push("/")}
-              className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+              className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Volver al inicio
@@ -444,7 +459,7 @@ export default function PublicFormPage() {
             </p>
             <Button
               onClick={() => router.push("/")}
-              className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+              className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
             >
               Volver al inicio
             </Button>
@@ -462,12 +477,12 @@ export default function PublicFormPage() {
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#07D9D9] to-[#0596A6] shadow-lg">
-              <img src="/favicon.ico" alt="Novack" className="size-10" />
+            <div className="flex size-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#0386D9] to-[#0596A6] shadow-lg">
+              <Image src="/favicon.ico" alt="Novack" width={40} height={40} className="size-10" />
             </div>
             <div>
               <div className="text-sm font-bold text-white">Novack</div>
-              <div className="text-xs text-[#07D9D9]">Security Platform</div>
+              <div className="text-xs text-[#0386D9]">Security Platform</div>
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white">{template.name}</h1>
@@ -588,7 +603,7 @@ export default function PublicFormPage() {
                   <Button
                     type="submit"
                     disabled={submitting}
-                    className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black px-8"
+                    className="bg-[#0386D9] hover:bg-[#0270BE] text-black px-8"
                   >
                     {submitting ? (
                       <>

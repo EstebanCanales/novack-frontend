@@ -148,7 +148,7 @@ export default function FormsPage() {
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <FileText className="h-6 w-6 text-[#07D9D9]" />
+              <FileText className="h-6 w-6 text-[#0386D9]" />
               <div>
                 <h2 className="text-xl font-bold text-white">Formularios</h2>
                 <p className="text-sm text-slate-400">
@@ -158,7 +158,7 @@ export default function FormsPage() {
             </div>
             <Button
               onClick={() => router.push('/forms/new')}
-              className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+              className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
             >
               <Plus className="h-4 w-4 mr-2" />
               Nuevo Formulario
@@ -170,7 +170,7 @@ export default function FormsPage() {
         <div className="flex-1 overflow-auto p-4">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
             </div>
           ) : forms.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
@@ -179,7 +179,7 @@ export default function FormsPage() {
               <p className="text-slate-400 mb-6">Crea tu primer formulario para comenzar</p>
               <Button
                 onClick={() => router.push('/forms/new')}
-                className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black"
+                className="bg-[#0386D9] hover:bg-[#0270BE] text-black"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Crear Formulario
@@ -204,7 +204,7 @@ export default function FormsPage() {
                       {form.name}
                     </TableCell>
                     <TableCell>
-                      <code className="text-sm text-[#07D9D9] bg-white/5 px-2 py-1 rounded">
+                      <code className="text-sm text-[#0386D9] bg-white/5 px-2 py-1 rounded">
                         {form.slug}
                       </code>
                     </TableCell>

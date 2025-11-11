@@ -21,7 +21,6 @@ import {
   Upload,
   Calendar,
   Award,
-  ArrowLeft,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -38,21 +37,15 @@ import {
 } from "@/components/ui/breadcrumb";
 
 const supplierSchema = z.object({
-  company_name: z
+  supplier_name: z
     .string()
-    .min(2, "El nombre de la empresa debe tener al menos 2 caracteres"),
-  contact_name: z
-    .string()
-    .min(2, "El nombre de contacto debe tener al menos 2 caracteres"),
+    .min(2, "El nombre del proveedor debe tener al menos 2 caracteres"),
   contact_email: z.string().email("Email inválido"),
-  contact_phone: z
+  phone_number: z
     .string()
     .min(10, "El teléfono debe tener al menos 10 dígitos"),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  postal_code: z.string().optional(),
-  country: z.string().optional(),
+  address: z.string().min(1, "La dirección es requerida"),
+  description: z.string().optional(),
 });
 
 type SupplierFormData = z.infer<typeof supplierSchema>;
@@ -91,15 +84,11 @@ export default function SupplierProfilePage() {
       const data = await supplierService.getById(user.supplier.id);
       setSupplier(data);
       reset({
-        company_name: data.company_name,
-        contact_name: data.contact_name,
-        contact_email: data.contact_email,
-        contact_phone: data.contact_phone || "",
+        supplier_name: data.supplier_name || "",
+        contact_email: data.contact_email || "",
+        phone_number: data.phone_number || "",
         address: data.address || "",
-        city: data.city || "",
-        state: data.state || "",
-        postal_code: data.postal_code || "",
-        country: data.country || "",
+        description: data.description || "",
       });
     } catch (error) {
       handleApiError(error, "Error al cargar información del proveedor");
@@ -165,7 +154,7 @@ export default function SupplierProfilePage() {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#07D9D9]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
           <p className="text-white text-lg">Cargando perfil...</p>
         </div>
       </div>
@@ -193,14 +182,6 @@ export default function SupplierProfilePage() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Gestión</BreadcrumbPage>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Proveedores</BreadcrumbPage>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
                 <BreadcrumbPage>Perfil del Proveedor</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -225,7 +206,7 @@ export default function SupplierProfilePage() {
             {!isEditing && (
               <Button
                 onClick={() => setIsEditing(true)}
-                className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black font-semibold"
+                className="bg-[#0386D9] hover:bg-[#0270BE] text-black font-semibold"
               >
                 <Save className="w-4 h-4 mr-2" />
                 Editar Perfil
@@ -243,35 +224,35 @@ export default function SupplierProfilePage() {
           <Card className="bg-white/5 border-white/10">
             <CardContent className="p-4">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                <Avatar className="h-24 w-24 border-2 border-[#07D9D9]/30">
+                <Avatar className="h-24 w-24 border-2 border-[#0386D9]/30">
                   <AvatarImage src={imagePreview || supplier.logo_url || ""} />
-                  <AvatarFallback className="bg-[#07D9D9] text-black text-2xl font-bold">
-                    {(supplier.company_name || supplier.supplier_name)[0]}
+                  <AvatarFallback className="bg-[#0386D9] text-black text-2xl font-bold">
+                    {supplier.supplier_name[0]}
                   </AvatarFallback>
                 </Avatar>
 
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className="text-2xl font-bold text-white">
-                      {supplier.company_name || supplier.supplier_name}
+                      {supplier.supplier_name}
                     </h2>
-                    <Badge className="bg-[#07D9D9]/20 text-[#07D9D9] border-[#07D9D9]/30">
+                    <Badge className="bg-[#0386D9]/20 text-[#0386D9] border-[#0386D9]/30">
                       Free
                     </Badge>
                   </div>
                   <div className="space-y-1 text-white">
                     <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-[#07D9D9]" />
-                      <span>{supplier.contact_name}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-[#07D9D9]" />
+                      <Mail className="w-4 h-4 text-[#0386D9]" />
                       <span>{supplier.contact_email}</span>
                     </div>
-                    {supplier.contact_phone && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-[#0386D9]" />
+                      <span>{supplier.phone_number}</span>
+                    </div>
+                    {supplier.address && (
                       <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-[#07D9D9]" />
-                        <span>{supplier.contact_phone}</span>
+                        <MapPin className="w-4 h-4 text-[#0386D9]" />
+                        <span>{supplier.address}</span>
                       </div>
                     )}
                   </div>
@@ -280,7 +261,7 @@ export default function SupplierProfilePage() {
                     <div className="mt-4">
                       <Label
                         htmlFor="logo"
-                        className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#07D9D9]/10 hover:bg-[#07D9D9]/20 text-[#07D9D9] rounded-lg border border-[#07D9D9]/30 transition-all"
+                        className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-[#0386D9]/10 hover:bg-[#0386D9]/20 text-[#0386D9] rounded-lg border border-[#0386D9]/30 transition-all"
                       >
                         <Upload className="w-4 h-4" />
                         Cambiar Logo
@@ -299,7 +280,7 @@ export default function SupplierProfilePage() {
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-white/5 rounded-lg border border-white/10">
-                    <Calendar className="w-6 h-6 text-[#07D9D9] mx-auto mb-2" />
+                    <Calendar className="w-6 h-6 text-[#0386D9] mx-auto mb-2" />
                     <p className="text-xs text-slate-400">Miembro desde</p>
                     <p className="text-sm font-semibold text-white">
                       {new Date(supplier.created_at).toLocaleDateString(
@@ -309,7 +290,7 @@ export default function SupplierProfilePage() {
                     </p>
                   </div>
                   <div className="text-center p-4 bg-white/5 rounded-lg border border-white/10">
-                    <Award className="w-6 h-6 text-[#07D9D9] mx-auto mb-2" />
+                    <Award className="w-6 h-6 text-[#0386D9] mx-auto mb-2" />
                     <p className="text-xs text-slate-400">Plan</p>
                     <p className="text-sm font-semibold text-white">Free</p>
                   </div>
@@ -336,23 +317,23 @@ export default function SupplierProfilePage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {/* Información de la Empresa */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                       <Building className="w-5 h-5" />
                       Datos de la Empresa
                     </h3>
 
                     <div className="space-y-2">
-                      <Label htmlFor="company_name" className="text-white">
-                        Nombre de la Empresa *
+                      <Label htmlFor="supplier_name" className="text-white">
+                        Nombre del Proveedor *
                       </Label>
                       <Input
-                        id="company_name"
-                        {...register("company_name")}
+                        id="supplier_name"
+                        {...register("supplier_name")}
                         className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       />
-                      {errors.company_name && (
+                      {errors.supplier_name && (
                         <p className="text-red-400 text-sm">
-                          {errors.company_name.message}
+                          {errors.supplier_name.message}
                         </p>
                       )}
                     </div>
@@ -360,130 +341,80 @@ export default function SupplierProfilePage() {
 
                   {/* Información de Contacto */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                       <User className="w-5 h-5" />
                       Datos de Contacto
                     </h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="contact_name" className="text-white">
-                          Nombre de Contacto *
+                        <Label htmlFor="contact_email" className="text-white">
+                          Email de Contacto *
                         </Label>
                         <Input
-                          id="contact_name"
-                          {...register("contact_name")}
+                          id="contact_email"
+                          type="email"
+                          {...register("contact_email")}
                           className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
-                        {errors.contact_name && (
+                        {errors.contact_email && (
                           <p className="text-red-400 text-sm">
-                            {errors.contact_name.message}
+                            {errors.contact_email.message}
                           </p>
                         )}
                       </div>
 
                       <div className="space-y-2">
-                        <Label
-                          htmlFor="contact_phone"
-                          className="text-white"
-                        >
+                        <Label htmlFor="phone_number" className="text-white">
                           Teléfono *
                         </Label>
                         <Input
-                          id="contact_phone"
-                          {...register("contact_phone")}
+                          id="phone_number"
+                          {...register("phone_number")}
                           className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                         />
-                        {errors.contact_phone && (
+                        {errors.phone_number && (
                           <p className="text-red-400 text-sm">
-                            {errors.contact_phone.message}
+                            {errors.phone_number.message}
                           </p>
                         )}
                       </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="contact_email" className="text-white">
-                        Email de Contacto *
-                      </Label>
-                      <Input
-                        id="contact_email"
-                        type="email"
-                        {...register("contact_email")}
-                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
-                      />
-                      {errors.contact_email && (
-                        <p className="text-red-400 text-sm">
-                          {errors.contact_email.message}
-                        </p>
-                      )}
                     </div>
                   </div>
 
                   {/* Dirección */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-[#07D9D9] flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-[#0386D9] flex items-center gap-2">
                       <MapPin className="w-5 h-5" />
                       Ubicación
                     </h3>
 
                     <div className="space-y-2">
                       <Label htmlFor="address" className="text-white">
-                        Dirección
+                        Dirección *
                       </Label>
                       <Input
                         id="address"
                         {...register("address")}
                         className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
                       />
+                      {errors.address && (
+                        <p className="text-red-400 text-sm">
+                          {errors.address.message}
+                        </p>
+                      )}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="city" className="text-white">
-                          Ciudad
-                        </Label>
-                        <Input
-                          id="city"
-                          {...register("city")}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="state" className="text-white">
-                          Estado/Provincia
-                        </Label>
-                        <Input
-                          id="state"
-                          {...register("state")}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="postal_code" className="text-white">
-                          Código Postal
-                        </Label>
-                        <Input
-                          id="postal_code"
-                          {...register("postal_code")}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="country" className="text-white">
-                          País
-                        </Label>
-                        <Input
-                          id="country"
-                          {...register("country")}
-                          className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="description" className="text-white">
+                        Descripción
+                      </Label>
+                      <Input
+                        id="description"
+                        {...register("description")}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-slate-500"
+                        placeholder="Describe tu empresa..."
+                      />
                     </div>
                   </div>
 
@@ -505,7 +436,7 @@ export default function SupplierProfilePage() {
                         </Button>
                         <Button
                           type="submit"
-                          className="bg-[#07D9D9] hover:bg-[#06b8b8] text-black font-semibold"
+                          className="bg-[#0386D9] hover:bg-[#0270BE] text-black font-semibold"
                           disabled={isSubmitting}
                         >
                           {isSubmitting ? (
