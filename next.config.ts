@@ -1,15 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async rewrites() {
-    const backend = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${backend}/:path*`,
-      },
-    ];
-  },
+  // Los rewrites ya no son necesarios porque usamos API routes como proxy
+  // Esto soluciona problemas de CORS y hace el proxy más robusto en Vercel
 };
 
 export default nextConfig;
