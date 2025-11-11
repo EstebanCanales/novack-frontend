@@ -3,6 +3,7 @@
   "workspaces": {
     "": {
       "dependencies": {
+        "": ".",
         "@auth/core": "^0.41.1",
         "@auth/prisma-adapter": "^2.11.1",
         "@googlemaps/react-wrapper": "^1.2.0",
@@ -74,6 +75,8 @@
     },
   },
   "packages": {
+    "": ["@root:", {}],
+
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
 
     "@ampproject/remapping": ["@ampproject/remapping@2.3.0", "", { "dependencies": { "@jridgewell/gen-mapping": "^0.3.5", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw=="],

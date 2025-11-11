@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Eye, Calendar, CheckCircle, XCircle, Clock, Filter, Home, FileCheck } from 'lucide-react';
 import { formSubmissionService, formTemplateService } from '@/lib/services/form.service';
@@ -73,7 +73,7 @@ const statusConfig = {
   },
 };
 
-export default function SubmissionsPage() {
+function SubmissionsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -678,5 +678,17 @@ export default function SubmissionsPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+export default function SubmissionsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-700 border-t-[#0386D9]"></div>
+      </div>
+    }>
+      <SubmissionsContent />
+    </Suspense>
   );
 }

@@ -67,7 +67,8 @@ class UserPreferenceService {
 
   async getGraphsLayout(): Promise<GraphLayout | null> {
     const preference = await this.getByType(PreferenceType.GRAPHS_LAYOUT);
-    return preference?.preference_value as GraphLayout | null;
+    if (!preference) return null;
+    return preference.preference_value as unknown as GraphLayout;
   }
 }
 
