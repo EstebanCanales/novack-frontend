@@ -21,8 +21,8 @@ function getBaseURL() {
     
     // Si estamos en producción pero no tenemos la URL correcta,
     // intentar inferirla o usar un fallback
-    // IMPORTANTE: Reemplaza esta URL con tu URL real de Railway
-    return buildTimeUrl || 'https://novack-backend.railway.app';
+    // IMPORTANTE: URL correcta de Railway
+    return buildTimeUrl || 'https://novack-backend-production.up.railway.app';
   }
   
   // En el servidor (build time o SSR)

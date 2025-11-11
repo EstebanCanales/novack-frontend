@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
                 return 'http://localhost:4000';
               }
             }
-            return url || 'https://novack-backend.railway.app';
+            return url || 'https://novack-backend-production.up.railway.app';
           };
 
           const response = await fetch(
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
                 return 'http://localhost:4000';
               }
             }
-            return url || 'https://novack-backend.railway.app';
+            return url || 'https://novack-backend-production.up.railway.app';
           };
 
           const response = await fetch(
