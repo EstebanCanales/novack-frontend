@@ -48,7 +48,7 @@ async function createEmployee(payload: EmployeeData) {
     position: payload.position || undefined,
     department: payload.department || undefined,
   };
-  const { data } = await api.post("/employees/public/register", body);
+  const { data } = await api.post("/employees/public", body);
   return data as { id: string };
 }
 

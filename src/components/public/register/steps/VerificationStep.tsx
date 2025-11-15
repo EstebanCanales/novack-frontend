@@ -124,7 +124,7 @@ export function VerificationStep({
     const payload =
       method === "sms"
         ? {
-            employee_id: employeeId,
+            // En registro público, no hay employee_id todavía
             employee_email: employeeEmail,
             otp: submitted,
           }
