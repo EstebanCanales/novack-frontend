@@ -131,6 +131,16 @@ class AppointmentService {
     const response = await api.post<{ archived: number }>("/appointments/archive-old", null, { params });
     return response.data;
   }
+
+  async archiveAppointment(id: string): Promise<Appointment> {
+    const response = await api.patch<Appointment>(`/appointments/${id}/archive`);
+    return response.data;
+  }
+
+  async unarchiveAppointment(id: string): Promise<Appointment> {
+    const response = await api.patch<Appointment>(`/appointments/${id}/unarchive`);
+    return response.data;
+  }
 }
 
 export const appointmentService = new AppointmentService();

@@ -25,6 +25,8 @@ import {
   XCircle,
   Mail,
   Home,
+  Archive,
+  ArchiveRestore,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -186,6 +188,58 @@ export default function MeetingDetailPage() {
         e?.response?.data?.message ||
         e?.message ||
         "Error al realizar el check-out";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleArchive = async (appointmentId: string) => {
+    try {
+      await appointmentService.archiveAppointment(appointmentId);
+      toast.success("Cita archivada exitosamente");
+
+      // Remove from active list
+      setAppointments((prev) => prev.filter((apt) => apt.id !== appointmentId));
+      
+      // Clear selection if this appointment was selected
+      if (selectedAppointment?.id === appointmentId) {
+        setSelectedAppointment(null);
+      }
+    } catch (error) {
+      type ErrorWithResponse = {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const e = error as ErrorWithResponse;
+      const errorMessage =
+        e?.response?.data?.message ||
+        e?.message ||
+        "Error al archivar cita";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleUnarchive = async (appointmentId: string) => {
+    try {
+      await appointmentService.unarchiveAppointment(appointmentId);
+      toast.success("Cita restaurada exitosamente");
+
+      // Remove from archived list
+      setAppointments((prev) => prev.filter((apt) => apt.id !== appointmentId));
+      
+      // Clear selection if this appointment was selected
+      if (selectedAppointment?.id === appointmentId) {
+        setSelectedAppointment(null);
+      }
+    } catch (error) {
+      type ErrorWithResponse = {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      const e = error as ErrorWithResponse;
+      const errorMessage =
+        e?.response?.data?.message ||
+        e?.message ||
+        "Error al restaurar cita";
       toast.error(errorMessage);
     }
   };
@@ -654,6 +708,26 @@ export default function MeetingDetailPage() {
                   >
                     <XCircle className="size-3 mr-1.5" />
                     Check-out
+                  </Button>
+                )}
+
+                {selectedAppointment.status === "completado" && viewMode === "active" && (
+                  <Button
+                    onClick={() => handleArchive(selectedAppointment.id)}
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs h-9"
+                  >
+                    <Archive className="size-3 mr-1.5" />
+                    Archivar
+                  </Button>
+                )}
+
+                {viewMode === "archived" && (
+                  <Button
+                    onClick={() => handleUnarchive(selectedAppointment.id)}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs h-9"
+                  >
+                    <ArchiveRestore className="size-3 mr-1.5" />
+                    Restaurar
                   </Button>
                 )}
               </div>
