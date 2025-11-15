@@ -13,15 +13,13 @@ export default async function VisitorLayout({
   children: React.ReactNode;
 }>) {
   console.log("🔍 [VISITOR LAYOUT] Renderizando layout");
+  console.log("🔍 [VISITOR LAYOUT] Renderizando children");
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full bg-black">
         <AppSidebar />
         <SidebarInset>
-          <div className="h-full">
-            {console.log("🔍 [VISITOR LAYOUT] Renderizando children")}
-            {children}
-          </div>
+          <div className="h-full">{children}</div>
         </SidebarInset>
       </div>
     </SidebarProvider>

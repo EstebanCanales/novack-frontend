@@ -152,7 +152,7 @@ export default function VisitorHistoryPage() {
       console.log("✅ [VISITOR PAGE] Loading finalizado, setLoading(false)");
       setLoading(false);
     }
-  }, [user?.supplier?.id]);
+  }, [user]);
 
   useEffect(() => {
     console.log("🔍 [VISITOR PAGE] useEffect loadVisitors:", {
