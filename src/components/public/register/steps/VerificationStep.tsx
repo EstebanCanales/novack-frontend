@@ -29,6 +29,7 @@ export function VerificationStep({
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [isResending, setIsResending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false); // Prevenir múltiples envíos
   const [code, setCode] = useState("");
   const [method, setMethod] = useState<"sms" | "email">("sms");
 
@@ -111,6 +112,11 @@ export function VerificationStep({
   };
 
   const onSubmit = async (data: { verification_code: string }) => {
+    // Prevenir múltiples envíos simultáneos
+    if (isVerifying) {
+      return;
+    }
+    
     const submitted = (data.verification_code || code || "").replace(/\D/g, "");
     if (submitted.length !== 6) {
       alert("Código inválido. Debe tener 6 dígitos");
@@ -121,50 +127,56 @@ export function VerificationStep({
       return;
     }
     
-    // Normalizar el email igual que el backend (trim + toLowerCase)
-    const normalizedEmail = employeeEmail?.trim().toLowerCase();
+    setIsVerifying(true);
     
-    const endpoint =
-      method === "sms"
-        ? `/api/2fa/sms/public/verify`
-        : `/api/2fa/email/public/verify`;
-    const payload =
-      method === "sms"
-        ? {
-            // En registro público, no hay employee_id todavía
-            employee_email: normalizedEmail,
-            otp: submitted,
-          }
-        : {
-            employee_email: normalizedEmail,
-            otp: submitted,
-          };
-
-    let res: Response;
     try {
-      res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "No se pudo conectar con el servidor. Verifica tu conexión.";
-      alert(errorMessage);
-      return;
-    }
-    if (!res.ok) {
-      const text = await res.text();
-      alert(text || "No se pudo verificar el código");
-      return;
-    }
-    const json = await res.json();
-    if (json?.verified) {
-      onNext(submitted);
-    } else {
-      alert("Código inválido");
+      // Normalizar el email igual que el backend (trim + toLowerCase)
+      const normalizedEmail = employeeEmail?.trim().toLowerCase();
+      
+      const endpoint =
+        method === "sms"
+          ? `/api/2fa/sms/public/verify`
+          : `/api/2fa/email/public/verify`;
+      const payload =
+        method === "sms"
+          ? {
+              // En registro público, no hay employee_id todavía
+              employee_email: normalizedEmail,
+              otp: submitted,
+            }
+          : {
+              employee_email: normalizedEmail,
+              otp: submitted,
+            };
+
+      let res: Response;
+      try {
+        res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : "No se pudo conectar con el servidor. Verifica tu conexión.";
+        alert(errorMessage);
+        return;
+      }
+      if (!res.ok) {
+        const text = await res.text();
+        alert(text || "No se pudo verificar el código");
+        return;
+      }
+      const json = await res.json();
+      if (json?.verified) {
+        onNext(submitted);
+      } else {
+        alert("Código inválido");
+      }
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -353,9 +365,17 @@ export function VerificationStep({
               <div className="flex-1">
                 <Button
                   type="submit"
+                  disabled={isVerifying}
                   className="w-full rounded-xl h-12 text-base font-semibold shadow-[0_10px_30px_rgba(7,217,217,0.25)]"
                 >
-                  Verificar
+                  {isVerifying ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Verificando...
+                    </>
+                  ) : (
+                    "Verificar"
+                  )}
                 </Button>
               </div>
             </div>
