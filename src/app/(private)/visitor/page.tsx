@@ -64,7 +64,10 @@ export default function VisitorHistoryPage() {
   }, [isAuthenticated, authLoading, router]);
 
   const loadVisitors = useCallback(async () => {
-    if (!user?.supplier?.id) return;
+    if (!user?.supplier?.id) {
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const allVisitors = await visitorService.getBySupplier(user.supplier.id);
@@ -212,12 +215,29 @@ export default function VisitorHistoryPage() {
     setDetailsOpen(true);
   };
 
-  if (authLoading) {
+  if (authLoading || loading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="size-12 border-4 border-[#0386D9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user?.supplier?.id) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <Users className="size-16 text-slate-600 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">Sin Proveedor Asignado</h3>
+          <p className="text-slate-400 mb-4">
+            Tu cuenta no está asociada a ningún proveedor.
+          </p>
+          <Button onClick={() => router.push("/home")} variant="outline">
+            Volver al Inicio
+          </Button>
         </div>
       </div>
     );
