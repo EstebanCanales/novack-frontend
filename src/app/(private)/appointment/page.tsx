@@ -165,10 +165,13 @@ export default function MeetingDetailPage() {
   };
 
   const handleCheckOut = async (appointmentId: string) => {
+    console.log("🔍 [APPOINTMENT] Iniciando checkout:", appointmentId);
     try {
+      console.log("📡 [APPOINTMENT] Llamando a appointmentService.checkOut...");
       const updatedAppointment = await appointmentService.checkOut(
         appointmentId
       );
+      console.log("✅ [APPOINTMENT] Checkout exitoso:", updatedAppointment);
       toast.success("Check-out realizado exitosamente");
 
       // Update both the list and selected appointment
@@ -179,6 +182,7 @@ export default function MeetingDetailPage() {
         setSelectedAppointment(updatedAppointment);
       }
     } catch (error) {
+      console.error("❌ [APPOINTMENT] Error en checkout:", error);
       type ErrorWithResponse = {
         response?: { data?: { message?: string } };
         message?: string;
@@ -188,6 +192,7 @@ export default function MeetingDetailPage() {
         e?.response?.data?.message ||
         e?.message ||
         "Error al realizar el check-out";
+      console.error("❌ [APPOINTMENT] Mensaje de error:", errorMessage);
       toast.error(errorMessage);
     }
   };
