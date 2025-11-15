@@ -51,6 +51,13 @@ export default function VisitorHistoryPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();
 
+  console.log("🔍 [VISITOR PAGE] Estado inicial:", {
+    user,
+    isAuthenticated,
+    authLoading,
+    supplier_id: user?.supplier?.id,
+  });
+
   const [visitors, setVisitors] = useState<Visitor[]>([]);
   const [selectedVisitor, setSelectedVisitor] = useState<Visitor | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,19 +65,35 @@ export default function VisitorHistoryPage() {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
+    console.log("🔍 [VISITOR PAGE] useEffect auth check:", {
+      authLoading,
+      isAuthenticated,
+    });
     if (!authLoading && !isAuthenticated) {
+      console.log("⚠️ [VISITOR PAGE] Redirigiendo a login - no autenticado");
       router.push("/login");
     }
   }, [isAuthenticated, authLoading, router]);
 
   const loadVisitors = useCallback(async () => {
+    console.log("🔍 [VISITOR PAGE] loadVisitors iniciado:", {
+      hasUser: !!user,
+      supplierId: user?.supplier?.id,
+    });
+    
     if (!user?.supplier?.id) {
+      console.log("⚠️ [VISITOR PAGE] Sin supplier_id, seteando loading a false");
       setLoading(false);
       return;
     }
     try {
+      console.log("📡 [VISITOR PAGE] Llamando a visitorService.getBySupplier...");
       setLoading(true);
       const allVisitors = await visitorService.getBySupplier(user.supplier.id);
+      console.log("✅ [VISITOR PAGE] Visitantes obtenidos:", {
+        count: allVisitors.length,
+        visitors: allVisitors,
+      });
 
       // Process visitors and get their latest completed/archived appointment
       const visitorsWithCompletedAppointments = allVisitors
@@ -113,21 +136,32 @@ export default function VisitorHistoryPage() {
         return dateB - dateA;
       });
 
+      console.log("✅ [VISITOR PAGE] Visitantes procesados:", {
+        total: allVisitors.length,
+        withCompleted: visitorsWithCompletedAppointments.length,
+      });
       setVisitors(visitorsWithCompletedAppointments);
     } catch (error) {
-      console.error("Error al cargar visitantes:", error);
+      console.error("❌ [VISITOR PAGE] Error al cargar visitantes:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Error desconocido";
       toast.error("Error al cargar el historial de visitantes", {
         description: errorMessage,
       });
     } finally {
+      console.log("✅ [VISITOR PAGE] Loading finalizado, setLoading(false)");
       setLoading(false);
     }
   }, [user?.supplier?.id]);
 
   useEffect(() => {
+    console.log("🔍 [VISITOR PAGE] useEffect loadVisitors:", {
+      isAuthenticated,
+      hasUser: !!user,
+      supplierId: user?.supplier?.id,
+    });
     if (isAuthenticated && user) {
+      console.log("📞 [VISITOR PAGE] Llamando a loadVisitors()");
       loadVisitors();
     }
   }, [isAuthenticated, user, loadVisitors]);
@@ -215,18 +249,31 @@ export default function VisitorHistoryPage() {
     setDetailsOpen(true);
   };
 
+  console.log("🎨 [VISITOR PAGE] Renderizado:", {
+    authLoading,
+    loading,
+    hasUser: !!user,
+    supplierId: user?.supplier?.id,
+    visitorsCount: visitors.length,
+  });
+
   if (authLoading || loading) {
+    console.log("⏳ [VISITOR PAGE] Mostrando pantalla de carga");
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <div className="size-12 border-4 border-[#0386D9] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400">Cargando...</p>
+          <p className="text-slate-600 text-xs mt-2">
+            authLoading: {String(authLoading)}, loading: {String(loading)}
+          </p>
         </div>
       </div>
     );
   }
 
   if (!user?.supplier?.id) {
+    console.log("⚠️ [VISITOR PAGE] Mostrando mensaje de sin proveedor");
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
@@ -234,6 +281,9 @@ export default function VisitorHistoryPage() {
           <h3 className="text-xl font-semibold text-white mb-2">Sin Proveedor Asignado</h3>
           <p className="text-slate-400 mb-4">
             Tu cuenta no está asociada a ningún proveedor.
+          </p>
+          <p className="text-slate-600 text-xs mb-4">
+            User: {user?.email || "No user"} | Supplier ID: {user?.supplier?.id || "undefined"}
           </p>
           <Button onClick={() => router.push("/home")} variant="outline">
             Volver al Inicio
@@ -243,6 +293,7 @@ export default function VisitorHistoryPage() {
     );
   }
 
+  console.log("✅ [VISITOR PAGE] Renderizando contenido principal");
   return (
     <div className="flex flex-col h-full p-3 pl-2 overflow-hidden">
       <div className="flex-1 overflow-auto space-y-3">
