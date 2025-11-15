@@ -30,7 +30,7 @@ async function handleProxy(request: NextRequest, method: string) {
     if (method !== 'GET' && method !== 'HEAD') {
       try {
         body = await request.text();
-      } catch (e) {
+      } catch {
         // No hay body, está bien
       }
     }
