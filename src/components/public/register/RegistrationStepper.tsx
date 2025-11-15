@@ -40,7 +40,7 @@ async function createEmployee(payload: EmployeeData) {
   const body = {
     first_name: payload.first_name,
     last_name: payload.last_name,
-    email: payload.email,
+    email: payload.email.trim().toLowerCase(), // Normalizar email
     password: payload.password,
     supplier_id: payload.supplier_id,
     is_creator: !!payload.is_creator,
@@ -74,7 +74,9 @@ export default function RegistrationStepper() {
 
   async function loginAndGoHome(email: string, password: string) {
     try {
-      const { data } = await api.post("/auth/login", { email, password });
+      // Normalizar email para login
+      const normalizedEmail = email.trim().toLowerCase();
+      const { data } = await api.post("/auth/login", { email: normalizedEmail, password });
 
       if (data.access_token && data.employee) {
         login(data.access_token, data.refresh_token || "", data.employee);
@@ -134,17 +136,18 @@ export default function RegistrationStepper() {
     // Crear en DB y luego login + redirect
     try {
       if (registrationData.employee.is_creator && registrationData.supplier) {
+        // Normalizar emails
+        const normalizedEmail = registrationData.employee.email.trim().toLowerCase();
         await createSupplier({
           ...registrationData.supplier,
           contact_email:
-            registrationData.supplier.contact_email ||
-            registrationData.employee.email,
+            (registrationData.supplier.contact_email || normalizedEmail).trim().toLowerCase(),
           supplier_creator:
             `${registrationData.employee.first_name} ${registrationData.employee.last_name}`.trim(),
         });
         // Backend crea el usuario creador automáticamente con password temporal; aquí usamos la del registro
         await loginAndGoHome(
-          registrationData.employee.email,
+          normalizedEmail,
           registrationData.employee.password
         );
         return;

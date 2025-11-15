@@ -65,13 +65,16 @@ export function VerificationStep({
       if (!employeeId && !employeeEmail) {
         await new Promise((resolve) => setTimeout(resolve, 1200));
       } else {
+        // Normalizar el email igual que el backend (trim + toLowerCase)
+        const normalizedEmail = employeeEmail?.trim().toLowerCase();
+        
         if (method === "sms") {
           const res = await fetch(`/api/2fa/sms/public/initiate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               employee_id: employeeId,
-              employee_email: employeeEmail,
+              employee_email: normalizedEmail,
               phone_number: phone.replace(/\s/g, ""),
             }),
           });
@@ -82,14 +85,14 @@ export function VerificationStep({
             );
           }
         } else {
-          if (!employeeEmail) {
+          if (!normalizedEmail) {
             throw new Error("Email requerido para verificación por correo");
           }
           const res = await fetch(`/api/2fa/email/public/initiate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              employee_email: employeeEmail,
+              employee_email: normalizedEmail,
             }),
           });
           if (!res.ok) {
@@ -117,6 +120,10 @@ export function VerificationStep({
       onNext(submitted);
       return;
     }
+    
+    // Normalizar el email igual que el backend (trim + toLowerCase)
+    const normalizedEmail = employeeEmail?.trim().toLowerCase();
+    
     const endpoint =
       method === "sms"
         ? `/api/2fa/sms/public/verify`
@@ -125,11 +132,11 @@ export function VerificationStep({
       method === "sms"
         ? {
             // En registro público, no hay employee_id todavía
-            employee_email: employeeEmail,
+            employee_email: normalizedEmail,
             otp: submitted,
           }
         : {
-            employee_email: employeeEmail,
+            employee_email: normalizedEmail,
             otp: submitted,
           };
 
